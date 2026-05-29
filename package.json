@@ -1,0 +1,65 @@
+{
+  "name": "@partssource/react-kit",
+  "version": "0.1.0",
+  "description": "PartsSource Design System — React + TypeScript component kit",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./tailwind.config": "./tailwind.config.js",
+    "./tokens": "./src/tokens.ts"
+  },
+  "files": [
+    "dist",
+    "src",
+    "tailwind.config.js",
+    "tailwind-input.css",
+    "tokens.ts",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "npm run sync:browser && vite",
+    "build": "npm run lint && npm run sync:browser && vite build && tsc --emitDeclarationOnly --outDir dist",
+    "build:css": "tailwindcss -c tailwind.config.js -i tailwind-input.css -o tailwind.css --minify",
+    "sync:browser": "node scripts/sync-to-browser.mjs",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist storybook-static"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^8.3.0",
+    "@storybook/addon-essentials": "^8.3.0",
+    "@storybook/addon-interactions": "^8.3.0",
+    "@storybook/addon-links": "^8.3.0",
+    "@storybook/react": "^8.3.0",
+    "@storybook/react-vite": "^8.3.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.35.0",
+    "storybook": "^8.3.0",
+    "tailwindcss": "3.4.16",
+    "typescript": "^5.5.0",
+    "vite": "^5.4.0"
+  },
+  "keywords": ["design-system", "react", "components", "partssource", "ui-kit"],
+  "license": "UNLICENSED",
+  "private": true
+}

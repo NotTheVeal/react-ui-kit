@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PartsSource Components — React + TS</title>
+
+<template id="__bundler_thumbnail" data-bg-color="#005BA6">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#005BA6"/>
+    <g transform="translate(420, 280)">
+      <rect width="360" height="240" rx="20" fill="#FFFFFF"/>
+      <text x="180" y="110" text-anchor="middle" font-family="Source Sans Pro, sans-serif" font-size="58" font-weight="700" fill="#005BA6">PS</text>
+      <text x="180" y="170" text-anchor="middle" font-family="Source Sans Pro, sans-serif" font-size="22" font-weight="600" fill="#002F48" letter-spacing="2">REACT KIT</text>
+    </g>
+  </svg>
+</template>
+
+<!-- Design tokens (Source Sans Pro, brand colors) -->
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../colors_and_type.css">
+
+<!-- Tailwind via Play CDN — fine for prototyping; swap for compiled in prod -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Map PS brand tokens onto Tailwind so utilities like `bg-ps-blue` work.
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'ps-blue': {
+            50:  '#EFF9FE',
+            100: '#D0EDFC',
+            200: '#B0C6D3',
+            400: '#009CF4',
+            500: '#005BA6',
+            600: '#004A84',
+            700: '#003763',
+            800: '#002F48',
+          },
+          'ps-gray': {
+            50:  '#FAFAFA',
+            100: '#F5F5F5',
+            150: '#F1F1F1',
+            200: '#E6E6E6',
+            300: '#DCDCDC',
+            400: '#CCCCCC',
+            500: '#949494',
+            600: '#777777',
+            700: '#4A4A4A',
+            800: '#2B2B2B',
+          },
+          'ps-orange': {
+            400: '#FF9505',
+            500: '#EC8000',
+            600: '#D27200',
+          },
+        },
+        fontFamily: {
+          sans: ['Source Sans Pro', 'Source Sans 3', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html, body { background: #FAFAFA; }
+  body { margin: 0; }
+  /* Keep tokens visible to all components */
+  :root {
+    color-scheme: light;
+  }
+  /* Native scrollbar polish */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #DCDCDC; border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: #CCCCCC; }
+</style>
+
+<!-- React + Babel (with TypeScript preset) -->
+<script
+  src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+  integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+  crossorigin="anonymous"></script>
+<script
+  src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+  integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+  crossorigin="anonymous"></script>
+<script
+  src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+  integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+  crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<!-- TypeScript components — Babel strips types and transpiles JSX at load -->
+<script type="text/babel" data-presets="typescript,react" src="tokens.ts"></script>
+<script type="text/babel" data-presets="typescript,react" src="Button.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Input.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Card.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="CardExtras.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Badge.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Alert.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Selections.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Tabs.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Modal.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Drawer.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Table.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Filter.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Navigation.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="CMS.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Layout.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Feedback.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Controls.tsx"></script>
+<script type="text/babel" data-presets="typescript,react" src="Showcase.tsx"></script>
+
+</body>
+</html>
