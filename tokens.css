@@ -1,0 +1,1268 @@
+/* ================================================================
+   PartsSource Design System — Token Sheet
+   Three-Level Token Architecture
+
+   Version:  1.2.0
+   Updated:  2026-05-13
+
+   CHANGELOG
+   ─────────
+   1.2.0 · Added z-index, breakpoint, icon-size, container tokens;
+          Dropdown, Pagination, Avatar, Breadcrumb, Switch, Skeleton,
+          Spinner, Progress, Empty-state component tokens; mobile
+          container floor.
+   1.1.0 · Added Alert, Toast, Tabs (3 variants), Checkbox, Radio,
+          Top Nav, LHN, Filter, Stepper, Tooltip; dark-mode scaffold.
+   1.0.0 · Initial three-level architecture for Color, Type, Spacing,
+          Radius, Elevation, Motion. Button, Input, Card, Badge,
+          Modal, Sheet, Table, Link.
+
+   LEVEL 1  Primitive  ─ raw values only             --ps-prim-*
+   LEVEL 2  Semantic   ─ references to primitives    --ps-sem-*
+   LEVEL 3  Component  ─ references to semantic      --ps-cmp-*
+
+   Rules:
+   • Primitives NEVER reference anything. They hold raw values.
+   • Semantic tokens ONLY reference primitives.
+   • Component tokens ONLY reference semantic tokens.
+   • Skipping a level (e.g. component → primitive) is forbidden.
+   ================================================================ */
+
+:root {
+
+  /* ===============================================================
+     LEVEL 1 — PRIMITIVE TOKENS
+     Raw values. The atomic palette / scale. Nothing references
+     a hex code or px value except these.
+     =============================================================== */
+
+  /* —— Color · Brand Blue ramp —— */
+  --ps-prim-blue-50:  #EFF9FE;
+  --ps-prim-blue-100: #D0EDFC;
+  --ps-prim-blue-150: #DCEAED;       /* Airway — tinted brand bg per canonical */
+  --ps-prim-blue-200: #B0C6D3;
+  --ps-prim-blue-300: #6AC7FC;
+  --ps-prim-blue-400: #009CF4;       /* Cyan */
+  --ps-prim-blue-500: #005BA6;       /* PS Blue — brand anchor */
+  --ps-prim-blue-600: #004A84;
+  --ps-prim-blue-700: #003763;
+  --ps-prim-blue-800: #002F48;       /* Midnight */
+  --ps-prim-blue-900: #001D2E;
+
+  /* —— Color · Neutral / Gray ramp —— */
+  --ps-prim-gray-0:   #FFFFFF;
+  --ps-prim-gray-50:  #FAFAFA;
+  --ps-prim-gray-100: #F5F5F5;
+  --ps-prim-gray-150: #F1F1F1;
+  --ps-prim-gray-200: #E6E6E6;
+  --ps-prim-gray-300: #DCDCDC;
+  --ps-prim-gray-400: #CCCCCC;
+  --ps-prim-gray-500: #949494;
+  --ps-prim-gray-600: #777777;
+  --ps-prim-gray-650: #5C5C5C;        /* between -600 and -700, used in cards & meta */
+  --ps-prim-gray-700: #4A4A4A;
+  --ps-prim-gray-800: #2B2B2B;
+  --ps-prim-gray-900: #000000;
+
+  /* —— Color · Teal accent (per canonical) —— */
+  --ps-prim-teal-400: #03D0BF;       /* Teal — accent highlight */
+  --ps-prim-teal-500: #87AFB8;       /* Jetstream — muted teal-grey */
+
+  /* —— Color · Orange ramp —— */
+  --ps-prim-orange-50:  #FFF4E5;
+  --ps-prim-orange-100: #FFCA82;   /* disabled-pill tint */
+  --ps-prim-orange-400: #FF9505;
+  --ps-prim-orange-500: #EC8000;   /* pill hover (real spec) */
+  --ps-prim-orange-600: #D27200;   /* pill pressed (real spec) */
+
+  /* —— Color · Red ramp —— */
+  --ps-prim-red-50:  #FFEBEB;
+  --ps-prim-red-100: #FDECEC;
+  --ps-prim-red-150: #FEF0F0;        /* alert/toast fail bg */
+  --ps-prim-red-400: #D14343;
+  --ps-prim-red-500: #B83535;
+  --ps-prim-red-600: #9E2020;
+  --ps-prim-red-700: #E00000;        /* alert/toast fail fg (pure red) */
+
+  /* —— Color · Green ramp —— */
+  --ps-prim-green-50:  #E5F9F2;
+  --ps-prim-green-100: #B8E6D5;
+  --ps-prim-green-150: #E2F5EE;      /* alert/toast success bg */
+  --ps-prim-green-400: #17AB78;
+  --ps-prim-green-500: #0E9563;
+  --ps-prim-green-600: #0A7850;
+  --ps-prim-green-700: #0E7C55;      /* alert/toast success fg */
+
+  /* —— Color · Amber (warning accent) —— */
+  --ps-prim-amber-400: #E3A92D;
+  --ps-prim-amber-500: #9A6A00;
+  --ps-prim-amber-700: #B45309;      /* alert warning fg */
+
+  /* —— Color · Purple ramp (Figma list-badge "Shopping") —— */
+  --ps-prim-purple-50:  #F5E6FF;     /* CardExtras list-pill shopping bg */
+  --ps-prim-purple-100: #EDE5FC;     /* Badge list shopping bg (Figma) */
+  --ps-prim-purple-600: #753EC7;     /* Badge list shopping fg (Figma) */
+  --ps-prim-purple-700: #9333EA;     /* CardExtras list-pill shopping fg */
+
+  /* —— Color · Pink ramp (Figma list-badge "Restocking") —— */
+  --ps-prim-pink-50:  #FBE4EE;       /* Badge restocking bg (Figma) */
+  --ps-prim-pink-100: #FCE7F3;       /* CardExtras list-pill restocking bg */
+  --ps-prim-pink-600: #BE185D;       /* CardExtras list-pill restocking fg */
+  --ps-prim-pink-700: #B41862;       /* Badge restocking fg (Figma) */
+
+  /* —— Color · Sky ramp (list-badge "Preventative" + AI "Pending" badge) —— */
+  --ps-prim-sky-50:  #DEEFFD;        /* Badge preventative bg (Figma) */
+  --ps-prim-sky-100: #BFDBFE;        /* CardExtras AI pending bg */
+  --ps-prim-sky-500: #0284C7;        /* CardExtras list-pill preventative fg */
+  --ps-prim-sky-600: #0265B3;        /* Badge preventative fg (Figma) */
+  --ps-prim-sky-700: #1D4ED8;        /* CardExtras AI pending fg */
+
+  /* —— Color · Orange ramp extensions (AI "Urgent" badge) —— */
+  --ps-prim-orange-200: #FED7AA;     /* CardExtras AI urgent bg */
+  --ps-prim-orange-700: #C2410C;     /* CardExtras AI urgent fg */
+
+  /* —— Spec aliases — exact canonical values that don't sit on a ramp.
+        Add here; never inline. Each one anchors a specific component spec. —— */
+  --ps-prim-red-spec:  #D32F2F;      /* Input error red — brighter than danger-600 */
+  --ps-prim-gray-450:  #525252;      /* Status badge "Not Shipped" text */
+  --ps-prim-gray-750:  #3A3A3A;      /* Tooltip background — soft dark grey */
+  --ps-prim-gray-770:  #373F41;      /* Modal title — Figma exact */
+
+  /* —— Misc spec aliases — niche component colors —— */
+  --ps-prim-blue-25:   #E5F4FF;      /* Status badge "In Transit/Pending" bg, AI hover bg */
+  --ps-prim-gray-225:  #E0E0E0;      /* Tab + Top-nav divider */
+  --ps-prim-gray-720:  #4C4B46;      /* TopNav utility text */
+  --ps-prim-orange-450:#E58400;      /* TopNav search-button hover */
+  --ps-prim-cyan-400:  #00AEEF;      /* TopNav active-state cyan */
+
+  /* —— Typography · Font families —— */
+  --ps-prim-font-source-sans: 'Source Sans Pro', 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ps-prim-font-metronic:    'Metronic Pro', 'Source Sans Pro', sans-serif;
+  --ps-prim-font-source-code: 'Source Code', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+
+  /* —— Typography · Font weights —— */
+  --ps-prim-weight-light:    300;
+  --ps-prim-weight-regular:  400;
+  --ps-prim-weight-medium:   500;
+  --ps-prim-weight-semibold: 600;
+  --ps-prim-weight-bold:     700;
+  --ps-prim-weight-black:    900;
+
+  /* —— Typography · Font size scale —— */
+  --ps-prim-size-11: 11px;
+  --ps-prim-size-12: 12px;
+  --ps-prim-size-13: 13px;
+  --ps-prim-size-14: 14px;
+  --ps-prim-size-15: 15px;
+  --ps-prim-size-16: 16px;
+  --ps-prim-size-18: 18px;
+  --ps-prim-size-20: 20px;
+  --ps-prim-size-24: 24px;
+  --ps-prim-size-28: 28px;
+  --ps-prim-size-30: 30px;
+  --ps-prim-size-34: 34px;
+  --ps-prim-size-36: 36px;
+
+  /* —— Typography · Line height —— */
+  --ps-prim-lh-tight:   1.2;
+  --ps-prim-lh-snug:    1.35;
+  --ps-prim-lh-normal:  1.5;
+  --ps-prim-lh-relaxed: 1.6;
+
+  /* —— Typography · Letter spacing —— */
+  --ps-prim-tracking-tight:  -0.2px;
+  --ps-prim-tracking-none:    0;
+  --ps-prim-tracking-wide:    0.5px;
+  --ps-prim-tracking-wider:   1px;
+  --ps-prim-tracking-widest:  1.5px;
+
+  /* —— Space · 4-px base scale —— */
+  --ps-prim-space-0:  0;
+  --ps-prim-space-1:  4px;
+  --ps-prim-space-2:  8px;
+  --ps-prim-space-3:  12px;
+  --ps-prim-space-4:  16px;
+  --ps-prim-space-5:  20px;
+  --ps-prim-space-6:  24px;
+  --ps-prim-space-7:  28px;
+  --ps-prim-space-8:  32px;
+  --ps-prim-space-10: 40px;
+  --ps-prim-space-12: 48px;
+  --ps-prim-space-14: 56px;
+  --ps-prim-space-16: 64px;
+  --ps-prim-space-20: 80px;
+  --ps-prim-space-24: 96px;
+
+  /* —— Radius scale —— */
+  --ps-prim-radius-0:    0;
+  --ps-prim-radius-2:    2px;
+  --ps-prim-radius-3:    3px;
+  --ps-prim-radius-4:    4px;
+  --ps-prim-radius-6:    6px;
+  --ps-prim-radius-8:    8px;
+  --ps-prim-radius-12:   12px;
+  --ps-prim-radius-20:   20px;
+  --ps-prim-radius-full: 9999px;
+
+  /* —— Border width —— */
+  --ps-prim-border-0: 0;
+  --ps-prim-border-1: 1px;
+  --ps-prim-border-2: 2px;
+  --ps-prim-border-3: 3px;
+
+  /* —— Shadow primitives (Midnight-tinted) —— */
+  --ps-prim-shadow-sm: 0 1px 4px rgba(0, 47, 72, 0.08);
+  --ps-prim-shadow-md: 0 2px 10px rgba(0, 47, 72, 0.10);
+  --ps-prim-shadow-lg: 0 6px 20px rgba(0, 47, 72, 0.18);
+  --ps-prim-shadow-xl: 0 16px 32px rgba(0, 47, 72, 0.20);
+
+  /* —— Opacity primitives —— */
+  --ps-prim-opacity-0:    0;
+  --ps-prim-opacity-40:  0.4;
+  --ps-prim-opacity-50:  0.5;
+  --ps-prim-opacity-75:  0.75;
+  --ps-prim-opacity-100: 1;
+
+  /* —— Motion · duration —— */
+  --ps-prim-duration-instant: 0ms;
+  --ps-prim-duration-fast:    150ms;
+  --ps-prim-duration-normal:  240ms;
+  --ps-prim-duration-slow:    400ms;
+
+  /* —— Motion · easing —— */
+  --ps-prim-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ps-prim-ease-out:      cubic-bezier(0, 0, 0.2, 1);
+  --ps-prim-ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1);
+
+
+  /* ===============================================================
+     LEVEL 2 — SEMANTIC TOKENS
+     Describes intent. References primitives only.
+     Component tokens should never reach past this layer.
+     =============================================================== */
+
+  /* —— Foreground (text & icon) —— */
+  --ps-sem-fg-primary:    var(--ps-prim-gray-800);     /* default body text */
+  --ps-sem-fg-secondary:  var(--ps-prim-gray-700);     /* supporting text */
+  --ps-sem-fg-tertiary:   var(--ps-prim-gray-600);     /* meta / hint */
+  --ps-sem-fg-disabled:   var(--ps-prim-gray-500);
+  --ps-sem-fg-inverse:    var(--ps-prim-gray-0);       /* text on dark */
+  --ps-sem-fg-brand:      var(--ps-prim-blue-500);     /* brand text / icon */
+  --ps-sem-fg-brand-dark: var(--ps-prim-blue-800);     /* heading anchor */
+  --ps-sem-fg-link:       var(--ps-prim-blue-500);
+  --ps-sem-fg-link-hover: var(--ps-prim-blue-600);
+
+  /* —— Background (surface) —— */
+  --ps-sem-bg-canvas:     var(--ps-prim-gray-50);      /* app background */
+  --ps-sem-bg-surface:    var(--ps-prim-gray-0);       /* card / sheet */
+  --ps-sem-bg-subtle:     var(--ps-prim-gray-100);     /* hovered surface */
+  --ps-sem-bg-muted:      var(--ps-prim-gray-150);     /* code / chip */
+  --ps-sem-bg-inverse:    var(--ps-prim-blue-800);     /* dark banner / footer */
+  --ps-sem-bg-brand:      var(--ps-prim-blue-500);
+  --ps-sem-bg-brand-tint: var(--ps-prim-blue-50);      /* selected row */
+  --ps-sem-bg-airway:     var(--ps-prim-blue-150);     /* tinted brand bg (Airway #DCEAED) */
+  --ps-sem-bg-teal:       var(--ps-prim-teal-400);     /* accent surface */
+
+  /* —— Border —— */
+  --ps-sem-border-subtle:  var(--ps-prim-gray-150);
+  --ps-sem-border-default: var(--ps-prim-gray-300);    /* the 1 px rule */
+  --ps-sem-border-strong:  var(--ps-prim-gray-400);
+  --ps-sem-border-brand:   var(--ps-prim-blue-500);
+  --ps-sem-border-focus:   var(--ps-prim-blue-300);
+
+  /* —— Status: Success —— */
+  --ps-sem-success-fg:     var(--ps-prim-green-600);
+  --ps-sem-success-bg:     var(--ps-prim-green-50);
+  --ps-sem-success-border: var(--ps-prim-green-100);
+  --ps-sem-success-solid:  var(--ps-prim-green-400);
+
+  /* —— Status: Warning —— */
+  --ps-sem-warning-fg:     var(--ps-prim-orange-600);
+  --ps-sem-warning-bg:     var(--ps-prim-orange-50);
+  --ps-sem-warning-border: var(--ps-prim-orange-100);
+  --ps-sem-warning-solid:  var(--ps-prim-orange-400);
+
+  /* —— Status: Danger —— */
+  --ps-sem-danger-fg:      var(--ps-prim-red-600);
+  --ps-sem-danger-bg:      var(--ps-prim-red-50);
+  --ps-sem-danger-border:  var(--ps-prim-red-100);
+  --ps-sem-danger-solid:   var(--ps-prim-red-400);
+
+  /* —— Status: Info —— */
+  --ps-sem-info-fg:        var(--ps-prim-blue-500);
+  --ps-sem-info-bg:        var(--ps-prim-blue-50);
+  --ps-sem-info-border:    var(--ps-prim-blue-100);
+  --ps-sem-info-solid:     var(--ps-prim-blue-400);
+
+  /* —— Promo accent (orange pill) —— */
+  --ps-sem-promo-solid:    var(--ps-prim-orange-400);   /* #FF9505 */
+  --ps-sem-promo-hover:    var(--ps-prim-orange-500);   /* #EC8000 */
+  --ps-sem-promo-pressed:  var(--ps-prim-orange-600);   /* #D27200 */
+
+  /* —— Action / Interactive (default = brand blue) —— */
+  --ps-sem-action-default: var(--ps-prim-blue-500);
+  --ps-sem-action-hover:   var(--ps-prim-blue-600);
+  --ps-sem-action-pressed: var(--ps-prim-blue-700);
+  --ps-sem-action-disabled-bg: var(--ps-prim-gray-300);
+  --ps-sem-action-disabled-fg: var(--ps-prim-gray-600);
+
+  /* —— Typography roles —— */
+  --ps-sem-font-body:    var(--ps-prim-font-source-sans);
+  --ps-sem-font-display: var(--ps-prim-font-metronic);
+  --ps-sem-font-mono:    var(--ps-prim-font-source-code);
+
+  --ps-sem-text-display-xl: var(--ps-prim-size-36);
+  --ps-sem-text-display-lg: var(--ps-prim-size-30);
+  --ps-sem-text-display-md: var(--ps-prim-size-24);
+  --ps-sem-text-heading:    var(--ps-prim-size-18);
+  --ps-sem-text-body-lg:    var(--ps-prim-size-16);
+  --ps-sem-text-body:       var(--ps-prim-size-14);
+  --ps-sem-text-caption:    var(--ps-prim-size-12);
+  --ps-sem-text-micro:      var(--ps-prim-size-11);
+
+  --ps-sem-weight-heading: var(--ps-prim-weight-light);    /* signature: airy display */
+  --ps-sem-weight-body:    var(--ps-prim-weight-regular);
+  --ps-sem-weight-emphasis:var(--ps-prim-weight-semibold);
+  --ps-sem-weight-strong:  var(--ps-prim-weight-bold);
+
+  /* —— Space roles (semantic gap / pad) —— */
+  --ps-sem-space-inset-xs:  var(--ps-prim-space-2);     /* badge / chip pad */
+  --ps-sem-space-inset-sm:  var(--ps-prim-space-3);     /* input pad-x */
+  --ps-sem-space-inset-md:  var(--ps-prim-space-5);     /* card pad */
+  --ps-sem-space-inset-lg:  var(--ps-prim-space-7);     /* sheet pad */
+  --ps-sem-space-stack-xs:  var(--ps-prim-space-1);     /* tight gap */
+  --ps-sem-space-stack-sm:  var(--ps-prim-space-2);
+  --ps-sem-space-stack-md:  var(--ps-prim-space-4);
+  --ps-sem-space-stack-lg:  var(--ps-prim-space-6);     /* section gap */
+  --ps-sem-space-stack-xl:  var(--ps-prim-space-12);    /* page section */
+
+  /* —— Radius roles —— */
+  --ps-sem-radius-control: var(--ps-prim-radius-4);     /* button, input, badge default */
+  --ps-sem-radius-surface: var(--ps-prim-radius-6);     /* card / sheet body */
+  --ps-sem-radius-modal:   var(--ps-prim-radius-8);     /* dialog, popover */
+  --ps-sem-radius-pill:    var(--ps-prim-radius-20);
+  --ps-sem-radius-circle:  var(--ps-prim-radius-full);
+
+  /* —— Elevation roles —— */
+  --ps-sem-elevation-flat:   none;
+  --ps-sem-elevation-rest:   var(--ps-prim-shadow-sm);
+  --ps-sem-elevation-raised: var(--ps-prim-shadow-md);
+  --ps-sem-elevation-overlay:var(--ps-prim-shadow-lg);
+  --ps-sem-elevation-modal:  var(--ps-prim-shadow-xl);
+
+  /* —— Motion roles —— */
+  --ps-sem-motion-control:  var(--ps-prim-duration-fast)   var(--ps-prim-ease-standard);
+  --ps-sem-motion-overlay:  var(--ps-prim-duration-normal) var(--ps-prim-ease-emphasis);
+  --ps-sem-motion-page:     var(--ps-prim-duration-slow)   var(--ps-prim-ease-out);
+
+  /* —— Focus ring —— */
+  --ps-sem-focus-ring: 0 0 0 3px var(--ps-prim-blue-200);
+
+
+  /* ===============================================================
+     LEVEL 3 — COMPONENT TOKENS
+     References semantic tokens ONLY. One source of truth per
+     component property. If a designer asks "what color is the
+     primary button on hover?" — they read this section.
+     =============================================================== */
+
+  /* —— Button · Primary (FUTURE direction — solid PS Blue fill) ——
+        Per brand redline, moving away from orange CTAs to a solid
+        PS Blue primary. Matches canonical token-studio source. —— */
+  --ps-cmp-button-primary-bg-default:   var(--ps-sem-action-default);
+  --ps-cmp-button-primary-bg-hover:     var(--ps-sem-action-hover);
+  --ps-cmp-button-primary-bg-pressed:   var(--ps-sem-action-pressed);
+  --ps-cmp-button-primary-bg-disabled:  var(--ps-sem-action-disabled-bg);
+  --ps-cmp-button-primary-fg-default:   var(--ps-sem-fg-inverse);
+  --ps-cmp-button-primary-fg-hover:     var(--ps-sem-fg-inverse);
+  --ps-cmp-button-primary-fg-disabled:  var(--ps-sem-action-disabled-fg);
+  --ps-cmp-button-primary-border:       var(--ps-sem-action-default);
+  --ps-cmp-button-primary-border-hover: var(--ps-sem-action-hover);
+  --ps-cmp-button-primary-radius:       var(--ps-sem-radius-control);
+
+  /* —— Button · Secondary (GREY OUTLINE SQUARE, fills PS Blue on hover) ——
+        matches preview/buttons.html .btn.tertiary (sm) —— */
+  --ps-cmp-button-secondary-bg-default: var(--ps-sem-bg-surface);     /* #FFF */
+  --ps-cmp-button-secondary-bg-hover:   var(--ps-sem-action-default); /* PS Blue */
+  --ps-cmp-button-secondary-bg-pressed: var(--ps-sem-action-hover);   /* #004A84 */
+  --ps-cmp-button-secondary-bg-disabled:var(--ps-prim-gray-300);
+  --ps-cmp-button-secondary-fg-default: var(--ps-sem-fg-secondary);   /* #4A4A4A */
+  --ps-cmp-button-secondary-fg-hover:   var(--ps-sem-fg-inverse);
+  --ps-cmp-button-secondary-fg-disabled:var(--ps-sem-action-disabled-fg);
+  --ps-cmp-button-secondary-border:     var(--ps-sem-border-default); /* #DCDCDC */
+  --ps-cmp-button-secondary-border-hover:var(--ps-sem-action-default);
+  --ps-cmp-button-secondary-radius:     var(--ps-sem-radius-control);
+  --ps-cmp-button-secondary-weight:     var(--ps-prim-weight-medium); /* 500 */
+
+  /* —— Button · Tertiary (GREY PILL · 40 px) ——
+        matches preview/buttons.html .btn.tert-lg —— */
+  --ps-cmp-button-tertiary-bg-default:  var(--ps-prim-gray-150);       /* #F1F1F1 */
+  --ps-cmp-button-tertiary-bg-hover:    var(--ps-prim-gray-300);       /* #DCDCDC */
+  --ps-cmp-button-tertiary-bg-pressed:  var(--ps-prim-gray-400);       /* #CCCCCC */
+  --ps-cmp-button-tertiary-bg-disabled: var(--ps-prim-gray-150);
+  --ps-cmp-button-tertiary-fg-default:  var(--ps-sem-fg-primary);      /* #2B2B2B */
+  --ps-cmp-button-tertiary-fg-disabled: var(--ps-sem-action-disabled-fg);
+  --ps-cmp-button-tertiary-border:      transparent;
+  --ps-cmp-button-tertiary-radius:      var(--ps-prim-radius-full);    /* pill */
+  --ps-cmp-button-tertiary-height:      40px;
+  --ps-cmp-button-tertiary-padding-x:   var(--ps-prim-space-6);        /* 24 px */
+  --ps-cmp-button-tertiary-weight:      var(--ps-sem-weight-body);
+
+  /* —— Button · Promo pill (orange CTA) — matches preview/buttons.html .btn.pill ——
+        48 px tall, 32 px pad-x, 100 px radius, uppercase 700,
+        hover #EC8000, pressed #D27200, disabled #FFCA82 —— */
+  --ps-cmp-button-pill-bg-default:      var(--ps-sem-promo-solid);
+  --ps-cmp-button-pill-bg-hover:        var(--ps-sem-promo-hover);
+  --ps-cmp-button-pill-bg-pressed:      var(--ps-sem-promo-pressed);
+  --ps-cmp-button-pill-bg-disabled:     var(--ps-prim-orange-100);
+  --ps-cmp-button-pill-fg-default:      var(--ps-sem-fg-inverse);
+  --ps-cmp-button-pill-radius:          var(--ps-prim-radius-full);
+  --ps-cmp-button-pill-height:          48px;
+  --ps-cmp-button-pill-padding-x:       var(--ps-prim-space-8);  /* 32 px */
+  --ps-cmp-button-pill-text:            var(--ps-sem-text-caption);
+  --ps-cmp-button-pill-weight:          var(--ps-sem-weight-strong);
+  --ps-cmp-button-pill-tracking:        var(--ps-prim-tracking-wide);
+
+  /* —— Input —— matches PartsSource floating-label spec
+                  (preview/inputs.html: 335×48, 3 px radius, #949494 border,
+                  16 px Source Sans, 10 px pad-x, label floats to 12 px) —— */
+  --ps-cmp-input-bg:                    var(--ps-sem-bg-surface);
+  --ps-cmp-input-bg-disabled:           var(--ps-sem-bg-surface);
+  --ps-cmp-input-fg:                    var(--ps-prim-gray-900);          /* #000 per spec */
+  --ps-cmp-input-fg-disabled:           var(--ps-prim-gray-300);          /* #DCDCDC */
+  --ps-cmp-input-placeholder:           transparent;                       /* label handles it */
+  --ps-cmp-input-border-default:        var(--ps-prim-gray-500);           /* #949494 */
+  --ps-cmp-input-border-hover:          var(--ps-prim-gray-900);           /* #000 */
+  --ps-cmp-input-border-focus:          var(--ps-sem-border-brand);        /* PS Blue */
+  --ps-cmp-input-border-error:          var(--ps-sem-danger-solid);
+  --ps-cmp-input-border-disabled:       var(--ps-prim-gray-300);
+  --ps-cmp-input-border-width:          var(--ps-prim-border-1);
+  --ps-cmp-input-radius:                var(--ps-prim-radius-3);           /* 3 px, not 4 */
+  --ps-cmp-input-height-sm:             48px;                              /* default */
+  --ps-cmp-input-height-lg:             80px;                              /* large variant */
+  --ps-cmp-input-padding-x:             10px;                              /* 10 px, not 12 */
+  --ps-cmp-input-text-size:             var(--ps-sem-text-body-lg);        /* 16 px */
+  --ps-cmp-input-font:                  var(--ps-sem-font-body);
+  --ps-cmp-input-focus-ring:            0 0 10px 0 rgba(0, 91, 166, 0.5);  /* glow, not box ring */
+  --ps-cmp-input-error-ring:            0 0 10px 0 rgba(211, 47, 47, 0.5);
+
+  /* —— Input · Label (floating) —— */
+  --ps-cmp-input-label-color-rest:      var(--ps-prim-gray-700);           /* #4A4A4A */
+  --ps-cmp-input-label-color-active:    var(--ps-sem-fg-brand);            /* PS Blue when focused/filled */
+  --ps-cmp-input-label-color-error:     var(--ps-sem-danger-solid);
+  --ps-cmp-input-label-color-disabled:  var(--ps-prim-gray-300);
+  --ps-cmp-input-label-size-rest:       var(--ps-sem-text-body-lg);        /* 16 px centered */
+  --ps-cmp-input-label-size-active:     var(--ps-sem-text-caption);        /* 12 px floated */
+  --ps-cmp-input-label-weight-rest:     var(--ps-sem-weight-body);
+  --ps-cmp-input-label-weight-active:   var(--ps-sem-weight-strong);       /* 700 when floated */
+
+  /* —— Card —— matches preview/cards.html: outline only at rest,
+        shadow appears on hover. —— */
+  --ps-cmp-card-bg:                     var(--ps-sem-bg-surface);
+  --ps-cmp-card-fg:                     var(--ps-sem-fg-primary);
+  --ps-cmp-card-border:                 var(--ps-sem-border-default);
+  --ps-cmp-card-border-hover:           var(--ps-sem-border-brand);
+  --ps-cmp-card-radius:                 var(--ps-sem-radius-control);  /* 4 px to match */
+  --ps-cmp-card-padding:                var(--ps-sem-space-inset-md);
+  --ps-cmp-card-shadow-default:         var(--ps-sem-elevation-flat);   /* none */
+  --ps-cmp-card-shadow-hover:           var(--ps-sem-elevation-raised);
+
+  /* —— Card · Small (horizontal status, 220 × 73)
+        matches preview/cards.html .status-card —— */
+  --ps-cmp-card-sm-bg:                  var(--ps-sem-bg-surface);
+  --ps-cmp-card-sm-border:              var(--ps-sem-border-default);   /* #DCDCDC */
+  --ps-cmp-card-sm-radius:              var(--ps-sem-radius-control);   /* 4 px */
+  --ps-cmp-card-sm-padding:             14px;                            /* spec one-off */
+  --ps-cmp-card-sm-gap:                 var(--ps-prim-space-3);          /* 12 px */
+  --ps-cmp-card-sm-shadow-hover:        var(--ps-sem-elevation-raised);
+  --ps-cmp-card-sm-image-size:          44px;
+  --ps-cmp-card-sm-image-bg:            var(--ps-prim-gray-400);
+  --ps-cmp-card-sm-image-radius:        var(--ps-prim-radius-2);
+  --ps-cmp-card-sm-title-size:          var(--ps-sem-text-caption);      /* 12 px */
+  --ps-cmp-card-sm-title-fg:            var(--ps-prim-gray-900);
+  --ps-cmp-card-sm-title-weight:        var(--ps-sem-weight-body);
+  --ps-cmp-card-sm-meta-size:           var(--ps-sem-text-micro);        /* 11 px */
+  --ps-cmp-card-sm-meta-fg:             var(--ps-sem-fg-tertiary);
+
+  /* —— Badge —— matches preview/badges.html .badge-status
+        12 px / 700, 4 px radius, 1 px bordered, NOT uppercase, NOT pill —— */
+  --ps-cmp-badge-radius:                var(--ps-sem-radius-control);
+  --ps-cmp-badge-padding-x:             var(--ps-prim-space-2);   /* 8 px */
+  --ps-cmp-badge-padding-y:             var(--ps-prim-space-1);   /* 4 px */
+  --ps-cmp-badge-gap:                   var(--ps-prim-space-2);   /* 8 px */
+  --ps-cmp-badge-text:                  var(--ps-sem-text-caption);   /* 12 px */
+  --ps-cmp-badge-weight:                var(--ps-sem-weight-strong);
+  --ps-cmp-badge-tracking:              var(--ps-prim-tracking-none);
+  --ps-cmp-badge-transform:             none;
+  --ps-cmp-badge-border-width:          var(--ps-prim-border-1);
+  --ps-cmp-badge-neutral-bg:            var(--ps-prim-gray-200);
+  --ps-cmp-badge-neutral-fg:            var(--ps-prim-gray-700);
+  --ps-cmp-badge-neutral-border:        var(--ps-prim-gray-300);
+  --ps-cmp-badge-success-bg:            var(--ps-sem-success-bg);
+  --ps-cmp-badge-success-fg:            var(--ps-sem-success-fg);
+  --ps-cmp-badge-success-border:        var(--ps-sem-success-border);
+  --ps-cmp-badge-warning-bg:            var(--ps-sem-warning-bg);
+  --ps-cmp-badge-warning-fg:            var(--ps-sem-warning-fg);
+  --ps-cmp-badge-warning-border:        var(--ps-sem-warning-border);
+  --ps-cmp-badge-danger-bg:             var(--ps-sem-danger-bg);
+  --ps-cmp-badge-danger-fg:             var(--ps-sem-danger-fg);
+  --ps-cmp-badge-danger-border:         var(--ps-sem-danger-border);
+  --ps-cmp-badge-info-bg:               var(--ps-sem-info-bg);
+  --ps-cmp-badge-info-fg:               var(--ps-sem-info-fg);
+  --ps-cmp-badge-info-border:           var(--ps-sem-info-border);
+
+  /* —— Alert / Banner —— */
+  --ps-cmp-alert-padding:               var(--ps-sem-space-inset-md);
+  --ps-cmp-alert-radius:                var(--ps-sem-radius-control);
+  --ps-cmp-alert-accent-width:          var(--ps-prim-border-3);
+  --ps-cmp-alert-success-bg:            var(--ps-sem-success-bg);
+  --ps-cmp-alert-warning-bg:            var(--ps-sem-warning-bg);
+  --ps-cmp-alert-danger-bg:             var(--ps-sem-danger-bg);
+  --ps-cmp-alert-info-bg:               var(--ps-sem-info-bg);
+
+  /* —— Sheet / Drawer —— */
+  --ps-cmp-sheet-bg:                    var(--ps-sem-bg-surface);
+  --ps-cmp-sheet-fg:                    var(--ps-sem-fg-primary);
+  --ps-cmp-sheet-shadow:                var(--ps-sem-elevation-modal);
+  --ps-cmp-sheet-scrim:                 rgba(0, 47, 72, 0.5);
+  --ps-cmp-sheet-padding:               var(--ps-sem-space-inset-lg);
+  --ps-cmp-sheet-title-color:           var(--ps-sem-fg-brand);
+  --ps-cmp-sheet-title-size:            var(--ps-sem-text-display-lg);
+  --ps-cmp-sheet-title-weight:          var(--ps-sem-weight-heading);
+  --ps-cmp-sheet-motion:                transform var(--ps-sem-motion-overlay);
+  --ps-cmp-sheet-width-desktop:         var(--ps-sem-container-sheet-desktop);
+  --ps-cmp-sheet-width-tablet:          var(--ps-sem-container-sheet-tablet);
+  --ps-cmp-sheet-z-index:               var(--ps-sem-z-sheet);
+  --ps-cmp-sheet-scrim-z-index:         var(--ps-sem-z-overlay);
+
+  /* —— Modal —— */
+  --ps-cmp-modal-bg:                    var(--ps-sem-bg-surface);
+  --ps-cmp-modal-radius:                var(--ps-sem-radius-modal);
+  --ps-cmp-modal-shadow:                var(--ps-sem-elevation-modal);
+  --ps-cmp-modal-scrim:                 rgba(0, 47, 72, 0.5);
+  --ps-cmp-modal-padding:               var(--ps-sem-space-inset-lg);
+  --ps-cmp-modal-width-sm:              var(--ps-sem-container-modal-sm);
+  --ps-cmp-modal-width-md:              var(--ps-sem-container-modal-md);
+  --ps-cmp-modal-width-lg:              var(--ps-sem-container-modal-lg);
+  --ps-cmp-modal-z-index:               var(--ps-sem-z-modal);
+  --ps-cmp-modal-scrim-z-index:         var(--ps-sem-z-overlay);
+
+  /* —— Table —— */
+  --ps-cmp-table-row-bg:                var(--ps-sem-bg-surface);
+  --ps-cmp-table-row-bg-hover:          var(--ps-sem-bg-subtle);
+  --ps-cmp-table-row-bg-selected:       var(--ps-sem-bg-brand-tint);
+  --ps-cmp-table-row-border:            var(--ps-sem-border-default);
+  --ps-cmp-table-header-bg:             var(--ps-sem-bg-canvas);
+  --ps-cmp-table-header-fg:             var(--ps-sem-fg-tertiary);
+
+  /* —— Link —— */
+  --ps-cmp-link-fg-default:             var(--ps-sem-fg-link);
+  --ps-cmp-link-fg-hover:               var(--ps-sem-fg-link-hover);
+
+  /* —— Alert (inline) —— matches preview/alerts.html .alert
+        40 px min-height · 5 px radius · 12 18 pad · 14/18 type —— */
+  --ps-cmp-alert-min-height:            40px;
+  --ps-cmp-alert-padding-y:             var(--ps-prim-space-3);   /* 12 */
+  --ps-cmp-alert-padding-x:             18px;
+  --ps-cmp-alert-radius:                5px;
+  --ps-cmp-alert-gap:                   18px;
+  --ps-cmp-alert-text-size:             var(--ps-sem-text-body);   /* 14 */
+  --ps-cmp-alert-line-height:           18px;
+  --ps-cmp-alert-success-bg:            var(--ps-prim-green-150);
+  --ps-cmp-alert-success-fg:            var(--ps-prim-green-700);
+  --ps-cmp-alert-danger-bg:             var(--ps-prim-red-150);
+  --ps-cmp-alert-danger-fg:             var(--ps-prim-red-700);
+  --ps-cmp-alert-info-bg:               var(--ps-prim-blue-50);
+  --ps-cmp-alert-info-fg:               var(--ps-sem-fg-brand);
+  --ps-cmp-alert-warning-bg:            var(--ps-prim-orange-50);
+  --ps-cmp-alert-warning-fg:            var(--ps-prim-amber-700);
+  --ps-cmp-alert-close-opacity:         0.6;
+  --ps-cmp-alert-close-opacity-hover:   1;
+
+  /* —— Toast (notification) —— preview/alerts.html .toast
+        56 min-height · 8 px radius · soft shadow + inset border —— */
+  --ps-cmp-toast-min-height:            56px;
+  --ps-cmp-toast-padding-y:             var(--ps-prim-space-4);   /* 16 */
+  --ps-cmp-toast-padding-x:             18px;
+  --ps-cmp-toast-radius:                var(--ps-sem-radius-modal);
+  --ps-cmp-toast-gap:                   18px;
+  --ps-cmp-toast-shadow:                0 4px 12px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.05);
+  --ps-cmp-toast-text-size:             var(--ps-sem-text-body);
+  --ps-cmp-toast-success-bg:            var(--ps-cmp-alert-success-bg);
+  --ps-cmp-toast-success-fg:            var(--ps-cmp-alert-success-fg);
+  --ps-cmp-toast-danger-bg:             var(--ps-cmp-alert-danger-bg);
+  --ps-cmp-toast-danger-fg:             var(--ps-cmp-alert-danger-fg);
+  --ps-cmp-toast-info-bg:               var(--ps-cmp-alert-info-bg);
+  --ps-cmp-toast-info-fg:               var(--ps-cmp-alert-info-fg);
+
+  /* —— Tabs · Underline (default) —— preview/tabs.html .tab-ul
+        38 px tall · "folder tab" with PS Blue 3 px strip on TOP +
+        1 px gray side borders on active. Both labels bold.  —— */
+  --ps-cmp-tab-ul-height:               38px;
+  --ps-cmp-tab-ul-padding-x:            var(--ps-prim-space-5);   /* 20 */
+  --ps-cmp-tab-ul-gap:                  var(--ps-prim-space-2);
+  --ps-cmp-tab-ul-text:                 var(--ps-sem-text-body-lg);
+  --ps-cmp-tab-ul-line-height:          38px;
+  --ps-cmp-tab-ul-weight:               var(--ps-sem-weight-strong);    /* both states bold */
+  --ps-cmp-tab-ul-bg:                   var(--ps-sem-bg-surface);
+  --ps-cmp-tab-ul-fg-default:           var(--ps-prim-gray-900);
+  --ps-cmp-tab-ul-fg-hover:             var(--ps-sem-action-default);
+  --ps-cmp-tab-ul-fg-active:            var(--ps-prim-gray-900);
+  --ps-cmp-tab-ul-fg-disabled:          var(--ps-prim-gray-400);
+  --ps-cmp-tab-ul-rail-color:           #E0E0E0;
+  --ps-cmp-tab-ul-active-border:        #E0E0E0;                        /* side borders on active */
+  --ps-cmp-tab-ul-indicator-color:      var(--ps-sem-action-default);
+  --ps-cmp-tab-ul-indicator-height:     3px;
+  --ps-cmp-tab-ul-indicator-position:   top;                            /* top, not bottom */
+
+  /* —— Tabs · Segmented —— preview/tabs.html .tabs-seg
+        34 px tall · subtle grey track, white pill for active —— */
+  --ps-cmp-tab-seg-track-bg:            #F4F6F8;
+  --ps-cmp-tab-seg-track-radius:        5px;
+  --ps-cmp-tab-seg-track-padding:       3px;
+  --ps-cmp-tab-seg-height:              34px;
+  --ps-cmp-tab-seg-padding-x:           14px;
+  --ps-cmp-tab-seg-radius:              3px;
+  --ps-cmp-tab-seg-text:                var(--ps-sem-text-body);
+  --ps-cmp-tab-seg-weight:              var(--ps-sem-weight-emphasis);
+  --ps-cmp-tab-seg-fg-default:          var(--ps-sem-fg-secondary);
+  --ps-cmp-tab-seg-fg-hover:            var(--ps-sem-fg-primary);
+  --ps-cmp-tab-seg-fg-active:           var(--ps-sem-fg-inverse);
+  --ps-cmp-tab-seg-bg-active:           var(--ps-sem-action-default);
+  --ps-cmp-tab-seg-shadow-active:       0 1px 2px rgba(0,0,0,.08);
+
+  /* —— Tabs · Pill —— preview/tabs.html .tab-pill —— */
+  --ps-cmp-tab-pill-height:             30px;
+  --ps-cmp-tab-pill-padding-x:          14px;
+  --ps-cmp-tab-pill-radius:             var(--ps-prim-radius-full);
+  --ps-cmp-tab-pill-bg-default:         var(--ps-sem-bg-surface);
+  --ps-cmp-tab-pill-bg-active:          var(--ps-sem-action-default);
+  --ps-cmp-tab-pill-border-default:     var(--ps-prim-gray-400);
+  --ps-cmp-tab-pill-border-hover:       var(--ps-sem-action-default);
+  --ps-cmp-tab-pill-fg-default:         var(--ps-sem-fg-primary);
+  --ps-cmp-tab-pill-fg-hover:           var(--ps-sem-action-default);
+  --ps-cmp-tab-pill-fg-active:          var(--ps-sem-fg-inverse);
+  --ps-cmp-tab-pill-count-bg-active:    rgba(255, 255, 255, 0.25);  /* spec: semi-transparent white */
+  --ps-cmp-tab-pill-count-fg-active:    var(--ps-sem-fg-inverse);
+
+  /* —— Tab count badge —— */
+  --ps-cmp-tab-count-bg-default:        var(--ps-prim-gray-300);
+  --ps-cmp-tab-count-bg-active:         var(--ps-prim-gray-300);   /* same as default per spec */
+  --ps-cmp-tab-count-fg-default:        var(--ps-prim-gray-900);
+  --ps-cmp-tab-count-fg-active:         var(--ps-prim-gray-900);
+  --ps-cmp-tab-count-radius:            var(--ps-prim-radius-full);
+  --ps-cmp-tab-count-height:            18px;
+
+  /* —— Checkbox —— preview/selections.html
+        24 × 24, 2 px radius, ORANGE accent (not blue), 1.5 px border —— */
+  --ps-cmp-checkbox-size:               24px;
+  --ps-cmp-checkbox-radius:             var(--ps-prim-radius-2);
+  --ps-cmp-checkbox-border-width:       1.5px;
+  --ps-cmp-checkbox-bg-default:         var(--ps-sem-bg-surface);
+  --ps-cmp-checkbox-bg-selected:        var(--ps-prim-orange-400);
+  --ps-cmp-checkbox-bg-hover:           var(--ps-prim-orange-500);
+  --ps-cmp-checkbox-bg-pressed:         var(--ps-prim-orange-600);
+  --ps-cmp-checkbox-bg-disabled:        var(--ps-prim-gray-400);
+  --ps-cmp-checkbox-border-default:     var(--ps-prim-gray-700);
+  --ps-cmp-checkbox-border-hover:       var(--ps-prim-orange-500);
+  --ps-cmp-checkbox-border-pressed:     var(--ps-prim-orange-600);
+  --ps-cmp-checkbox-border-disabled:    var(--ps-prim-gray-400);
+  --ps-cmp-checkbox-check-fg:           var(--ps-sem-fg-inverse);
+  --ps-cmp-checkbox-focus-ring:         0 0 10px 5px rgba(0,91,166,0.5);
+  --ps-cmp-checkbox-pressed-ring:       0 0 0 4px var(--ps-prim-orange-100);
+  --ps-cmp-checkbox-label-fg:           var(--ps-prim-gray-900);
+  --ps-cmp-checkbox-label-fg-disabled:  var(--ps-prim-gray-500);
+
+  /* —— Radio —— preview/selections.html .rb
+        24 × 24 circle · orange dot when selected · darker orange ring —— */
+  --ps-cmp-radio-size:                  24px;
+  --ps-cmp-radio-border-width:          1.5px;
+  --ps-cmp-radio-bg:                    var(--ps-sem-bg-surface);
+  --ps-cmp-radio-border-default:        var(--ps-prim-gray-700);
+  --ps-cmp-radio-border-hover:          var(--ps-prim-orange-500);
+  --ps-cmp-radio-border-selected:       var(--ps-prim-orange-600);  /* dark orange ring */
+  --ps-cmp-radio-border-disabled:       var(--ps-prim-gray-400);
+  --ps-cmp-radio-dot-color:             var(--ps-prim-orange-400);  /* bright orange fill */
+  --ps-cmp-radio-dot-size:              10px;
+  --ps-cmp-radio-focus-ring:            0 0 10px 5px rgba(0,91,166,0.5);
+  --ps-cmp-radio-label-fg:              var(--ps-prim-gray-900);
+  --ps-cmp-radio-label-fg-disabled:     var(--ps-prim-gray-500);
+
+  /* —— Top Navigation —— preview/top-navigation.html
+        Three rows: util (28) · main (60) · hero (52) —— */
+  --ps-cmp-topnav-bg:                   var(--ps-sem-bg-surface);
+  --ps-cmp-topnav-border:               var(--ps-prim-gray-200);
+  --ps-cmp-topnav-util-height:          28px;
+  --ps-cmp-topnav-util-fg:              var(--ps-prim-gray-900);
+  --ps-cmp-topnav-util-link-hover:      var(--ps-sem-action-default);
+  --ps-cmp-topnav-util-phone:           var(--ps-sem-info-solid);   /* #009CF4 cyan */
+  --ps-cmp-topnav-main-height:          60px;
+  --ps-cmp-topnav-main-padding-x:       var(--ps-prim-space-10);    /* 40 */
+  --ps-cmp-topnav-search-height:        32px;
+  --ps-cmp-topnav-search-radius:        5px;
+  --ps-cmp-topnav-search-border:        var(--ps-prim-gray-400);
+  --ps-cmp-topnav-search-border-hover:  var(--ps-prim-gray-500);
+  --ps-cmp-topnav-search-border-focus:  var(--ps-sem-action-default);
+  --ps-cmp-topnav-search-btn-bg:        var(--ps-prim-orange-400);
+  --ps-cmp-topnav-search-btn-bg-hover:  var(--ps-prim-orange-500);
+  --ps-cmp-topnav-cart-fg:              var(--ps-sem-action-default);
+  --ps-cmp-topnav-cart-fg-hover:        var(--ps-sem-action-hover);
+  --ps-cmp-topnav-cart-badge-bg:        var(--ps-sem-action-default);
+  --ps-cmp-topnav-cart-badge-fg:        var(--ps-sem-fg-inverse);
+  --ps-cmp-topnav-hero-height:          52px;
+  --ps-cmp-topnav-hero-bg:              var(--ps-prim-blue-700);    /* #003763 */
+  --ps-cmp-topnav-hero-fg:              var(--ps-sem-fg-inverse);
+  --ps-cmp-topnav-max-width:            var(--ps-sem-container-shell);   /* 1440 */
+  --ps-cmp-topnav-z-index:              var(--ps-sem-z-sticky);
+
+  /* —— Left-Hand Navigation —— preview/left-hand-navigation.html
+        199 px expanded · 70 px collapsed · midnight rail —— */
+  --ps-cmp-lhn-width-expanded:          199px;
+  --ps-cmp-lhn-width-collapsed:         70px;
+  --ps-cmp-lhn-bg:                      var(--ps-prim-blue-700);    /* #003763 */
+  --ps-cmp-lhn-fg:                      var(--ps-sem-fg-inverse);
+  --ps-cmp-lhn-header-bg:               var(--ps-sem-action-hover); /* #004A84 */
+  --ps-cmp-lhn-header-height:           60px;
+  --ps-cmp-lhn-header-shadow:           0 4px 4px rgba(0,0,0,0.25);
+  --ps-cmp-lhn-item-text:               var(--ps-sem-text-body);
+  --ps-cmp-lhn-item-padding-x:          11px;
+  --ps-cmp-lhn-item-gap:                var(--ps-prim-space-3);
+  --ps-cmp-lhn-item-radius:             var(--ps-sem-radius-control);
+  --ps-cmp-lhn-item-bg-hover:           var(--ps-sem-action-default);
+  --ps-cmp-lhn-item-bg-active:          var(--ps-sem-action-default);
+  --ps-cmp-lhn-item-icon-size:          18px;
+  --ps-cmp-lhn-divider-color:           var(--ps-sem-action-default);
+  --ps-cmp-lhn-collapse-btn-bg:         var(--ps-sem-action-default);
+  --ps-cmp-lhn-collapse-btn-bg-hover:   var(--ps-sem-action-hover);
+  --ps-cmp-lhn-collapse-btn-size:       30px;
+
+  /* —— Filter Shell + Chip + Pill button —— preview/filter.html —— */
+  --ps-cmp-filter-shell-bg:             var(--ps-sem-bg-canvas);
+  --ps-cmp-filter-shell-border:         var(--ps-sem-border-default);
+  --ps-cmp-filter-shell-radius:         var(--ps-sem-radius-modal);
+  --ps-cmp-filter-shell-padding-y:      14px;
+  --ps-cmp-filter-shell-padding-x:      10px;
+  --ps-cmp-filter-bar-height:           40px;
+  --ps-cmp-filter-bar-bg:               var(--ps-sem-bg-surface);
+  --ps-cmp-filter-bar-border:           var(--ps-prim-gray-400);
+  --ps-cmp-filter-bar-border-active:    var(--ps-sem-action-default);
+  --ps-cmp-filter-bar-fg:               var(--ps-sem-fg-secondary);
+  --ps-cmp-filter-bar-radius:           5px;
+  --ps-cmp-filter-chip-bg:              var(--ps-prim-blue-100);     /* #D0EDFC */
+  --ps-cmp-filter-chip-fg:              var(--ps-sem-fg-primary);
+  --ps-cmp-filter-chip-height:          23px;
+  --ps-cmp-filter-chip-padding-x:       11px;
+  --ps-cmp-filter-chip-radius:          var(--ps-prim-radius-full);
+  --ps-cmp-filter-chip-gap:             var(--ps-prim-space-1);
+  --ps-cmp-filter-chip-x-fg:            var(--ps-sem-fg-secondary);
+  --ps-cmp-filter-chip-x-fg-hover:      var(--ps-sem-action-default);
+  --ps-cmp-filter-pill-btn-height:      36px;
+  --ps-cmp-filter-pill-btn-padding-x:   18px;
+  --ps-cmp-filter-pill-btn-bg-default:  var(--ps-sem-bg-surface);
+  --ps-cmp-filter-pill-btn-bg-hover:    var(--ps-sem-action-default);
+  --ps-cmp-filter-pill-btn-fg-default:  var(--ps-sem-fg-primary);
+  --ps-cmp-filter-pill-btn-fg-hover:    var(--ps-sem-fg-inverse);
+  --ps-cmp-filter-pill-btn-border:      var(--ps-sem-border-default);
+
+  /* —— Stepper —— for multi-step flows
+        Filled circles for done · open circles for next steps —— */
+  --ps-cmp-stepper-dot-size:            24px;
+  --ps-cmp-stepper-dot-border-width:    2px;
+  --ps-cmp-stepper-dot-bg-completed:    var(--ps-sem-action-default);
+  --ps-cmp-stepper-dot-fg-completed:    var(--ps-sem-fg-inverse);
+  --ps-cmp-stepper-dot-bg-current:      var(--ps-sem-bg-surface);
+  --ps-cmp-stepper-dot-border-current:  var(--ps-sem-action-default);
+  --ps-cmp-stepper-dot-fg-current:      var(--ps-sem-action-default);
+  --ps-cmp-stepper-dot-bg-pending:      var(--ps-sem-bg-surface);
+  --ps-cmp-stepper-dot-border-pending:  var(--ps-sem-border-strong);
+  --ps-cmp-stepper-dot-fg-pending:      var(--ps-sem-fg-tertiary);
+  --ps-cmp-stepper-line-color-done:     var(--ps-sem-action-default);
+  --ps-cmp-stepper-line-color-pending:  var(--ps-sem-border-default);
+  --ps-cmp-stepper-line-thickness:      2px;
+  --ps-cmp-stepper-label-text:          var(--ps-sem-text-caption);
+  --ps-cmp-stepper-label-fg-active:     var(--ps-sem-fg-primary);
+  --ps-cmp-stepper-label-fg-pending:    var(--ps-sem-fg-tertiary);
+
+  /* —— Tooltip —— Material-style dark grey hover label —— */
+  --ps-cmp-tooltip-bg:                  var(--ps-prim-gray-700);   /* #4A4A4A */
+  --ps-cmp-tooltip-fg:                  var(--ps-sem-fg-inverse);
+  --ps-cmp-tooltip-padding-x:           var(--ps-prim-space-2);
+  --ps-cmp-tooltip-padding-y:           var(--ps-prim-space-1);
+  --ps-cmp-tooltip-radius:              var(--ps-sem-radius-control);
+  --ps-cmp-tooltip-text:                var(--ps-sem-text-caption);
+  --ps-cmp-tooltip-weight:              var(--ps-sem-weight-emphasis);
+  --ps-cmp-tooltip-shadow:              var(--ps-sem-elevation-overlay);
+  --ps-cmp-tooltip-arrow-size:          6px;
+  --ps-cmp-tooltip-z-index:             var(--ps-sem-z-tooltip);
+
+  /* —— Dropdown menu —— popover list (select, context menu, profile menu) —— */
+  --ps-cmp-dropdown-bg:                 var(--ps-sem-bg-surface);
+  --ps-cmp-dropdown-fg:                 var(--ps-sem-fg-primary);
+  --ps-cmp-dropdown-border:             var(--ps-sem-border-subtle);
+  --ps-cmp-dropdown-radius:             var(--ps-sem-radius-control);
+  --ps-cmp-dropdown-shadow:             var(--ps-sem-elevation-overlay);
+  --ps-cmp-dropdown-padding-y:          var(--ps-prim-space-2);
+  --ps-cmp-dropdown-min-width:          180px;
+  --ps-cmp-dropdown-max-height:         520px;
+  --ps-cmp-dropdown-z-index:            var(--ps-sem-z-dropdown);
+  --ps-cmp-dropdown-item-padding-y:     var(--ps-prim-space-2);
+  --ps-cmp-dropdown-item-padding-x:     var(--ps-prim-space-4);
+  --ps-cmp-dropdown-item-text:          var(--ps-sem-text-body);
+  --ps-cmp-dropdown-item-fg:            var(--ps-sem-fg-primary);
+  --ps-cmp-dropdown-item-fg-disabled:   var(--ps-sem-fg-disabled);
+  --ps-cmp-dropdown-item-bg-hover:      var(--ps-sem-bg-subtle);
+  --ps-cmp-dropdown-item-bg-selected:   var(--ps-prim-blue-100);     /* #D0EDFC */
+  --ps-cmp-dropdown-item-fg-selected:   var(--ps-sem-fg-primary);
+  --ps-cmp-dropdown-divider-color:      var(--ps-sem-border-subtle);
+  --ps-cmp-dropdown-divider-margin-y:   var(--ps-prim-space-1);
+
+  /* —— Pagination —— */
+  --ps-cmp-pagination-gap:              var(--ps-prim-space-1);
+  --ps-cmp-pagination-item-size:        32px;
+  --ps-cmp-pagination-item-radius:      var(--ps-sem-radius-control);
+  --ps-cmp-pagination-item-text:        var(--ps-sem-text-body);
+  --ps-cmp-pagination-item-weight:      var(--ps-sem-weight-emphasis);
+  --ps-cmp-pagination-item-bg-default:  transparent;
+  --ps-cmp-pagination-item-bg-hover:    var(--ps-sem-bg-subtle);
+  --ps-cmp-pagination-item-bg-current:  var(--ps-sem-action-default);
+  --ps-cmp-pagination-item-fg-default:  var(--ps-sem-fg-primary);
+  --ps-cmp-pagination-item-fg-hover:    var(--ps-sem-action-default);
+  --ps-cmp-pagination-item-fg-current:  var(--ps-sem-fg-inverse);
+  --ps-cmp-pagination-item-fg-disabled: var(--ps-sem-fg-disabled);
+  --ps-cmp-pagination-border:           transparent;
+  --ps-cmp-pagination-ellipsis-fg:      var(--ps-sem-fg-tertiary);
+
+  /* —— Avatar —— circular initials / image —— */
+  --ps-cmp-avatar-size-xs:              24px;
+  --ps-cmp-avatar-size-sm:              32px;
+  --ps-cmp-avatar-size-md:              40px;
+  --ps-cmp-avatar-size-lg:              56px;
+  --ps-cmp-avatar-size-xl:              72px;
+  --ps-cmp-avatar-radius:               var(--ps-prim-radius-full);
+  --ps-cmp-avatar-bg:                   var(--ps-prim-blue-100);     /* tinted background */
+  --ps-cmp-avatar-fg:                   var(--ps-sem-fg-brand);
+  --ps-cmp-avatar-weight:               var(--ps-sem-weight-strong);
+  --ps-cmp-avatar-border:               var(--ps-sem-bg-surface);    /* white ring on stacks */
+  --ps-cmp-avatar-border-width:         2px;
+  --ps-cmp-avatar-status-dot-size:      10px;
+  --ps-cmp-avatar-status-ring:          var(--ps-sem-bg-surface);
+
+  /* —— Breadcrumb —— */
+  --ps-cmp-breadcrumb-gap:              var(--ps-prim-space-3);
+  --ps-cmp-breadcrumb-text:             var(--ps-sem-text-body);
+  --ps-cmp-breadcrumb-fg-default:       var(--ps-sem-fg-tertiary);
+  --ps-cmp-breadcrumb-fg-current:       var(--ps-sem-fg-primary);
+  --ps-cmp-breadcrumb-fg-link:          var(--ps-sem-fg-brand);
+  --ps-cmp-breadcrumb-fg-link-hover:    var(--ps-sem-action-hover);
+  --ps-cmp-breadcrumb-separator-color:  var(--ps-sem-border-strong);
+  --ps-cmp-breadcrumb-back-bg-hover:    var(--ps-sem-bg-brand-tint);
+  --ps-cmp-breadcrumb-back-padding-x:   var(--ps-prim-space-3);
+  --ps-cmp-breadcrumb-back-padding-y:   var(--ps-prim-space-2);
+  --ps-cmp-breadcrumb-back-radius:      var(--ps-sem-radius-control);
+
+  /* —— Switch / Toggle —— iOS-style track + thumb —— */
+  --ps-cmp-switch-track-width:          44px;
+  --ps-cmp-switch-track-height:         24px;
+  --ps-cmp-switch-track-radius:         var(--ps-prim-radius-full);
+  --ps-cmp-switch-track-bg-off:         var(--ps-prim-gray-400);
+  --ps-cmp-switch-track-bg-on:          var(--ps-sem-action-default);
+  --ps-cmp-switch-track-bg-disabled:    var(--ps-prim-gray-300);
+  --ps-cmp-switch-thumb-size:           20px;
+  --ps-cmp-switch-thumb-bg:             var(--ps-sem-bg-surface);
+  --ps-cmp-switch-thumb-shadow:         0 1px 3px rgba(0, 0, 0, 0.2);
+  --ps-cmp-switch-thumb-offset:         2px;
+  --ps-cmp-switch-thumb-translate:      20px;        /* track − thumb − 2·offset */
+  --ps-cmp-switch-motion:               background 150ms ease, transform 150ms ease;
+  --ps-cmp-switch-focus-ring:           var(--ps-sem-focus-ring);
+  --ps-cmp-switch-label-gap:            var(--ps-prim-space-3);
+
+  /* —— Skeleton loader —— shimmer placeholder —— */
+  --ps-cmp-skeleton-bg:                 var(--ps-prim-gray-150);
+  --ps-cmp-skeleton-shimmer:            var(--ps-prim-gray-100);
+  --ps-cmp-skeleton-shimmer-highlight:  var(--ps-prim-gray-50);
+  --ps-cmp-skeleton-radius:             var(--ps-sem-radius-control);
+  --ps-cmp-skeleton-shimmer-duration:   2s;
+  --ps-cmp-skeleton-height-text:        12px;
+  --ps-cmp-skeleton-height-heading:     20px;
+  --ps-cmp-skeleton-height-button:      40px;
+
+  /* —— Spinner —— circular progress indicator —— */
+  --ps-cmp-spinner-size-sm:             16px;
+  --ps-cmp-spinner-size-md:             24px;
+  --ps-cmp-spinner-size-lg:             40px;
+  --ps-cmp-spinner-stroke-width:        2.5px;
+  --ps-cmp-spinner-track-color:         var(--ps-prim-gray-200);
+  --ps-cmp-spinner-accent-color:        var(--ps-sem-action-default);
+  --ps-cmp-spinner-duration:            900ms;
+  --ps-cmp-spinner-on-dark-track:       rgba(255, 255, 255, 0.2);
+  --ps-cmp-spinner-on-dark-accent:      var(--ps-sem-fg-inverse);
+
+  /* —— Progress bar —— linear determinate progress —— */
+  --ps-cmp-progress-height:             6px;
+  --ps-cmp-progress-radius:             var(--ps-prim-radius-full);
+  --ps-cmp-progress-track-bg:           var(--ps-prim-gray-200);
+  --ps-cmp-progress-fill-bg:            var(--ps-sem-action-default);
+  --ps-cmp-progress-fill-success:       var(--ps-sem-success-solid);
+  --ps-cmp-progress-fill-warning:       var(--ps-sem-warning-solid);
+  --ps-cmp-progress-fill-danger:        var(--ps-sem-danger-solid);
+  --ps-cmp-progress-motion:             width 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ps-cmp-progress-label-text:         var(--ps-sem-text-caption);
+  --ps-cmp-progress-label-fg:           var(--ps-sem-fg-secondary);
+
+  /* —— Empty state —— illustration + headline + body + CTA —— */
+  --ps-cmp-empty-padding-y:             var(--ps-prim-space-12);
+  --ps-cmp-empty-padding-x:             var(--ps-prim-space-8);
+  --ps-cmp-empty-gap:                   var(--ps-prim-space-4);
+  --ps-cmp-empty-icon-size:             var(--ps-sem-icon-2xl);
+  --ps-cmp-empty-icon-color:            var(--ps-sem-fg-tertiary);
+  --ps-cmp-empty-title-size:            var(--ps-sem-text-heading);
+  --ps-cmp-empty-title-weight:          var(--ps-sem-weight-emphasis);
+  --ps-cmp-empty-title-fg:              var(--ps-sem-fg-primary);
+  --ps-cmp-empty-body-size:             var(--ps-sem-text-body);
+  --ps-cmp-empty-body-fg:               var(--ps-sem-fg-secondary);
+  --ps-cmp-empty-body-max-width:        var(--ps-sem-container-narrow);
+
+  /* —— Tooltip —— preview/tooltip.html .tt / .tt-rich
+        Soft dark-grey bubble with 12 px radius, white type, optional rich
+        variant with icon + title + CTA. */
+  --ps-cmp-tooltip-bg:                  var(--ps-prim-gray-700);
+  --ps-cmp-tooltip-fg:                  var(--ps-prim-gray-0);
+  --ps-cmp-tooltip-fg-muted:            rgba(255,255,255,.92);
+  --ps-cmp-tooltip-radius:              12px;
+  --ps-cmp-tooltip-padding-y:           var(--ps-prim-space-2);
+  --ps-cmp-tooltip-padding-x:           var(--ps-prim-space-4);
+  --ps-cmp-tooltip-max-width:           320px;
+  --ps-cmp-tooltip-caret-size:          7px;
+  --ps-cmp-tooltip-offset:              10px;
+  --ps-cmp-tooltip-shadow:              0 4px 14px rgba(0,0,0,.18);
+  --ps-cmp-tooltip-rich-radius:         10px;
+  --ps-cmp-tooltip-rich-shadow:         0 6px 20px rgba(0,0,0,.22);
+  --ps-cmp-tooltip-rich-max-width:      380px;
+  --ps-cmp-tooltip-rich-icon-size:      24px;
+  --ps-cmp-tooltip-rich-cta-color:      var(--ps-prim-gray-0);
+  --ps-cmp-tooltip-rich-cta-hover:      var(--ps-prim-blue-300);
+  --ps-cmp-tooltip-fade-duration:       120ms;
+
+  /* —— Accordion —— preview/accordion.html .acc
+        2 px Grey-6 border, 5 px radius, header turns PS Blue on open. */
+  --ps-cmp-accordion-bg:                var(--ps-sem-bg-surface);
+  --ps-cmp-accordion-border:            2px solid var(--ps-prim-gray-150);
+  --ps-cmp-accordion-border-open:       2px solid var(--ps-sem-fg-brand);
+  --ps-cmp-accordion-radius:            5px;
+  --ps-cmp-accordion-header-padding-y:  18px;
+  --ps-cmp-accordion-header-padding-x:  var(--ps-prim-space-6);
+  --ps-cmp-accordion-header-min-height: 60px;
+  --ps-cmp-accordion-header-hover-bg:   var(--ps-prim-gray-50);
+  --ps-cmp-accordion-title-size:        18px;
+  --ps-cmp-accordion-title-weight:      var(--ps-prim-weight-semibold);
+  --ps-cmp-accordion-title-fg:          var(--ps-prim-blue-800);
+  --ps-cmp-accordion-sub-size:          var(--ps-prim-size-14);
+  --ps-cmp-accordion-sub-fg:            var(--ps-prim-gray-600);
+  --ps-cmp-accordion-count-bg:          var(--ps-prim-blue-50);
+  --ps-cmp-accordion-count-fg:          var(--ps-sem-fg-brand);
+  --ps-cmp-accordion-count-border:      1px solid #B0D7F4;
+  --ps-cmp-accordion-chevron-size:      14px;
+  --ps-cmp-accordion-chevron-color:     var(--ps-sem-fg-brand);
+  --ps-cmp-accordion-divider:           1px solid var(--ps-prim-gray-150);
+  --ps-cmp-accordion-body-padding:      20px var(--ps-prim-space-6) var(--ps-prim-space-6);
+  --ps-cmp-accordion-motion-duration:   240ms;
+  --ps-cmp-accordion-chevron-duration:  200ms;
+  --ps-cmp-accordion-focus-ring:        2px solid var(--ps-sem-fg-brand);
+
+  /* —— Analytics Card —— preview/cards.html .ac
+        KPI tiles. Wide variant centers metric with divider; square
+        left-aligns. Highlighted = blue tint + Blue-4 border. */
+  --ps-cmp-analytics-card-bg:           var(--ps-sem-bg-surface);
+  --ps-cmp-analytics-card-border:       1px solid var(--ps-prim-gray-200);
+  --ps-cmp-analytics-card-radius:       10px;
+  --ps-cmp-analytics-card-padding:      20px var(--ps-prim-space-6) 22px;
+  --ps-cmp-analytics-card-shadow:       0 1px 2px rgba(0, 47, 72, 0.04);
+  --ps-cmp-analytics-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --ps-cmp-analytics-card-title-size:   var(--ps-prim-size-16);
+  --ps-cmp-analytics-card-title-fg:     var(--ps-prim-blue-800);
+  --ps-cmp-analytics-card-value-size:   40px;
+  --ps-cmp-analytics-card-value-weight: var(--ps-prim-weight-light);
+  --ps-cmp-analytics-card-value-fg:     var(--ps-prim-gray-800);
+  --ps-cmp-analytics-card-label-fg:     var(--ps-prim-gray-700);
+  --ps-cmp-analytics-card-sub-fg:       var(--ps-prim-gray-700);
+  --ps-cmp-analytics-card-divider:      1px solid var(--ps-prim-gray-200);
+  --ps-cmp-analytics-card-highlight-bg: var(--ps-prim-blue-50);
+  --ps-cmp-analytics-card-highlight-border: 1px solid var(--ps-prim-blue-400);
+  --ps-cmp-analytics-card-delta-bg-up:  var(--ps-prim-green-150);
+  --ps-cmp-analytics-card-delta-fg-up:  var(--ps-prim-green-700);
+  --ps-cmp-analytics-card-delta-bg-down: var(--ps-prim-red-150);
+  --ps-cmp-analytics-card-delta-fg-down: var(--ps-prim-red-700);
+
+  /* —— List Card —— preview/cards.html .lc
+        294 px wide. Four variants: product / list / create / standing. */
+  --ps-cmp-list-card-width:             294px;
+  --ps-cmp-list-card-bg:                var(--ps-sem-bg-surface);
+  --ps-cmp-list-card-border:            1px solid var(--ps-prim-gray-200);
+  --ps-cmp-list-card-radius:            6px;
+  --ps-cmp-list-card-shadow:            0 0 4px rgba(0, 0, 0, 0.10);
+  --ps-cmp-list-card-padding:           20px;
+  --ps-cmp-list-card-gap:               var(--ps-prim-space-2);
+  --ps-cmp-list-card-title-size:        22px;
+  --ps-cmp-list-card-title-weight:      var(--ps-prim-weight-light);
+  --ps-cmp-list-card-title-fg:          var(--ps-prim-gray-900);
+  --ps-cmp-list-card-title-blue-fg:     var(--ps-sem-fg-brand);
+  --ps-cmp-list-card-foot-bg:           transparent;
+  --ps-cmp-list-card-foot-divider:      1px solid var(--ps-prim-gray-300);
+  --ps-cmp-list-card-status-bg:         var(--ps-prim-blue-50);
+  --ps-cmp-list-card-status-fg:         var(--ps-sem-fg-brand);
+  --ps-cmp-list-card-create-bg:         var(--ps-prim-green-100);
+  --ps-cmp-list-card-create-fg:         var(--ps-prim-green-600);
+
+  /* —— Date Picker —— preview/date-picker.html .dp
+        Range picker with orange calendar trigger button. */
+  --ps-cmp-date-picker-field-width:        230px;
+  --ps-cmp-date-picker-field-height:       48px;
+  --ps-cmp-date-picker-field-bg:           var(--ps-sem-bg-surface);
+  --ps-cmp-date-picker-field-border:       1px solid var(--ps-prim-gray-500);
+  --ps-cmp-date-picker-field-border-hover: 1px solid var(--ps-prim-gray-900);
+  --ps-cmp-date-picker-field-border-focus: 1px solid var(--ps-sem-fg-brand);
+  --ps-cmp-date-picker-field-shadow-focus: 0 0 10px 0 rgba(0, 91, 166, 0.5);
+  --ps-cmp-date-picker-field-radius:       3px;
+  --ps-cmp-date-picker-field-text-size:    var(--ps-prim-size-16);
+  --ps-cmp-date-picker-field-text-fg:      var(--ps-prim-gray-700);
+  --ps-cmp-date-picker-field-text-filled:  var(--ps-prim-gray-900);
+  --ps-cmp-date-picker-trigger-bg:         var(--ps-prim-orange-400);
+  --ps-cmp-date-picker-trigger-bg-hover:   var(--ps-prim-orange-500);
+  --ps-cmp-date-picker-trigger-bg-disabled: var(--ps-prim-orange-100);
+  --ps-cmp-date-picker-trigger-fg:         var(--ps-prim-gray-0);
+  --ps-cmp-date-picker-trigger-width:      48px;
+  --ps-cmp-date-picker-title-size:         var(--ps-prim-size-20);
+  --ps-cmp-date-picker-title-fg:           var(--ps-prim-gray-900);
+  --ps-cmp-date-picker-field-gap:          30px;
+  --ps-cmp-date-picker-cal-width:          300px;
+  --ps-cmp-date-picker-cal-radius:         6px;
+  --ps-cmp-date-picker-cal-shadow:         0 6px 20px rgba(0, 47, 72, 0.12);
+  --ps-cmp-date-picker-cal-day-size:       36px;
+  --ps-cmp-date-picker-day-selected-bg:    var(--ps-sem-fg-brand);
+  --ps-cmp-date-picker-day-selected-fg:    var(--ps-prim-gray-0);
+  --ps-cmp-date-picker-day-range-bg:       var(--ps-prim-blue-50);
+  --ps-cmp-date-picker-day-range-fg:       var(--ps-sem-fg-brand);
+
+  /* —— Stepper —— preview/stepper.html .stp
+        Numbered/checkmark circles connected by a 2 px track. */
+  --ps-cmp-stepper-circle-size:           32px;
+  --ps-cmp-stepper-circle-border-width:   2px;
+  --ps-cmp-stepper-connector-height:      2px;
+  --ps-cmp-stepper-connector-pending:     var(--ps-prim-gray-300);
+  --ps-cmp-stepper-connector-complete:    var(--ps-sem-fg-brand);
+  --ps-cmp-stepper-pending-bg:            var(--ps-sem-bg-surface);
+  --ps-cmp-stepper-pending-border:        var(--ps-prim-gray-300);
+  --ps-cmp-stepper-pending-fg:            var(--ps-prim-gray-600);
+  --ps-cmp-stepper-current-border:        var(--ps-sem-fg-brand);
+  --ps-cmp-stepper-current-fg:            var(--ps-sem-fg-brand);
+  --ps-cmp-stepper-current-halo:          0 0 0 4px var(--ps-prim-blue-50);
+  --ps-cmp-stepper-complete-bg:           var(--ps-sem-fg-brand);
+  --ps-cmp-stepper-complete-fg:           var(--ps-prim-gray-0);
+  --ps-cmp-stepper-error-bg:              var(--ps-prim-red-150);
+  --ps-cmp-stepper-error-border:          var(--ps-prim-red-700);
+  --ps-cmp-stepper-error-fg:              var(--ps-prim-red-700);
+  --ps-cmp-stepper-disabled-bg:           var(--ps-prim-gray-50);
+  --ps-cmp-stepper-disabled-border:       var(--ps-prim-gray-200);
+  --ps-cmp-stepper-disabled-fg:           var(--ps-prim-gray-400);
+  --ps-cmp-stepper-label-size:            var(--ps-prim-size-14);
+  --ps-cmp-stepper-label-fg:              var(--ps-prim-gray-700);
+  --ps-cmp-stepper-label-active-fg:       var(--ps-prim-blue-800);
+  --ps-cmp-stepper-sub-size:              var(--ps-prim-size-12);
+  --ps-cmp-stepper-sub-fg:                var(--ps-prim-gray-500);
+  --ps-cmp-stepper-transition:            150ms ease;
+
+  /* ===============================================================
+     Z-INDEX SCALE
+     Primitives are raw integers. Semantic tokens describe layer role
+     so a popover never has to guess which integer to pick.
+     =============================================================== */
+  --ps-prim-z-0:        0;
+  --ps-prim-z-10:       10;
+  --ps-prim-z-100:      100;
+  --ps-prim-z-200:      200;
+  --ps-prim-z-1000:     1000;
+  --ps-prim-z-1100:     1100;
+  --ps-prim-z-1200:     1200;
+  --ps-prim-z-1300:     1300;
+  --ps-prim-z-1400:     1400;
+
+  --ps-sem-z-base:      var(--ps-prim-z-0);
+  --ps-sem-z-raised:    var(--ps-prim-z-10);     /* card, lifted element */
+  --ps-sem-z-dropdown:  var(--ps-prim-z-100);
+  --ps-sem-z-sticky:    var(--ps-prim-z-200);    /* top-nav, sticky header */
+  --ps-sem-z-overlay:   var(--ps-prim-z-1000);   /* scrim under modal/sheet */
+  --ps-sem-z-modal:     var(--ps-prim-z-1100);
+  --ps-sem-z-sheet:     var(--ps-prim-z-1100);
+  --ps-sem-z-popover:   var(--ps-prim-z-1200);
+  --ps-sem-z-toast:     var(--ps-prim-z-1300);
+  --ps-sem-z-tooltip:   var(--ps-prim-z-1400);
+
+  /* ===============================================================
+     BREAKPOINTS
+     Width thresholds in pixels. Use in @media (min-width: …) queries
+     or read with `var()` inside JS-friendly contexts.
+     =============================================================== */
+  --ps-prim-bp-0:    0;
+  --ps-prim-bp-600:  600px;
+  --ps-prim-bp-768:  768px;
+  --ps-prim-bp-1024: 1024px;
+  --ps-prim-bp-1280: 1280px;
+  --ps-prim-bp-1440: 1440px;
+
+  --ps-sem-bp-mobile:          var(--ps-prim-bp-0);     /* < 600 */
+  --ps-sem-bp-tablet-portrait: var(--ps-prim-bp-600);   /* 600–767 */
+  --ps-sem-bp-tablet:          var(--ps-prim-bp-768);   /* 768–1023 */
+  --ps-sem-bp-desktop:         var(--ps-prim-bp-1024);  /* 1024+ */
+  --ps-sem-bp-desktop-wide:    var(--ps-prim-bp-1280);  /* marketing max */
+  --ps-sem-bp-desktop-max:     var(--ps-prim-bp-1440);  /* top-nav frame */
+
+  /* ===============================================================
+     ICON SIZES
+     Per design system spec — 6 steps. Stroke weight stays 1.5 px.
+     =============================================================== */
+  --ps-prim-icon-12: 12px;
+  --ps-prim-icon-16: 16px;
+  --ps-prim-icon-20: 20px;
+  --ps-prim-icon-24: 24px;
+  --ps-prim-icon-32: 32px;
+  --ps-prim-icon-48: 48px;
+
+  --ps-sem-icon-xs:  var(--ps-prim-icon-12);   /* inline with body text */
+  --ps-sem-icon-sm:  var(--ps-prim-icon-16);   /* compact UI controls */
+  --ps-sem-icon-md:  var(--ps-prim-icon-20);   /* default */
+  --ps-sem-icon-lg:  var(--ps-prim-icon-24);   /* alerts, headers */
+  --ps-sem-icon-xl:  var(--ps-prim-icon-32);
+  --ps-sem-icon-2xl: var(--ps-prim-icon-48);   /* empty-state, splash */
+  --ps-sem-icon-stroke: 1.5px;
+
+  /* ===============================================================
+     CONTAINER / MAX-WIDTH
+     Layout widths and overlay sizings. Reference these instead of
+     hard-coding 1280px in marketing pages or 550px on sheets.
+     =============================================================== */
+  --ps-prim-container-360:  360px;
+  --ps-prim-container-400:  400px;
+  --ps-prim-container-450:  450px;
+  --ps-prim-container-550:  550px;
+  --ps-prim-container-600:  600px;
+  --ps-prim-container-760:  760px;
+  --ps-prim-container-800:  800px;
+  --ps-prim-container-1280: 1280px;
+  --ps-prim-container-1440: 1440px;
+  --ps-prim-container-full: 100%;
+
+  --ps-sem-container-mobile:        var(--ps-prim-container-360);   /* phone viewport floor */
+  --ps-sem-container-narrow:        var(--ps-prim-container-760);   /* article column */
+  --ps-sem-container-marketing:     var(--ps-prim-container-1280);  /* hero / catalog */
+  --ps-sem-container-shell:         var(--ps-prim-container-1440);  /* top-nav max */
+  --ps-sem-container-fluid:         var(--ps-prim-container-full);  /* edge-to-edge on mobile sheet/modal */
+  --ps-sem-container-sheet-mobile:  var(--ps-prim-container-full);  /* < 600 — full-screen */
+  --ps-sem-container-sheet-desktop: var(--ps-prim-container-550);
+  --ps-sem-container-sheet-tablet:  var(--ps-prim-container-450);
+  --ps-sem-container-modal-sm:      var(--ps-prim-container-400);
+  --ps-sem-container-modal-md:      var(--ps-prim-container-600);
+  --ps-sem-container-modal-lg:      var(--ps-prim-container-800);
+
+}
+
+/* ================================================================
+   LEGACY ALIASES
+   The pre-existing flat token names from colors_and_type.css are
+   kept here as aliases so existing pages don't break. New work
+   should use --ps-prim-*, --ps-sem-*, --ps-cmp-*.
+   ================================================================ */
+:root {
+  --ps-brand-primary:   var(--ps-prim-blue-500);
+  --ps-brand-blue-2:    var(--ps-prim-blue-600);
+  --ps-brand-blue-3:    var(--ps-prim-blue-700);
+  --ps-brand-azure:     var(--ps-prim-blue-400);
+  --ps-brand-light-blue:var(--ps-prim-blue-200);
+
+  --ps-fg-primary:   var(--ps-sem-fg-primary);
+  --ps-fg-secondary: var(--ps-sem-fg-secondary);
+  --ps-fg-tertiary:  var(--ps-sem-fg-tertiary);
+  --ps-fg-inverse:   var(--ps-sem-fg-inverse);
+
+  --ps-bg-default: var(--ps-sem-bg-surface);
+  --ps-bg-subtle:  var(--ps-sem-bg-subtle);
+  --ps-bg-canvas:  var(--ps-sem-bg-canvas);
+
+  --ps-border-default: var(--ps-sem-border-default);
+  --ps-border-strong:  var(--ps-sem-border-strong);
+  --ps-border-subtle:  var(--ps-sem-border-subtle);
+
+  --ps-link:       var(--ps-sem-fg-link);
+  --ps-link-hover: var(--ps-sem-fg-link-hover);
+
+  --ps-success:    var(--ps-sem-success-solid);
+  --ps-success-bg: var(--ps-sem-success-bg);
+  --ps-warning:    var(--ps-sem-warning-solid);
+  --ps-warning-bg: var(--ps-sem-warning-bg);
+  --ps-danger:     var(--ps-sem-danger-solid);
+  --ps-danger-bg:  var(--ps-sem-danger-bg);
+  --ps-info:       var(--ps-sem-info-solid);
+  --ps-info-bg:    var(--ps-sem-info-bg);
+
+  --ps-font-sans:    var(--ps-sem-font-body);
+  --ps-font-display: var(--ps-sem-font-display);
+  --ps-font-mono:    var(--ps-sem-font-mono);
+}
+
+/* ================================================================
+   DARK MODE (scaffold · COMING SOON)
+   Activate with `<html data-theme="dark">` or any ancestor element.
+   Only the SEMANTIC layer is remapped — component tokens cascade
+   through automatically. Primitives keep their raw values.
+   Uses the PS neutral gray palette (not blue-tinted) as the dark canvas.
+   ================================================================ */
+[data-theme="dark"] {
+
+  /* Foreground */
+  --ps-sem-fg-primary:    var(--ps-prim-gray-50);
+  --ps-sem-fg-secondary:  var(--ps-prim-gray-300);
+  --ps-sem-fg-tertiary:   var(--ps-prim-gray-500);
+  --ps-sem-fg-disabled:   var(--ps-prim-gray-600);
+  --ps-sem-fg-inverse:    var(--ps-prim-gray-900);
+  --ps-sem-fg-brand:      var(--ps-prim-blue-300);
+  --ps-sem-fg-brand-dark: var(--ps-prim-gray-0);          /* headings → white */
+  --ps-sem-fg-link:       var(--ps-prim-blue-300);
+  --ps-sem-fg-link-hover: var(--ps-prim-blue-100);
+
+  /* Background — PS gray palette, not blue-tinted */
+  --ps-sem-bg-canvas:     var(--ps-prim-gray-900);
+  --ps-sem-bg-surface:    var(--ps-prim-gray-800);
+  --ps-sem-bg-subtle:     var(--ps-prim-gray-700);
+  --ps-sem-bg-muted:      var(--ps-prim-gray-700);
+  --ps-sem-bg-inverse:    var(--ps-prim-gray-50);
+  --ps-sem-bg-brand:      var(--ps-prim-blue-400);
+  --ps-sem-bg-brand-tint: rgba(0, 156, 244, 0.12);
+
+  /* Border — grey on grey */
+  --ps-sem-border-subtle:  var(--ps-prim-gray-800);
+  --ps-sem-border-default: var(--ps-prim-gray-700);
+  --ps-sem-border-strong:  var(--ps-prim-gray-600);
+  --ps-sem-border-brand:   var(--ps-prim-blue-400);
+  --ps-sem-border-focus:   var(--ps-prim-blue-300);
+
+  /* Status — keep solids, dim backgrounds */
+  --ps-sem-success-fg:     var(--ps-prim-green-400);
+  --ps-sem-success-bg:     rgba(23, 171, 120, 0.15);
+  --ps-sem-success-border: rgba(23, 171, 120, 0.30);
+  --ps-sem-warning-fg:     var(--ps-prim-orange-400);
+  --ps-sem-warning-bg:     rgba(255, 149, 5, 0.15);
+  --ps-sem-warning-border: rgba(255, 149, 5, 0.30);
+  --ps-sem-danger-fg:      var(--ps-prim-red-400);
+  --ps-sem-danger-bg:      rgba(209, 67, 67, 0.15);
+  --ps-sem-danger-border:  rgba(209, 67, 67, 0.30);
+  --ps-sem-info-fg:        var(--ps-prim-blue-300);
+  --ps-sem-info-bg:        rgba(0, 156, 244, 0.15);
+  --ps-sem-info-border:    rgba(0, 156, 244, 0.30);
+
+  /* Action — brighter blue so it pops on dark surfaces */
+  --ps-sem-action-default: var(--ps-prim-blue-400);
+  --ps-sem-action-hover:   var(--ps-prim-blue-300);
+  --ps-sem-action-pressed: var(--ps-prim-blue-100);
+
+  /* Focus ring tuned for dark */
+  --ps-sem-focus-ring: 0 0 0 3px var(--ps-prim-blue-400);
+}

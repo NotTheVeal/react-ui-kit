@@ -1,19 +1,53 @@
 name: CI
+
+# Runs on every push to main and every pull request.
+# The build chain (lint → sync → vite → tsc) enforces the design-system
+# guardrails: a raw hex color, a type error, or a broken build fails the
+# check before anything can merge.
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   build:
+    name: Lint, typecheck & build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run build
+          # package-lock.json lives in the repo root (the "UI Kit" folder
+          # becomes the repo root when you `git init` inside it).
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (blocks raw hex + lint errors)
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build library
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      # Uploads the static Storybook so reviewers can download the
+      # component workshop artifact straight from the CI run.
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: storybook-static
+          if-no-files-found: ignore

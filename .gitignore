@@ -1,8 +1,39 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Build output
 dist/
 storybook-static/
-tailwind.css
-.DS_Store
-*.log
-.eslintcache
 *.tsbuildinfo
+
+# Generated CSS (built from tailwind-input.css via `npm run build:css`)
+tailwind.css
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+*.log
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*~
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Misc caches
+.eslintcache
+.cache/
+coverage/

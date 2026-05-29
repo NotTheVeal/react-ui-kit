@@ -2,6 +2,11 @@
 
 The PartsSource Design System, packaged as a React + TypeScript component library. **22 component families** sourced 1-for-1 from the Figma design system and the `preview/*.html` reference pages.
 
+> **Using this in a product app?** Read **[CONSUMING.md](./CONSUMING.md)** — it's
+> the sanctioned, only-supported way to install and stay on-system. To enforce
+> the no-rogue-color rule inside your app too, add
+> **[@partssource/eslint-config](./eslint-config/README.md)**.
+
 ## Install
 
 ```bash
@@ -9,6 +14,17 @@ npm install @partssource/react-kit
 ```
 
 `react` and `react-dom` are peer dependencies — bring your own (>=18).
+
+## Tokens — required at app root
+
+The components reference CSS custom properties (`--ps-prim-*`). Import the token
+stylesheets **once** at your app's entry point, or the components render without
+their brand colors:
+
+```ts
+import '@partssource/react-kit/tokens.css';
+import '@partssource/react-kit/colors.css';
+```
 
 ## Tailwind setup
 

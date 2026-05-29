@@ -1,0 +1,274 @@
+/* ================================================================
+   PartsSource Design System — Colors & Type
+   Source of truth for design tokens
+   Updated: 2026-04-28
+   ================================================================ */
+
+/* --- Fonts --- */
+
+/* Source Sans Pro — Primary brand font */
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Metronic Pro — Corporate/display font (used sparingly) */
+@font-face {
+  font-family: 'Metronic Pro';
+  src: url('fonts/MetronicproReg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Metronic Pro';
+  src: url('fonts/MetronicproSemiBo.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Metronic Pro';
+  src: url('fonts/MetronicproBold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Source Code — Monospace */
+@font-face {
+  font-family: 'Source Code';
+  src: url('fonts/SourceCodeVariable-Roman.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Design Tokens --- */
+:root {
+  /* Brand Colors */
+  --ps-brand-primary: #005BA6;
+  --ps-brand-blue-2: #004A84;
+  --ps-brand-blue-3: #002F48;
+  --ps-brand-azure: #009CF4;
+  --ps-brand-light-blue: #B0C6D3;
+
+  /* Oranges */
+  --ps-orange-1: #FF9505;
+  --ps-orange-2: #E68604;
+  --ps-orange-3: #C56F00;
+  --ps-orange-4: #FFF4E5;
+  --ps-orange-5: #FFEACC;
+
+  /* Reds */
+  --ps-red-1: #D14343;
+  --ps-red-2: #B83535;
+  --ps-red-3: #9E2020;
+  --ps-red-4: #FFEBEB;
+
+  /* Greens */
+  --ps-green-1: #17AB78;
+  --ps-green-2: #0E9563;
+  --ps-green-3: #0A7850;
+  --ps-green-4: #E5F9F2;
+
+  /* Grays / Neutrals */
+  --ps-gray-0: #FFFFFF;
+  --ps-gray-1: #F5F5F5;
+  --ps-gray-2: #E6E6E6;
+  --ps-gray-3: #DCDCDC;
+  --ps-gray-4: #949494;
+  --ps-gray-5: #4A4A4A;
+  --ps-gray-6: #2B2B2B;
+  --ps-gray-7: #000000;
+
+  /* Semantic Tokens */
+  --ps-fg-primary: #2B2B2B;
+  --ps-fg-secondary: #4A4A4A;
+  --ps-fg-tertiary: #949494;
+  --ps-fg-inverse: #FFFFFF;
+
+  --ps-bg-default: #FFFFFF;
+  --ps-bg-subtle: #F5F5F5;
+  --ps-bg-canvas: #FAFAFA;
+
+  --ps-border-default: #E6E6E6;
+  --ps-border-strong: #DCDCDC;
+  --ps-border-subtle: #F1F1F1;
+
+  --ps-link: #005BA6;
+  --ps-link-hover: #004A84;
+
+  --ps-success: #17AB78;
+  --ps-success-bg: #E5F9F2;
+  --ps-warning: #FF9505;
+  --ps-warning-bg: #FFF4E5;
+  --ps-danger: #D14343;
+  --ps-danger-bg: #FFEBEB;
+  --ps-info: #009CF4;
+  --ps-info-bg: #B0C6D3;
+
+  /* Typography — Source Sans Pro is the PRIMARY font */
+  --ps-font-sans: 'Source Sans Pro', 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ps-font-display: 'Metronic Pro', 'Source Sans Pro', sans-serif;
+  --ps-font-mono: 'Source Code', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+
+  --ps-text-xs: 11px;
+  --ps-text-sm: 12px;
+  --ps-text-base: 14px;
+  --ps-text-md: 15px;
+  --ps-text-lg: 16px;
+  --ps-text-xl: 18px;
+  --ps-text-2xl: 24px;
+  --ps-text-3xl: 28px;
+  --ps-text-4xl: 36px;
+
+  /* Spacing Scale */
+  --ps-space-1: 4px;
+  --ps-space-2: 8px;
+  --ps-space-3: 12px;
+  --ps-space-4: 16px;
+  --ps-space-5: 20px;
+  --ps-space-6: 24px;
+  --ps-space-8: 32px;
+  --ps-space-10: 40px;
+  --ps-space-12: 48px;
+  --ps-space-16: 64px;
+
+  /* Border Radius */
+  --ps-radius-sm: 4px;
+  --ps-radius-md: 6px;
+  --ps-radius-lg: 8px;
+  --ps-radius-xl: 10px;
+  --ps-radius-2xl: 12px;
+  --ps-radius-full: 9999px;
+
+  /* Shadows */
+  --ps-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ps-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --ps-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --ps-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* Elevation */
+  --ps-elevation-0: none;
+  --ps-elevation-1: 0 2px 4px rgba(0, 47, 72, 0.08);
+  --ps-elevation-2: 0 4px 8px rgba(0, 47, 72, 0.12);
+  --ps-elevation-3: 0 8px 16px rgba(0, 47, 72, 0.16);
+  --ps-elevation-4: 0 16px 32px rgba(0, 47, 72, 0.20);
+
+  /* Focus Ring */
+  --ps-focus-ring: 0 0 10px 5px rgba(0, 156, 244, 0.35);
+}
+
+/* --- Base Styles --- */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Source Sans Pro', 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: var(--ps-text-base);
+  line-height: 1.5;
+  color: var(--ps-fg-primary);
+  background: var(--ps-bg-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: 'Source Sans Pro', 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--ps-text-4xl); font-weight: 300; }
+h2 { font-size: var(--ps-text-3xl); font-weight: 300; }
+h3 { font-size: var(--ps-text-2xl); font-weight: 400; }
+h4 { font-size: var(--ps-text-xl); font-weight: 600; }
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--ps-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--ps-link-hover);
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--ps-font-mono);
+  font-size: 0.9em;
+  background: var(--ps-bg-subtle);
+  padding: 2px 6px;
+  border-radius: var(--ps-radius-sm);
+}
+
+/* --- Utility Classes --- */
+.text-primary { color: var(--ps-fg-primary); }
+.text-secondary { color: var(--ps-fg-secondary); }
+.text-tertiary { color: var(--ps-fg-tertiary); }
+.text-inverse { color: var(--ps-fg-inverse); }
+
+.bg-default { background: var(--ps-bg-default); }
+.bg-subtle { background: var(--ps-bg-subtle); }
+.bg-canvas { background: var(--ps-bg-canvas); }
+
+.font-sans { font-family: 'Source Sans Pro', 'Source Sans 3', sans-serif; }
+.font-display { font-family: 'Metronic Pro', 'Source Sans Pro', sans-serif; }
+.font-mono { font-family: var(--ps-font-mono); }
+
+.fw-300 { font-weight: 300; }
+.fw-400 { font-weight: 400; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
