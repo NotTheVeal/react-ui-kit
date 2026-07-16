@@ -37,6 +37,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Token drift guard (blocks tokens.css drift from /tokens source)
+        run: npm run test:tokens
+
       - name: Build library
         run: npm run build
 

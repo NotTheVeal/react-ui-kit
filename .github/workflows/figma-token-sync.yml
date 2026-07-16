@@ -1,0 +1,86 @@
+name: Figma token sync
+
+# Pulls variable values from Figma → rewrites tokens/*.json (value-sync) →
+# rebuilds tokens.css → runs the value-identity gate → opens a PR if (and only
+# if) something changed.  The ONLY credential is a read-only Figma token; no
+# GitHub PAT, no Tokens Studio plugin.  The PR itself is opened with the
+# built-in GITHUB_TOKEN, so nothing lands on `main` without human review + CI.
+
+on:
+  workflow_dispatch: {}          # run on demand from the Actions tab
+  schedule:
+    - cron: '0 13 * * 1'         # every Monday 13:00 UTC — adjust to taste
+
+# Least-privilege: allow this workflow to push its branch and open a PR.
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: figma-token-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Export from Figma & open PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Export variables from Figma (value-sync)
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}       # read-only, scope: file_variables:read
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }} # pyZ5wKN9KGBUfgi47UwQ0q
+        run: npm run export:tokens
+
+      - name: Rebuild tokens.css from source
+        run: npm run build:tokens
+
+      - name: Value-identity gate (committed tokens.css vs freshly built source)
+        run: npm run test:tokens
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- tokens tokens.css; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No token changes from Figma."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- tokens tokens.css
+          fi
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/figma-token-sync
+          base: main
+          commit-message: "chore(tokens): sync values from Figma"
+          title: "chore(tokens): sync values from Figma"
+          delete-branch: true
+          add-paths: |
+            tokens
+            tokens.css
+          body: |
+            Automated value-sync from the Figma Variables REST API.
+
+            - Source: `PS · Primitives / Semantic / Component (SoT)` collections
+            - Only `$value`s that genuinely changed were rewritten (value-sync;
+              structural changes are reported in the run log, never applied).
+            - The value-identity gate (`npm run test:tokens`) passed in this run,
+              so `tokens.css` is consistent with `tokens/*.json`.
+
+            Review the diff, then merge. CI re-runs the full gate on the PR.
