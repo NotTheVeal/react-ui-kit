@@ -1,0 +1,86 @@
+{
+  "ps-brand-primary": {
+    "$value": "{ps-prim-blue-500}"
+  },
+  "ps-brand-blue-2": {
+    "$value": "{ps-prim-blue-600}"
+  },
+  "ps-brand-blue-3": {
+    "$value": "{ps-prim-blue-700}"
+  },
+  "ps-brand-azure": {
+    "$value": "{ps-prim-blue-400}"
+  },
+  "ps-brand-light-blue": {
+    "$value": "{ps-prim-blue-200}"
+  },
+  "ps-fg-primary": {
+    "$value": "{ps-sem-fg-primary}"
+  },
+  "ps-fg-secondary": {
+    "$value": "{ps-sem-fg-secondary}"
+  },
+  "ps-fg-tertiary": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-fg-inverse": {
+    "$value": "{ps-sem-fg-inverse}"
+  },
+  "ps-bg-default": {
+    "$value": "{ps-sem-bg-surface}"
+  },
+  "ps-bg-subtle": {
+    "$value": "{ps-sem-bg-subtle}"
+  },
+  "ps-bg-canvas": {
+    "$value": "{ps-sem-bg-canvas}"
+  },
+  "ps-border-default": {
+    "$value": "{ps-sem-border-default}"
+  },
+  "ps-border-strong": {
+    "$value": "{ps-sem-border-strong}"
+  },
+  "ps-border-subtle": {
+    "$value": "{ps-sem-border-subtle}"
+  },
+  "ps-link": {
+    "$value": "{ps-sem-fg-link}"
+  },
+  "ps-link-hover": {
+    "$value": "{ps-sem-fg-link-hover}"
+  },
+  "ps-success": {
+    "$value": "{ps-sem-success-solid}"
+  },
+  "ps-success-bg": {
+    "$value": "{ps-sem-success-bg}"
+  },
+  "ps-warning": {
+    "$value": "{ps-sem-warning-solid}"
+  },
+  "ps-warning-bg": {
+    "$value": "{ps-sem-warning-bg}"
+  },
+  "ps-danger": {
+    "$value": "{ps-sem-danger-solid}"
+  },
+  "ps-danger-bg": {
+    "$value": "{ps-sem-danger-bg}"
+  },
+  "ps-info": {
+    "$value": "{ps-sem-info-solid}"
+  },
+  "ps-info-bg": {
+    "$value": "{ps-sem-info-bg}"
+  },
+  "ps-font-sans": {
+    "$value": "{ps-sem-font-body}"
+  },
+  "ps-font-display": {
+    "$value": "{ps-sem-font-display}"
+  },
+  "ps-font-mono": {
+    "$value": "{ps-sem-font-mono}"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tokenSetOrder": [
+    "primitive",
+    "semantic",
+    "semantic.dark",
+    "component",
+    "legacy"
+  ]
+}
