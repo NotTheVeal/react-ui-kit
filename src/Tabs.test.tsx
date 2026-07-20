@@ -40,6 +40,41 @@ describe('FolderTabs', () => {
     render(<FolderTabs items={items} activeId="two" />);
     expect(screen.getByRole('tab', { name: /two/i })).toHaveAttribute('aria-selected', 'true');
   });
+
+  it('uses roving tabindex — only the active tab is in the tab order', () => {
+    render(<FolderTabs items={items} />);
+    expect(screen.getByRole('tab', { name: /one/i })).toHaveAttribute('tabindex', '0');
+    expect(screen.getByRole('tab', { name: /two/i })).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('moves selection with ArrowRight and skips disabled tabs (wrapping)', () => {
+    const onChange = vi.fn();
+    render(<FolderTabs items={items} onChange={onChange} />);
+    const one = screen.getByRole('tab', { name: /one/i });
+
+    fireEvent.keyDown(one, { key: 'ArrowRight' });
+    expect(onChange).toHaveBeenLastCalledWith('two');
+    expect(screen.getByRole('tab', { name: /two/i })).toHaveAttribute('aria-selected', 'true');
+
+    // 'three' is disabled, so ArrowRight from 'two' wraps back to 'one'.
+    fireEvent.keyDown(screen.getByRole('tab', { name: /two/i }), { key: 'ArrowRight' });
+    expect(onChange).toHaveBeenLastCalledWith('one');
+  });
+
+  it('ArrowLeft wraps past disabled tabs; Home/End jump to the ends', () => {
+    const onChange = vi.fn();
+    render(<FolderTabs items={items} onChange={onChange} />);
+    const one = screen.getByRole('tab', { name: /one/i });
+
+    fireEvent.keyDown(one, { key: 'ArrowLeft' }); // wraps past disabled 'three' to 'two'
+    expect(onChange).toHaveBeenLastCalledWith('two');
+
+    fireEvent.keyDown(screen.getByRole('tab', { name: /two/i }), { key: 'Home' });
+    expect(onChange).toHaveBeenLastCalledWith('one');
+
+    fireEvent.keyDown(screen.getByRole('tab', { name: /one/i }), { key: 'End' });
+    expect(onChange).toHaveBeenLastCalledWith('two'); // last enabled
+  });
 });
 
 describe('SegmentedTabs', () => {

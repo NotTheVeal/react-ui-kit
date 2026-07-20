@@ -44,4 +44,20 @@ describe('Carousel', () => {
     );
     expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
   });
+
+  it('renders paging controls and the header link as keyboard-operable native buttons', () => {
+    render(
+      <Carousel title="X" linkLabel="See all" onLinkClick={() => {}}>
+        <div>one</div>
+        <div>two</div>
+      </Carousel>,
+    );
+    // Arrows are native buttons (keyboard-operable; disabled at the scroll edges).
+    expect(screen.getByRole('button', { name: 'Previous' }).tagName).toBe('BUTTON');
+    expect(screen.getByRole('button', { name: 'Next' }).tagName).toBe('BUTTON');
+    // The header link is always enabled, so it can hold focus for keyboard users.
+    const link = screen.getByRole('button', { name: /see all/i });
+    link.focus();
+    expect(link).toHaveFocus();
+  });
 });

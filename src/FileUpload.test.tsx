@@ -40,4 +40,23 @@ describe('FileUpload', () => {
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
     expect(onFilesSelected).toHaveBeenCalled();
   });
+
+  it('offers a keyboard path to the picker — focusable browse button + labelled file input', () => {
+    render(<FileUpload />);
+    const browse = screen.getByRole('button');
+    expect(browse.tagName).toBe('BUTTON');
+    browse.focus();
+    expect(browse).toHaveFocus();
+    // The real <input type="file"> carries an accessible name so keyboard/AT users can operate it.
+    expect(screen.getByLabelText('Choose files to upload')).toHaveAttribute('type', 'file');
+  });
+
+  it('surfaces files chosen through the native input (keyboard/browse path)', () => {
+    const onFilesSelected = vi.fn();
+    render(<FileUpload onFilesSelected={onFilesSelected} />);
+    const input = screen.getByLabelText('Choose files to upload');
+    const file = new File(['x'], 'b.pdf', { type: 'application/pdf' });
+    fireEvent.change(input, { target: { files: [file] } });
+    expect(onFilesSelected).toHaveBeenCalled();
+  });
 });

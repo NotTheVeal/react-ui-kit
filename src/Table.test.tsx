@@ -58,4 +58,18 @@ describe('Table', () => {
     render(<Table columns={columns} data={[]} emptyState={<div>Nothing here</div>} />);
     expect(screen.getByText('Nothing here')).toBeInTheDocument();
   });
+
+  it('exposes sort as a focusable native button (keyboard-operable) and marks sort direction', () => {
+    render(<Table columns={columns} data={data} />);
+    const nameHeader = screen.getByRole('button', { name: /name/i });
+    expect(nameHeader.tagName).toBe('BUTTON');
+    nameHeader.focus();
+    expect(nameHeader).toHaveFocus();
+
+    // aria-sort on the column header reflects the active sort for assistive tech.
+    const nameColumn = screen.getByRole('columnheader', { name: /name/i });
+    expect(nameColumn).toHaveAttribute('aria-sort', 'none');
+    fireEvent.click(nameHeader);
+    expect(nameColumn).toHaveAttribute('aria-sort', 'ascending');
+  });
 });

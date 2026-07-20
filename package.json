@@ -40,6 +40,7 @@
   },
   "scripts": {
     "dev": "npm run sync:browser && vite",
+    "prebuild": "npm run test",
     "build": "npm run lint && npm run sync:browser && vite build && tsc --emitDeclarationOnly --outDir dist",
     "build:css": "tailwindcss -c tailwind.config.js -i tailwind-input.css -o tailwind.css --minify",
     "sync:browser": "node scripts/sync-to-browser.mjs",

@@ -27,6 +27,17 @@ describe('Slider (single)', () => {
     render(<Slider label="Locked" value={10} disabled />);
     expect(screen.getByRole('slider')).toBeDisabled();
   });
+
+  it('is keyboard-operable — a focusable native range with ARIA bounds', () => {
+    render(<Slider label="Quantity" min={0} max={100} value={40} />);
+    const slider = screen.getByRole('slider');
+    expect(slider.tagName).toBe('INPUT');
+    expect(slider).toHaveAttribute('type', 'range');
+    expect(slider).toHaveAttribute('min', '0');
+    expect(slider).toHaveAttribute('max', '100');
+    slider.focus();
+    expect(slider).toHaveFocus();
+  });
 });
 
 describe('Slider (range)', () => {

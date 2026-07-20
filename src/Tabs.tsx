@@ -51,6 +51,27 @@ const FolderTabs: React.FC<TabsProps> = ({
   className = "",
 }) => {
   const [active, setActive] = useActive(defaultActiveId ?? items[0]?.id, activeId);
+  const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+
+  // WAI-ARIA tabs pattern: roving focus with Arrow/Home/End, automatic
+  // activation (moving focus also selects). Disabled tabs are skipped.
+  const moveFocus = (fromIndex: number, key: string) => {
+    const enabled = items
+      .map((it, i) => ({ it, i }))
+      .filter((x) => !x.it.disabled);
+    if (enabled.length === 0) return;
+    const pos = enabled.findIndex((x) => x.i === fromIndex);
+    let nextPos = pos;
+    if (key === "ArrowRight") nextPos = (pos + 1) % enabled.length;
+    else if (key === "ArrowLeft") nextPos = (pos - 1 + enabled.length) % enabled.length;
+    else if (key === "Home") nextPos = 0;
+    else if (key === "End") nextPos = enabled.length - 1;
+    const next = enabled[nextPos];
+    if (!next) return;
+    tabRefs.current[next.i]?.focus();
+    setActive(next.it.id);
+    onChange?.(next.it.id);
+  };
 
   return (
     <div
@@ -61,7 +82,7 @@ const FolderTabs: React.FC<TabsProps> = ({
       )}
       style={{ paddingTop: 6, borderBottom: "1px solid var(--ps-prim-gray-225)" }}
     >
-      {items.map((item) => {
+      {items.map((item, index) => {
         const isActive = active === item.id;
         return (
           <button
@@ -69,7 +90,17 @@ const FolderTabs: React.FC<TabsProps> = ({
             type="button"
             role="tab"
             aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
+            ref={(el) => {
+              tabRefs.current[index] = el;
+            }}
             disabled={item.disabled}
+            onKeyDown={(e) => {
+              if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) {
+                e.preventDefault();
+                moveFocus(index, e.key);
+              }
+            }}
             onClick={() => {
               if (item.disabled) return;
               setActive(item.id);

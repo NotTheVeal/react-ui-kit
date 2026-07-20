@@ -50,4 +50,25 @@ describe('Popover', () => {
     expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
     expect(screen.getByText('Just a hint')).toBeInTheDocument();
   });
+
+  it('exposes keyboard-operable controls — focusable native buttons in tab order', () => {
+    const primary = vi.fn();
+    render(
+      <Popover
+        variant="cta"
+        title="Delete Item"
+        onClose={() => {}}
+        primaryAction={{ label: 'Delete', onClick: primary }}
+        secondaryAction={{ label: 'Cancel', onClick: () => {} }}
+      >
+        body
+      </Popover>,
+    );
+    const close = screen.getByRole('button', { name: 'Close' });
+    const confirm = screen.getByRole('button', { name: 'Delete' });
+    expect(close.tagName).toBe('BUTTON');
+    expect(confirm.tagName).toBe('BUTTON');
+    confirm.focus();
+    expect(confirm).toHaveFocus();
+  });
 });
