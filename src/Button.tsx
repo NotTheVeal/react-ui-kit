@@ -191,7 +191,10 @@ const Button: React.FC<ButtonProps> = ({
       {...rest}
     >
       {loading ? (
-        <ButtonSpinner />
+        <>
+          <span className="sr-only">Loading</span>
+          <ButtonSpinner />
+        </>
       ) : (
         <>
           {iconStart && <span className="mr-1.5 inline-flex items-center">{iconStart}</span>}
