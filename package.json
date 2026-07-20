@@ -63,6 +63,7 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
+    "@figma/code-connect": "^1.4.9",
     "@storybook/addon-a11y": "^8.3.0",
     "@storybook/addon-essentials": "^8.3.0",
     "@storybook/addon-interactions": "^8.3.0",

@@ -1,0 +1,12 @@
+{
+  "codeConnect": {
+    "parser": "react",
+    "include": ["src/**/*.figma.tsx"],
+    "importPaths": {
+      "src/*": "@partssource/react-kit"
+    },
+    "documentUrlSubstitutions": {
+      "<FIGMA_FILE>": "https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System"
+    }
+  }
+}
