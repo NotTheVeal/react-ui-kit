@@ -54,6 +54,7 @@ const FolderTabs: React.FC<TabsProps> = ({
 
   return (
     <div
+      role="tablist"
       className={cxTab(
         "flex items-end font-['Source_Sans_Pro','Source_Sans_3',sans-serif]",
         className,
