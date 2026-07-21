@@ -14,6 +14,7 @@ type Variant =
   | "primary"           // 50px blue-outline → fills on hover (current brand direction)
   | "secondary"         // 32px white + grey border, blue fill on hover
   | "tertiary"          // 40px grey pill, secondary affordance
+  | "danger"            // red destructive action, filled
   | "pill"              // 48px orange pill (legacy — deprecated for ADA)
   | "arrow";            // 28px square icon-only back button
 
@@ -89,6 +90,20 @@ const variants = {
       "active:bg-[var(--ps-prim-gray-400)] active:shadow-[0_4px_4px_rgba(0,0,0,0.25)] " +
       "focus-visible:border-[var(--ps-prim-blue-500)] focus-visible:shadow-[0_0_0_3px_var(--ps-prim-blue-50)] " +
       "disabled:text-[var(--ps-prim-gray-500)]",
+  },
+  danger: {
+    // Red destructive action — filled. Mirrors primary's darken-on-interact,
+    // using the red-400/500/600 ramp. Specced in CLAUDE.md as canonical.
+    default: "bg-[var(--ps-prim-red-500)] text-white border-transparent",
+    hover:   "bg-[var(--ps-prim-red-600)] text-white border-transparent",
+    pressed: "bg-[var(--ps-prim-red-600)] text-white border-transparent shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
+    focus:   "bg-[var(--ps-prim-red-500)] text-white border-transparent shadow-[0_0_0_3px_rgba(184,53,53,0.3)]",
+    disabled:"bg-[var(--ps-prim-gray-300)] text-[var(--ps-prim-gray-600)] border-transparent",
+    hoverInteractive:
+      "hover:bg-[var(--ps-prim-red-600)] active:bg-[var(--ps-prim-red-600)] " +
+      "active:shadow-[0_4px_4px_rgba(0,0,0,0.25)] " +
+      "focus-visible:shadow-[0_0_0_3px_rgba(184,53,53,0.3)] " +
+      "disabled:bg-[var(--ps-prim-gray-300)] disabled:text-[var(--ps-prim-gray-600)]",
   },
   pill: {
     // Orange — 48px, legacy. Marked deprecated in docs.

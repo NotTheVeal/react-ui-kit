@@ -287,6 +287,54 @@
     "$value": "#00AEEF",
     "$type": "color"
   },
+  "ps-prim-orange-75": {
+    "$value": "#FFE4C0",
+    "$type": "color"
+  },
+  "ps-prim-green-200": {
+    "$value": "#8BD5BC",
+    "$type": "color"
+  },
+  "ps-prim-red-200": {
+    "$value": "#FACBCB",
+    "$type": "color"
+  },
+  "ps-prim-red-max": {
+    "$value": "#FF0000",
+    "$type": "color"
+  },
+  "ps-prim-gray-425": {
+    "$value": "#ACACAC",
+    "$type": "color"
+  },
+  "ps-prim-teal-450": {
+    "$value": "#00CBB7",
+    "$type": "color"
+  },
+  "ps-prim-blue-550": {
+    "$value": "#005499",
+    "$type": "color"
+  },
+  "ps-prim-formulary-best": {
+    "$value": "#29A10F",
+    "$type": "color"
+  },
+  "ps-prim-formulary-verygood": {
+    "$value": "#03C700",
+    "$type": "color"
+  },
+  "ps-prim-formulary-moderate": {
+    "$value": "#E9E022",
+    "$type": "color"
+  },
+  "ps-prim-formulary-fair": {
+    "$value": "#F58B00",
+    "$type": "color"
+  },
+  "ps-prim-formulary-poor": {
+    "$value": "#DE3700",
+    "$type": "color"
+  },
   "ps-prim-font-source-sans": {
     "$value": "'Source Sans Pro', 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     "$type": "fontFamily"
@@ -485,6 +533,10 @@
   },
   "ps-prim-radius-4": {
     "$value": "4px",
+    "$type": "dimension"
+  },
+  "ps-prim-radius-5": {
+    "$value": "5px",
     "$type": "dimension"
   },
   "ps-prim-radius-6": {

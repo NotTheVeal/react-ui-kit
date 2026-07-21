@@ -62,7 +62,7 @@ describe('Button', () => {
     expect(btn).toHaveAttribute('name', 'save');
   });
 
-  it.each(['primary', 'secondary', 'tertiary', 'pill', 'arrow'] as const)(
+  it.each(['primary', 'secondary', 'tertiary', 'danger', 'pill', 'arrow'] as const)(
     'renders the %s variant',
     (variant) => {
       render(<Button variant={variant}>{variant}</Button>);

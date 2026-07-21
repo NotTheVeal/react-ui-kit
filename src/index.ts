@@ -5,6 +5,12 @@
 // ──────────────────────────────────────────────────────────────────
 
 export { Button, ButtonInline, BackArrowIcon } from './Button';
+export { IconButton } from './IconButton';
+export type { IconButtonProps } from './IconButton';
+export { ChipButton } from './ChipButton';
+export type { ChipButtonProps } from './ChipButton';
+export { SegmentedButton } from './SegmentedButton';
+export type { SegmentedButtonProps, SegmentedOption } from './SegmentedButton';
 export { Input, Dropdown } from './Input';
 export { EventCard, StatusCard, AlertCard } from './Card';
 export { AiDataCard, ProductCard, AnalyticsCard, ListCard } from './CardExtras';

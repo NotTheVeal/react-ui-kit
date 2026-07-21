@@ -356,5 +356,32 @@
   },
   "ps-sem-container-modal-lg": {
     "$value": "{ps-prim-container-800}"
+  },
+  "ps-sem-formulary-best": {
+    "$value": "{ps-prim-formulary-best}"
+  },
+  "ps-sem-formulary-verygood": {
+    "$value": "{ps-prim-formulary-verygood}"
+  },
+  "ps-sem-formulary-moderate": {
+    "$value": "{ps-prim-formulary-moderate}"
+  },
+  "ps-sem-formulary-fair": {
+    "$value": "{ps-prim-formulary-fair}"
+  },
+  "ps-sem-formulary-poor": {
+    "$value": "{ps-prim-formulary-poor}"
+  },
+  "ps-sem-rewards-teal": {
+    "$value": "{ps-prim-teal-450}"
+  },
+  "ps-sem-rewards-blue": {
+    "$value": "{ps-prim-blue-550}"
+  },
+  "ps-sem-dataviz-negative": {
+    "$value": "{ps-prim-red-max}"
+  },
+  "ps-sem-dataviz-active": {
+    "$value": "{ps-prim-gray-425}"
   }
 }
