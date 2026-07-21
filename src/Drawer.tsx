@@ -19,6 +19,8 @@ interface DrawerProps {
   footer?: React.ReactNode;
   width?: number | string;
   className?: string;
+  /** Accessible name when no visible `title` is provided. */
+  'aria-label'?: string;
 }
 
 const cxDrawer = (...parts: Array<string | false | undefined>) =>
@@ -33,7 +35,9 @@ const Drawer: React.FC<DrawerProps> = ({
   footer,
   width = 480,
   className = "",
+  'aria-label': ariaLabel,
 }) => {
+  const titleId = React.useId();
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -54,10 +58,12 @@ const Drawer: React.FC<DrawerProps> = ({
           open ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       />
-      <aside
+      <div
         role="dialog"
         aria-modal="true"
         aria-hidden={!open}
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={!title ? ariaLabel : undefined}
         style={{ width: typeof width === "number" ? `${width}px` : width }}
         className={cxDrawer(
           "fixed top-0 right-0 z-[100] h-screen max-w-[100vw] bg-white",
@@ -72,7 +78,7 @@ const Drawer: React.FC<DrawerProps> = ({
             <div className="flex-1 min-w-0">
               {title && (
                 // Figma node 4445:1443 — 17px / 700 / var(--ps-prim-gray-700), Source Sans 3.
-                <h2 className="m-0 text-[17px] font-bold text-[var(--ps-prim-gray-700)] leading-none font-['Source_Sans_3',sans-serif]">
+                <h2 id={titleId} className="m-0 text-[17px] font-bold text-[var(--ps-prim-gray-700)] leading-none font-['Source_Sans_3',sans-serif]">
                   {title}
                 </h2>
               )}
@@ -98,7 +104,7 @@ const Drawer: React.FC<DrawerProps> = ({
             {footer}
           </footer>
         )}
-      </aside>
+      </div>
     </>
   );
 };

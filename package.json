@@ -27,7 +27,9 @@
     "tokens.ts",
     "README.md"
   ],
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NotTheVeal/react-ui-kit.git"
@@ -38,6 +40,7 @@
   },
   "scripts": {
     "dev": "npm run sync:browser && vite",
+    "prebuild": "npm run test",
     "build": "npm run lint && npm run sync:browser && vite build && tsc --emitDeclarationOnly --outDir dist",
     "build:css": "tailwindcss -c tailwind.config.js -i tailwind-input.css -o tailwind.css --minify",
     "sync:browser": "node scripts/sync-to-browser.mjs",
@@ -46,31 +49,55 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist storybook-static"
+    "test": "NODE_ENV=test vitest run",
+    "test:watch": "NODE_ENV=test vitest",
+    "test:coverage": "NODE_ENV=test vitest run --coverage",
+    "clean": "rm -rf dist storybook-static",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "test:tokens": "node scripts/token-gate.mjs",
+    "export:tokens": "node scripts/figma-export-tokens.mjs",
+    "export:tokens:dry": "node scripts/figma-export-tokens.mjs --dry-run",
+    "test:export": "node scripts/figma-export-tokens.mjs --self-test"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
+    "@figma/code-connect": "^1.4.9",
     "@storybook/addon-a11y": "^8.3.0",
     "@storybook/addon-essentials": "^8.3.0",
     "@storybook/addon-interactions": "^8.3.0",
     "@storybook/addon-links": "^8.3.0",
     "@storybook/react": "^8.3.0",
     "@storybook/react-vite": "^8.3.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest-axe": "^3.5.9",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.0",
+    "jest-axe": "^9.0.0",
+    "jsdom": "^25.0.1",
     "storybook": "^8.3.0",
+    "style-dictionary": "^4.4.0",
     "tailwindcss": "3.4.16",
     "typescript": "^5.5.0",
-    "vite": "^5.4.0"
+    "vite": "^5.4.0",
+    "vitest": "^2.1.9"
   },
-  "keywords": ["design-system", "react", "components", "partssource", "ui-kit"],
+  "keywords": [
+    "design-system",
+    "react",
+    "components",
+    "partssource",
+    "ui-kit"
+  ],
   "license": "UNLICENSED"
 }

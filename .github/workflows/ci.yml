@@ -31,11 +31,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build CSS (Tailwind output required by Storybook)
+        run: npm run build:css
+
       - name: Lint (blocks raw hex + lint errors)
         run: npm run lint
 
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Token drift guard (blocks tokens.css drift from /tokens source)
+        run: npm run test:tokens
 
       - name: Build library
         run: npm run build

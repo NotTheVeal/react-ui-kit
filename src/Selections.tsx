@@ -21,6 +21,8 @@ interface CheckboxProps {
   state?: SelectionState;
   disabled?: boolean;
   className?: string;
+  /** Accessible name when no visible `label` is provided. */
+  'aria-label'?: string;
 }
 
 interface RadioProps {
@@ -33,6 +35,8 @@ interface RadioProps {
   state?: SelectionState;
   disabled?: boolean;
   className?: string;
+  /** Accessible name when no visible `label` is provided. */
+  'aria-label'?: string;
 }
 
 interface ToggleProps {
@@ -42,6 +46,8 @@ interface ToggleProps {
   disabled?: boolean;
   label?: React.ReactNode;
   className?: string;
+  /** Accessible name when no visible `label` is provided. */
+  'aria-label'?: string;
 }
 
 const cxSel = (...parts: Array<string | false | undefined>) =>
@@ -64,7 +70,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   state = "default",
   disabled,
   className = "",
+  'aria-label': ariaLabel,
 }) => {
+  const labelId = React.useId();
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked ?? false);
   const isControlled = checked !== undefined;
   const isChecked = isControlled ? checked : internalChecked;
@@ -90,6 +98,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
         role="checkbox"
         aria-checked={isChecked}
         aria-disabled={isDisabled}
+        aria-labelledby={label ? labelId : undefined}
+        aria-label={!label ? ariaLabel : undefined}
         tabIndex={isDisabled ? -1 : 0}
         onKeyDown={(e) => {
           if (e.key === " " || e.key === "Enter") {
@@ -118,6 +128,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       </span>
       {label && (
         <span
+          id={labelId}
           className={cxSel(
             "text-[13px] font-['Source_Sans_Pro',sans-serif]",
             isDisabled ? "text-[var(--ps-prim-gray-500)]" : "text-[var(--ps-prim-gray-900)]",
@@ -140,7 +151,9 @@ const Radio: React.FC<RadioProps> = ({
   state = "default",
   disabled,
   className = "",
+  'aria-label': ariaLabel,
 }) => {
+  const labelId = React.useId();
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked ?? false);
   const isControlled = checked !== undefined;
   const isChecked = isControlled ? checked : internalChecked;
@@ -165,6 +178,8 @@ const Radio: React.FC<RadioProps> = ({
         role="radio"
         aria-checked={isChecked}
         aria-disabled={isDisabled}
+        aria-labelledby={label ? labelId : undefined}
+        aria-label={!label ? ariaLabel : undefined}
         tabIndex={isDisabled ? -1 : 0}
         onKeyDown={(e) => {
           if (e.key === " " || e.key === "Enter") {
@@ -190,6 +205,7 @@ const Radio: React.FC<RadioProps> = ({
       </span>
       {label && (
         <span
+          id={labelId}
           className={cxSel(
             "text-[13px] font-['Source_Sans_Pro',sans-serif]",
             isDisabled ? "text-[var(--ps-prim-gray-500)]" : "text-[var(--ps-prim-gray-900)]",
@@ -209,7 +225,9 @@ const Toggle: React.FC<ToggleProps> = ({
   disabled,
   label,
   className = "",
+  'aria-label': ariaLabel,
 }) => {
+  const labelId = React.useId();
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked ?? false);
   const isControlled = checked !== undefined;
   const isChecked = isControlled ? checked : internalChecked;
@@ -227,6 +245,8 @@ const Toggle: React.FC<ToggleProps> = ({
         type="button"
         role="switch"
         aria-checked={isChecked}
+        aria-labelledby={label ? labelId : undefined}
+        aria-label={!label ? ariaLabel : undefined}
         disabled={disabled}
         onClick={toggle}
         className={cxSel(
@@ -245,7 +265,7 @@ const Toggle: React.FC<ToggleProps> = ({
         />
       </button>
       {label && (
-        <span className="text-[13px] font-['Source_Sans_Pro',sans-serif] text-[var(--ps-prim-gray-900)]">
+        <span id={labelId} className="text-[13px] font-['Source_Sans_Pro',sans-serif] text-[var(--ps-prim-gray-900)]">
           {label}
         </span>
       )}

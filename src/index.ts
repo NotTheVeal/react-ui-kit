@@ -5,6 +5,12 @@
 // ──────────────────────────────────────────────────────────────────
 
 export { Button, ButtonInline, BackArrowIcon } from './Button';
+export { IconButton } from './IconButton';
+export type { IconButtonProps } from './IconButton';
+export { ChipButton } from './ChipButton';
+export type { ChipButtonProps } from './ChipButton';
+export { SegmentedButton } from './SegmentedButton';
+export type { SegmentedButtonProps, SegmentedOption } from './SegmentedButton';
 export { Input, Dropdown } from './Input';
 export { EventCard, StatusCard, AlertCard } from './Card';
 export { AiDataCard, ProductCard, AnalyticsCard, ListCard } from './CardExtras';
@@ -20,3 +26,10 @@ export { Banner, ImageBlock, TextBlock, CardGrid } from './CMS';
 export { Breadcrumb, BreadcrumbBack, Accordion, AccordionCount, Stepper } from './Layout';
 export { Avatar, AvatarGroup, Tooltip, TooltipRich, Skeleton, SkeletonKeyframes, Spinner, EmptyState, ErrorPage } from './Feedback';
 export { Pagination, DatePicker } from './Controls';
+export { Divider } from './Divider';
+export { Table } from './Table';
+export { Slider } from './Slider';
+export { Carousel } from './Carousel';
+export { FileUpload } from './FileUpload';
+export { Popover } from './Popover';
+export { PageShell } from './PageShell';

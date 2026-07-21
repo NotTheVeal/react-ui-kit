@@ -8,7 +8,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'pill', 'arrow'],
+      options: ['primary', 'secondary', 'tertiary', 'danger', 'pill', 'arrow'],
     },
     size: { control: 'select', options: ['sm', 'lg'] },
     state: { control: 'select', options: [undefined, 'default', 'hover', 'focus', 'pressed'] },
@@ -24,6 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = { args: { variant: 'primary', children: 'Buy Now' } };
 export const Secondary: Story = { args: { variant: 'secondary', size: 'sm', children: 'Apply Filter' } };
 export const Tertiary: Story = { args: { variant: 'tertiary', children: 'Save for later' } };
+export const Danger: Story = { args: { variant: 'danger', children: 'Delete Item' } };
 export const PillLegacy: Story = {
   args: { variant: 'pill', children: 'Propose Quote' },
   parameters: { docs: { description: { story: '⚠ Deprecated — orange CTAs fail WCAG AA. Use Primary for new work.' } } },
@@ -39,6 +40,7 @@ export const AllVariants: Story = {
         <Button variant="primary">Primary</Button>
         <Button variant="secondary" size="sm">Secondary</Button>
         <Button variant="tertiary">Tertiary</Button>
+        <Button variant="danger">Danger</Button>
         <Button variant="pill">Pill (legacy)</Button>
       </div>
       <div className="flex flex-wrap items-center gap-4">

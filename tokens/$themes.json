@@ -1,0 +1,49 @@
+[
+  {
+    "id": "primitives",
+    "name": "Primitives",
+    "group": "Primitives",
+    "selectedTokenSets": {
+      "primitive": "enabled"
+    },
+    "$figmaCollectionId": "VariableCollectionId:5316:47",
+    "$figmaModeId": "5316:0"
+  },
+  {
+    "id": "light",
+    "name": "Light",
+    "group": "Semantic",
+    "selectedTokenSets": {
+      "primitive": "source",
+      "semantic": "enabled",
+      "semantic.dark": "disabled"
+    },
+    "$figmaCollectionId": "VariableCollectionId:5322:47",
+    "$figmaModeId": "5322:0"
+  },
+  {
+    "id": "dark",
+    "name": "Dark",
+    "group": "Semantic",
+    "selectedTokenSets": {
+      "primitive": "source",
+      "semantic": "enabled",
+      "semantic.dark": "enabled"
+    },
+    "$figmaCollectionId": "VariableCollectionId:5322:47",
+    "$figmaModeId": "5323:0"
+  },
+  {
+    "id": "component",
+    "name": "Component",
+    "group": "Component",
+    "selectedTokenSets": {
+      "primitive": "source",
+      "semantic": "source",
+      "component": "enabled",
+      "legacy": "disabled"
+    },
+    "$figmaCollectionId": "VariableCollectionId:5328:47",
+    "$figmaModeId": "5328:0"
+  }
+]
