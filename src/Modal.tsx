@@ -19,6 +19,7 @@ interface ModalProps {
   footer?: React.ReactNode;
   width?: number | string;
   className?: string;
+  'aria-label'?: string;
 }
 
 interface ConfirmDialogProps {
@@ -43,7 +44,9 @@ const Modal: React.FC<ModalProps> = ({
   footer,
   width = 540,
   className = "",
+  'aria-label': ariaLabel,
 }) => {
+  const titleId = React.useId();
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -59,6 +62,8 @@ const Modal: React.FC<ModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
+      aria-label={title ? undefined : ariaLabel}
       className="fixed inset-0 z-[100] flex items-center justify-center font-['Source_Sans_Pro',sans-serif]"
     >
       <div
@@ -75,7 +80,7 @@ const Modal: React.FC<ModalProps> = ({
         {title && (
           <header className="flex items-start justify-between px-8 pt-6 pb-4">
             {/* preview/modals.html: 30px / 300 / lh 34px / gray-770 (=#373F41) */}
-            <h2 className="m-0 text-[30px] font-light text-[var(--ps-prim-gray-770)] leading-[34px] tracking-[0]">
+            <h2 id={titleId} className="m-0 text-[30px] font-light text-[var(--ps-prim-gray-770)] leading-[34px] tracking-[0]">
               {title}
             </h2>
             <button
