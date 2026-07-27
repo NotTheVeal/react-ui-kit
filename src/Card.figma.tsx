@@ -17,7 +17,7 @@ figma.connect(EventCard, 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/Pa
 // StatusCard — same Figma family; connects the compact status variant.
 figma.connect(StatusCard, 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System?node-id=3334-8877', {
   props: {},
-  example: () => <StatusCard title="Order #4821" meta="Shipped · arrives Fri" />,
+  example: () => <StatusCard title="Order 4821" meta="Shipped · arrives Fri" />,
 })
 
 // AlertCard — same Figma family; connects the alert/severity variant.
