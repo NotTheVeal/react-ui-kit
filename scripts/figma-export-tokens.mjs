@@ -229,7 +229,16 @@ async function loadPayload() {
   const res = await fetch(url, { headers: { 'X-Figma-Token': token } });
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(`Figma REST ${res.status}: ${body.slice(0, 400)}`);
+    // The Variables REST endpoint (/variables/local) is Enterprise-plan-only and
+    // needs a file_variables:read-scoped token. A 404 (non-Enterprise) or a 403
+    // that names the missing scope means the endpoint is structurally unreachable
+    // with the current plan/token — flag it so the caller can soft-skip in CI.
+    const soft =
+      res.status === 404 ||
+      (res.status === 403 && /file_variables:read/.test(body));
+    throw new Error(
+      `${soft ? 'ENDPOINT_UNAVAILABLE ' : ''}Figma REST ${res.status}: ${body.slice(0, 400)}`
+    );
   }
   const json = await res.json();
   if (json.error) throw new Error(`Figma REST error: ${JSON.stringify(json).slice(0, 400)}`);
@@ -378,4 +387,26 @@ async function main() {
   console.log('Next: npm run build:tokens && npm run test:tokens  (CI gate).');
 }
 
-main().catch((e) => { console.error(e.message || e); process.exit(1); });
+main().catch((e) => {
+  const msg = e && (e.message || String(e));
+  console.error(msg);
+  // In CI, when the Variables REST endpoint is structurally unreachable (non-
+  // Enterprise plan or token missing file_variables:read), soft-skip instead of
+  // failing the scheduled job: the drift guard (test:tokens) still protects the
+  // live UI on every push, so a missing pull is not a red build. Auto-detected
+  // via GITHUB_ACTIONS/CI so no workflow-file change is needed; force off with
+  // FIGMA_SYNC_SOFT_FAIL=0. Locally (no CI) this still fails hard so a dev sees it.
+  const inCI =
+    process.env.FIGMA_SYNC_SOFT_FAIL === '1' ||
+    ((process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true') &&
+      process.env.FIGMA_SYNC_SOFT_FAIL !== '0');
+  if (inCI && /ENDPOINT_UNAVAILABLE/.test(msg)) {
+    console.log(
+      '::notice title=Figma token sync skipped::Variables REST endpoint unavailable ' +
+        '(Enterprise-only / token lacks file_variables:read). Skipping pull; ' +
+        'drift guard still enforced on every push.'
+    );
+    process.exit(0);
+  }
+  process.exit(1);
+});
