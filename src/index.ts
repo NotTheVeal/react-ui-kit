@@ -78,6 +78,28 @@ export {
   Sparkline,
   BulletChart,
   BULLET_RANGE_COLORS,
+  ScatterPlot,
+  BubbleChart,
+  HeatMap,
+  TreeMap,
+  BumpChart,
+  StreamChart,
+  HEATMAP_SCALE,
+} from './DataViz';
+export type {
+  ScatterPoint,
+  ScatterSeries,
+  ScatterPlotProps,
+  BubblePoint,
+  BubbleSeries,
+  BubbleChartProps,
+  HeatMapProps,
+  TreeMapNode,
+  TreeMapProps,
+  BumpSeries,
+  BumpChartProps,
+  StreamSeries,
+  StreamChartProps,
 } from './DataViz';
 export {
   TypingIndicator,
