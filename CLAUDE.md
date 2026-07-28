@@ -43,7 +43,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 
 | Component type | Required tests |
 |---|---|
-| Buttons / links (`Button`, `InlineButton`, `ArrowButton`, `ChipButton`) | renders label; fires `onClick`; does **not** fire when `disabled`/`loading`; `aria-disabled`/`aria-busy`; axe clean default + disabled |
+| Buttons / links (`Button`, `ButtonInline`/`InlineButton`, `ChipButton`, `SegmentedButton`, `IconButton`) | renders label; fires `onClick`; does **not** fire when `disabled`/`loading`; `aria-disabled`/`aria-busy`; axe clean default + disabled. `Button` variants: `primary \| outline \| secondary \| tertiary \| danger \| pill \| arrow` (`ghost` accepted as an alias → `outline`). No standalone `ArrowButton`: the back-arrow affordance is `Button variant="arrow"` + `BackArrowIcon`. |
 | Inputs (`Input`, `Checkbox`, `Slider`, `Filter`) | value renders; `onChange` fires with typed value; error/hint shown; disabled blocks input; native role present + focusable; axe clean default + error |
 | Tabs (`FolderTabs` and friends) | `role="tab"`/`aria-selected`; click selects + fires `onChange`; disabled tab inert; **ArrowLeft/ArrowRight/Home/End roving navigation**; controlled `activeId` respected |
 | Tables (`Table`) | rows render; sort asc→desc via header **button**; row click; select-all + row selection; empty state; sort control is a real focusable `<button>` |
