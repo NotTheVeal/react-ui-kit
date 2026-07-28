@@ -1,0 +1,67 @@
+name: Rebuild tokens.css from token source
+
+# Closes the "Figma variables → GitHub → Storybook" loop for the Tokens Studio
+# plugin path (no Enterprise REST token required).
+#
+# The Tokens Studio Figma plugin pushes updated token JSON (tokens/**) to a
+# branch and opens a PR. The plugin does NOT know how to run Style Dictionary,
+# so the committed tokens.css would be stale and the CI drift gate (test:tokens)
+# would fail on that PR. This workflow regenerates tokens.css from the pushed
+# source and commits it back to the same branch, so the PR that reaches main is
+# already value-consistent and every downstream gate (drift → build → Storybook
+# → Pages deploy) passes automatically.
+#
+# Loop safety: this job only ever writes tokens.css (never tokens/**), and it is
+# triggered on tokens/** paths only, so its own commit cannot re-trigger it.
+
+on:
+  push:
+    branches-ignore: [main]
+    paths:
+      - 'tokens/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tokens-autobuild-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    name: Rebuild tokens.css
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild tokens.css from /tokens source
+        run: npm run build:tokens
+
+      - name: Prove the rebuild is deterministic (value-identity gate)
+        run: npm run test:tokens
+
+      - name: Commit regenerated tokens.css (only if it changed)
+        run: |
+          if git diff --quiet -- tokens.css; then
+            echo "tokens.css already in sync with /tokens source — nothing to commit."
+          else
+            git config user.name  "figma-token-bot"
+            git config user.email "figma-token-bot@users.noreply.github.com"
+            git add tokens.css
+            git commit -m "chore(tokens): rebuild tokens.css from Figma plugin push"
+            git push origin HEAD:${{ github.ref_name }}
+            echo "Committed regenerated tokens.css to ${{ github.ref_name }}."
+          fi
