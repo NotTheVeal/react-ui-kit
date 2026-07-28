@@ -9,6 +9,7 @@ import {
   FunnelChart,
   WaffleChart,
   Sparkline,
+  BulletChart,
 } from './DataViz';
 
 const months = ['Jan', 'Feb', 'Mar'];
@@ -78,6 +79,19 @@ describe('DataViz accessibility', () => {
 
   it('has no violations — Sparkline', async () => {
     const { container } = render(<Sparkline data={[1, 3, 2, 5]} aria-label="Trend" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no violations — BulletChart', async () => {
+    const { container } = render(
+      <BulletChart
+        title="KPI vs Target"
+        rows={[
+          { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
+          { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
+        ]}
+      />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });

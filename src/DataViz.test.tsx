@@ -10,6 +10,8 @@ import {
   FunnelChart,
   WaffleChart,
   Sparkline,
+  BulletChart,
+  BULLET_RANGE_COLORS,
   Legend,
   SERIES_COLORS,
 } from './DataViz';
@@ -142,6 +144,51 @@ describe('WaffleChart', () => {
       />,
     );
     expect(container.querySelectorAll('rect').length).toBe(100);
+  });
+});
+
+describe('BulletChart', () => {
+  it('exposes a token-bound qualitative range palette', () => {
+    expect(BULLET_RANGE_COLORS.length).toBe(3);
+    expect(BULLET_RANGE_COLORS.every((c) => c.startsWith('var(--ps-'))).toBe(true);
+  });
+
+  it('renders as an img with an accessible name', () => {
+    render(
+      <BulletChart
+        title="KPI"
+        rows={[{ label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] }]}
+      />,
+    );
+    expect(screen.getByRole('img', { name: 'KPI' })).toBeInTheDocument();
+  });
+
+  it('renders a band per range, one measure bar and one target marker per row', () => {
+    const { container } = render(
+      <BulletChart
+        title="KPI"
+        rows={[
+          { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
+          { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
+        ]}
+      />,
+    );
+    // 2 rows × (3 range bands + 1 measure bar) = 8 rects
+    expect(container.querySelectorAll('rect').length).toBe(8);
+    // one target marker line per row
+    expect(container.querySelectorAll('line').length).toBe(2);
+  });
+
+  it('labels each row and lists all series in the legend', () => {
+    render(
+      <BulletChart
+        title="KPI"
+        rows={[{ label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] }]}
+      />,
+    );
+    expect(screen.getByText('Revenue')).toBeInTheDocument();
+    expect(screen.getByText('Measure')).toBeInTheDocument();
+    expect(screen.getByText('Target marker')).toBeInTheDocument();
   });
 });
 
