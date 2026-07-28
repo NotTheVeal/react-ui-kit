@@ -292,8 +292,11 @@ export const Filter: React.FC<FilterProps> = ({
   const removeChip = (id: string) => emit(applied.filter((c) => c.id !== id));
   const clearAll = () => emit([]);
 
-  const triggerOpen = selectedFacet != null;
   const facetType = selectedFacet?.type ?? 'text';
+  const hasFacet = selectedFacet != null;
+  // Trigger turns blue only when the facet menu is open, or when a search/
+  // multiselect facet is active (matches filter.html .bar-trigger.open rules).
+  const blueTrigger = facetMenuOpen || (hasFacet && facetType !== 'text');
   const placeholder =
     facetType === 'search' || facetType === 'multiselect'
       ? `Search ${selectedFacet?.label ?? ''}...`
@@ -315,7 +318,7 @@ export const Filter: React.FC<FilterProps> = ({
               'flex-shrink-0 w-[42px] h-10 flex items-center justify-center cursor-pointer',
               'bg-[var(--ps-sem-bg-surface)] border border-[var(--ps-sem-border-strong)] rounded-l-[5px]',
               'transition-colors duration-150',
-              facetMenuOpen || triggerOpen
+              blueTrigger
                 ? 'text-[var(--ps-sem-fg-brand)] border-[var(--ps-sem-fg-brand)]'
                 : 'text-[var(--ps-sem-fg-secondary)]',
             )}
@@ -331,22 +334,24 @@ export const Filter: React.FC<FilterProps> = ({
             onClick={() => setFacetMenuOpen((o) => !o)}
             className={cx(
               'flex-shrink-0 w-[212px] h-10 flex items-center text-left cursor-pointer px-[15px] relative',
-              'bg-[var(--ps-sem-bg-surface)] border border-l-0 border-[var(--ps-sem-border-strong)]',
-              triggerOpen && 'border border-[var(--ps-sem-fg-brand)]',
+              'bg-[var(--ps-sem-bg-surface)] border',
+              blueTrigger
+                ? 'border-[var(--ps-sem-fg-brand)]'
+                : 'border-l-0 border-[var(--ps-sem-border-strong)]',
             )}
           >
             <span className="flex-1 flex flex-col leading-none min-w-0">
-              {triggerOpen ? (
+              {blueTrigger ? (
                 <>
                   <span className="text-[11px] font-semibold text-[var(--ps-sem-fg-brand)] tracking-[0.2px] mb-[3px]">
                     Add a Filter
                   </span>
                   <span className="text-base font-normal text-[var(--ps-sem-fg-brand)] tracking-[-0.16px] truncate">
-                    {selectedFacet?.label}
+                    {selectedFacet?.label ?? 'Add a Filter'}
                   </span>
                 </>
               ) : (
-                <span className="text-base font-normal text-[var(--ps-prim-gray-650)] tracking-[-0.16px]">
+                <span className="text-base font-normal text-[var(--ps-prim-gray-650)] tracking-[-0.16px] truncate">
                   Add a Filter
                 </span>
               )}
@@ -354,7 +359,7 @@ export const Filter: React.FC<FilterProps> = ({
             <span
               className={cx(
                 'flex items-center justify-center w-5 h-5 ml-2 flex-shrink-0',
-                triggerOpen ? 'text-[var(--ps-sem-fg-brand)]' : 'text-[var(--ps-prim-gray-650)]',
+                blueTrigger ? 'text-[var(--ps-sem-fg-brand)]' : 'text-[var(--ps-prim-gray-650)]',
               )}
             >
               <Chevron />
@@ -365,7 +370,7 @@ export const Filter: React.FC<FilterProps> = ({
               <div
                 role="listbox"
                 aria-label="Available filters"
-                className="absolute top-[calc(100%+4px)] left-0 w-[266px] max-h-[520px] overflow-auto z-20 py-2 rounded bg-[var(--ps-sem-bg-surface)] shadow-[0_2px_10px_0_rgba(0,47,72,0.30)]"
+                className="absolute top-[calc(100%+4px)] left-0 w-[212px] max-h-[520px] overflow-auto z-20 py-2 rounded bg-[var(--ps-sem-bg-surface)] shadow-[0_2px_10px_0_rgba(0,47,72,0.30)]"
               >
                 {facets.map((f) => (
                   <div
@@ -394,10 +399,10 @@ export const Filter: React.FC<FilterProps> = ({
           <div
             className={cx(
               'flex-1 h-10 bg-[var(--ps-sem-bg-surface)] border border-l-0 border-[var(--ps-sem-border-strong)] rounded-r-[5px]',
-              triggerOpen && 'flex items-center px-[18px]',
+              hasFacet && 'flex items-center px-[18px]',
             )}
           >
-            {triggerOpen && (
+            {hasFacet && (
               <input
                 type="text"
                 aria-label={selectedFacet?.label}
@@ -418,7 +423,7 @@ export const Filter: React.FC<FilterProps> = ({
         </div>
 
         {/* Suggestion / multi-select menu — flush under input area */}
-        {triggerOpen && suggestOpen && facetType !== 'text' && (
+        {hasFacet && suggestOpen && facetType !== 'text' && (
           <div
             className="absolute top-[54px] left-[264px] right-2.5 z-10 mt-1 rounded bg-[var(--ps-sem-bg-surface)] border border-t-0 border-[var(--ps-sem-border-default)] shadow-[0_4px_12px_rgba(0,47,72,0.06)]"
             role={facetType === 'multiselect' ? 'group' : 'listbox'}
@@ -458,16 +463,36 @@ export const Filter: React.FC<FilterProps> = ({
                         i < arr.length - 1 && 'border-b border-[var(--ps-sem-border-subtle)]',
                       )}
                     >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() =>
-                          setPendingMulti((prev) =>
-                            prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt],
-                          )
-                        }
-                        className="w-4 h-4 accent-[var(--ps-sem-fg-brand)]"
-                      />
+                      <span
+                        className={cx(
+                          'relative flex items-center justify-center w-4 h-4 rounded-[2px] border-[1.5px] flex-shrink-0 transition-colors duration-100',
+                          checked
+                            ? 'bg-[var(--ps-sem-fg-brand)] border-[var(--ps-sem-fg-brand)]'
+                            : 'bg-[var(--ps-sem-bg-surface)] border-[var(--ps-sem-border-strong)]',
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            setPendingMulti((prev) =>
+                              prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt],
+                            )
+                          }
+                          className="absolute inset-0 opacity-0 cursor-pointer m-0"
+                        />
+                        {checked && (
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                            <path
+                              d="M1.5 5L4 7.5L8.5 2.5"
+                              stroke="var(--ps-sem-fg-inverse)"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </span>
                       {opt}
                     </label>
                   );
