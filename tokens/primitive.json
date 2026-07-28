@@ -287,44 +287,8 @@
     "$value": "#00AEEF",
     "$type": "color"
   },
-  "ps-prim-orange-75": {
-    "$value": "#FFE4C0",
-    "$type": "color"
-  },
-  "ps-prim-green-200": {
-    "$value": "#8BD5BC",
-    "$type": "color"
-  },
-  "ps-prim-red-200": {
-    "$value": "#FACBCB",
-    "$type": "color"
-  },
-  "ps-prim-red-max": {
-    "$value": "#FF0000",
-    "$type": "color"
-  },
-  "ps-prim-gray-425": {
-    "$value": "#ACACAC",
-    "$type": "color"
-  },
-  "ps-prim-teal-450": {
-    "$value": "#00CBB7",
-    "$type": "color"
-  },
-  "ps-prim-blue-550": {
-    "$value": "#005499",
-    "$type": "color"
-  },
   "ps-prim-formulary-best": {
     "$value": "#29A10F",
-    "$type": "color"
-  },
-  "ps-prim-formulary-verygood": {
-    "$value": "#03C700",
-    "$type": "color"
-  },
-  "ps-prim-formulary-moderate": {
-    "$value": "#E9E022",
     "$type": "color"
   },
   "ps-prim-formulary-fair": {
@@ -533,10 +497,6 @@
   },
   "ps-prim-radius-4": {
     "$value": "4px",
-    "$type": "dimension"
-  },
-  "ps-prim-radius-5": {
-    "$value": "5px",
     "$type": "dimension"
   },
   "ps-prim-radius-6": {
@@ -757,5 +717,77 @@
   },
   "ps-prim-container-full": {
     "$value": "100%"
+  },
+  "ps-prim-slate-500": {
+    "$value": "#737B84",
+    "$type": "color"
+  },
+  "ps-prim-red-pure": {
+    "$value": "#FF0000",
+    "$type": "color"
+  },
+  "ps-prim-yellow-400": {
+    "$value": "#E9E022",
+    "$type": "color"
+  },
+  "ps-prim-orange-pale": {
+    "$value": "#FFE4C0",
+    "$type": "color"
+  },
+  "ps-prim-green-light": {
+    "$value": "#8BD5BC",
+    "$type": "color"
+  },
+  "ps-prim-red-light": {
+    "$value": "#FACBCB",
+    "$type": "color"
+  },
+  "ps-prim-gray-450-2": {
+    "$value": "#ACACAC",
+    "$type": "color"
+  },
+  "ps-prim-formulary-very-good": {
+    "$value": "#03C700",
+    "$type": "color"
+  },
+  "ps-prim-rewards-teal": {
+    "$value": "#00CBB7",
+    "$type": "color"
+  },
+  "ps-prim-rewards-blue": {
+    "$value": "#005499",
+    "$type": "color"
+  },
+  "ps-prim-shadow-gray-25": {
+    "$value": "#6E6E6E40",
+    "$type": "color"
+  },
+  "ps-prim-shadow-charcoal-20": {
+    "$value": "#3A333333",
+    "$type": "color"
+  },
+  "ps-prim-shadow-focus-91": {
+    "$value": "#D0EDFCE8",
+    "$type": "color"
+  },
+  "ps-prim-shadow-navy-08": {
+    "$value": "#002F4814",
+    "$type": "color"
+  },
+  "ps-prim-shadow-navy-10": {
+    "$value": "#002F481A",
+    "$type": "color"
+  },
+  "ps-prim-shadow-navy-18": {
+    "$value": "#002F482E",
+    "$type": "color"
+  },
+  "ps-prim-size-22": {
+    "$value": "22px",
+    "$type": "dimension"
+  },
+  "ps-prim-size-26": {
+    "$value": "26px",
+    "$type": "dimension"
   }
 }

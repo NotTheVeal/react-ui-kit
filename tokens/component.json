@@ -1864,5 +1864,110 @@
   },
   "ps-cmp-stepper-transition": {
     "$value": "150ms ease"
+  },
+  "ps-cmp-availability-chip-available-bg": {
+    "$value": "{ps-sem-success-bg}"
+  },
+  "ps-cmp-availability-chip-available-fg": {
+    "$value": "{ps-sem-success-fg}"
+  },
+  "ps-cmp-availability-chip-available-dot": {
+    "$value": "{ps-sem-success-fg}"
+  },
+  "ps-cmp-availability-chip-unavailable-bg": {
+    "$value": "{ps-sem-danger-bg}"
+  },
+  "ps-cmp-availability-chip-unavailable-fg": {
+    "$value": "{ps-sem-danger-fg}"
+  },
+  "ps-cmp-availability-chip-unavailable-dot": {
+    "$value": "{ps-sem-danger-fg}"
+  },
+  "ps-cmp-availability-chip-onorder-bg": {
+    "$value": "{ps-sem-warning-bg}"
+  },
+  "ps-cmp-availability-chip-onorder-fg": {
+    "$value": "{ps-sem-warning-fg}"
+  },
+  "ps-cmp-availability-chip-onorder-dot": {
+    "$value": "{ps-sem-warning-fg}"
+  },
+  "ps-cmp-availability-chip-discontinued-bg": {
+    "$value": "{ps-sem-bg-muted}"
+  },
+  "ps-cmp-availability-chip-discontinued-fg": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-cmp-availability-chip-discontinued-dot": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-cmp-price-tag-surface": {
+    "$value": "{ps-sem-bg-surface}"
+  },
+  "ps-cmp-price-tag-border": {
+    "$value": "{ps-sem-border-default}"
+  },
+  "ps-cmp-price-tag-current-price": {
+    "$value": "{ps-sem-fg-brand-dark}"
+  },
+  "ps-cmp-price-tag-compare-price": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-cmp-price-tag-savings-bg": {
+    "$value": "{ps-sem-success-bg}"
+  },
+  "ps-cmp-price-tag-savings-fg": {
+    "$value": "{ps-sem-success-fg}"
+  },
+  "ps-cmp-stock-level-label": {
+    "$value": "{ps-sem-fg-secondary}"
+  },
+  "ps-cmp-stock-level-value": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-cmp-stock-level-status-text": {
+    "$value": "{ps-sem-action-default}"
+  },
+  "ps-cmp-stock-level-track-bg": {
+    "$value": "{ps-sem-border-default}"
+  },
+  "ps-cmp-stock-level-track-fill": {
+    "$value": "{ps-sem-action-default}"
+  },
+  "ps-cmp-part-reference-surface": {
+    "$value": "{ps-sem-bg-muted}"
+  },
+  "ps-cmp-part-reference-label": {
+    "$value": "{ps-sem-fg-tertiary}"
+  },
+  "ps-cmp-part-reference-value": {
+    "$value": "{ps-sem-fg-brand-dark}"
+  },
+  "ps-cmp-part-reference-copy-button-surface": {
+    "$value": "{ps-sem-action-default}"
+  },
+  "ps-cmp-part-reference-copy-button-text": {
+    "$value": "{ps-sem-fg-inverse}"
+  },
+  "ps-cmp-vendor-badge-surface": {
+    "$value": "{ps-sem-bg-surface}"
+  },
+  "ps-cmp-vendor-badge-border": {
+    "$value": "{ps-sem-border-default}"
+  },
+  "ps-cmp-vendor-badge-name": {
+    "$value": "{ps-sem-fg-brand-dark}"
+  },
+  "ps-cmp-vendor-badge-avatar-surface": {
+    "$value": "{ps-sem-action-default}"
+  },
+  "ps-cmp-vendor-badge-avatar-text": {
+    "$value": "{ps-sem-fg-inverse}"
+  },
+  "ps-cmp-vendor-badge-tier-bg": {
+    "$value": "{ps-sem-success-bg}"
+  },
+  "ps-cmp-vendor-badge-tier-fg": {
+    "$value": "{ps-sem-success-fg}"
   }
 }
