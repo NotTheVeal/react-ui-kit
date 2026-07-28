@@ -9,6 +9,12 @@ import {
   FunnelChart,
   RadarChart,
   BulletChart,
+  ScatterPlot,
+  BubbleChart,
+  HeatMap,
+  TreeMap,
+  BumpChart,
+  StreamChart,
 } from './DataViz'
 
 const FIG = 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System'
@@ -123,6 +129,117 @@ figma.connect(BulletChart, `${FIG}?node-id=4751-1155`, {
         { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
         { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
         { label: 'NPS', measure: 48, target: 70, ranges: [40, 70, 100] },
+      ]}
+    />
+  ),
+})
+
+// Scatter Plot
+figma.connect(ScatterPlot, `${FIG}?node-id=4750-80`, {
+  example: () => (
+    <ScatterPlot
+      title="Lead Time vs Fill Rate"
+      subtitle="Each point is a supplier"
+      series={[
+        {
+          name: 'Imaging',
+          data: [
+            { x: 12, y: 88, label: 'GE' },
+            { x: 18, y: 82, label: 'Philips' },
+            { x: 9, y: 94, label: 'Siemens' },
+            { x: 22, y: 76, label: 'Canon' },
+          ],
+        },
+      ]}
+      xFormat={(n) => `${n}d`}
+      yFormat={(n) => `${n}%`}
+    />
+  ),
+})
+
+// Bubble Chart
+figma.connect(BubbleChart, `${FIG}?node-id=4750-141`, {
+  example: () => (
+    <BubbleChart
+      title="Category Performance"
+      subtitle="x = margin · y = fill rate · size = volume"
+      series={[
+        {
+          name: 'Segments',
+          data: [
+            { x: 80, y: 92, r: 16, label: 'Imaging' },
+            { x: 65, y: 85, r: 20, label: 'Surgical' },
+            { x: 45, y: 78, r: 11, label: 'ICU' },
+            { x: 30, y: 70, r: 9, label: 'Lab' },
+          ],
+        },
+      ]}
+      xFormat={(n) => `${n}%`}
+      yFormat={(n) => `${n}%`}
+    />
+  ),
+})
+
+// Heat Map
+figma.connect(HeatMap, `${FIG}?node-id=4750-397`, {
+  example: () => (
+    <HeatMap
+      title="Order Volume by Day & Shift"
+      xLabels={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+      yLabels={['Night', 'Morning', 'Afternoon', 'Evening']}
+      values={[
+        [1, 0, 1, 2, 1, 0, 0],
+        [4, 5, 4, 6, 5, 2, 1],
+        [3, 4, 5, 4, 6, 2, 1],
+        [2, 3, 2, 3, 4, 1, 0],
+      ]}
+    />
+  ),
+})
+
+// Treemap
+figma.connect(TreeMap, `${FIG}?node-id=4750-735`, {
+  example: () => (
+    <TreeMap
+      title="Parts Spend by Category"
+      data={[
+        { name: 'Imaging', value: 140, d: 0 },
+        { name: 'Surgical', value: 110, d: 1 },
+        { name: 'ICU', value: 90, d: 2 },
+        { name: 'Lab', value: 70, d: 3 },
+        { name: 'Other', value: 40, d: 4 },
+      ]}
+      valueFormat={(n) => `$${n}k`}
+    />
+  ),
+})
+
+// Bump Chart
+figma.connect(BumpChart, `${FIG}?node-id=4751-103`, {
+  example: () => (
+    <BumpChart
+      title="Supplier Rank by Quarter"
+      periods={["Q1'24", "Q2'24", "Q3'24", "Q4'24", "Q1'25"]}
+      series={[
+        { name: 'Supplier A', ranks: [1, 2, 1, 3, 2] },
+        { name: 'Supplier B', ranks: [3, 1, 2, 1, 1] },
+        { name: 'Supplier C', ranks: [2, 3, 3, 2, 3] },
+      ]}
+    />
+  ),
+})
+
+// Stream Chart
+figma.connect(StreamChart, `${FIG}?node-id=4751-178`, {
+  example: () => (
+    <StreamChart
+      title="Category Mix Over Time"
+      categories={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']}
+      series={[
+        { name: 'Imaging', data: [20, 24, 22, 28, 30, 34] },
+        { name: 'Surgical', data: [16, 18, 20, 19, 22, 24] },
+        { name: 'ICU', data: [10, 12, 14, 13, 15, 16] },
+        { name: 'Lab', data: [8, 9, 8, 11, 10, 12] },
       ]}
     />
   ),
