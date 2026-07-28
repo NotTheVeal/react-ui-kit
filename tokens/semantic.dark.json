@@ -118,5 +118,50 @@
   },
   "ps-sem-focus-ring": {
     "$value": "0 0 0 3px {ps-prim-blue-400}"
+  },
+  "ps-sem-promo-disabled": {
+    "$value": "#FF95054D"
+  },
+  "ps-sem-bg-tooltip": {
+    "$value": "{ps-prim-gray-800}"
+  },
+  "ps-sem-fg-input": {
+    "$value": "#FAFAFA"
+  },
+  "ps-sem-fg-input-disabled": {
+    "$value": "#777777"
+  },
+  "ps-sem-border-input": {
+    "$value": "#4A4A4A"
+  },
+  "ps-sem-border-input-hover": {
+    "$value": "#FAFAFA"
+  },
+  "ps-sem-border-control": {
+    "$value": "#DCDCDC"
+  },
+  "ps-sem-bg-selected": {
+    "$value": "#009CF44D"
+  },
+  "ps-sem-bg-neutral": {
+    "$value": "#4A4A4A"
+  },
+  "ps-sem-bg-strong": {
+    "$value": "#777777"
+  },
+  "ps-sem-success-bg-alert": {
+    "$value": "#17AB7826"
+  },
+  "ps-sem-success-fg-alert": {
+    "$value": "#17AB78"
+  },
+  "ps-sem-danger-bg-alert": {
+    "$value": "#D1434326"
+  },
+  "ps-sem-danger-fg-alert": {
+    "$value": "#D14343"
+  },
+  "ps-sem-warning-fg-alert": {
+    "$value": "#FF9505"
   }
 }

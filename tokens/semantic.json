@@ -357,31 +357,58 @@
   "ps-sem-container-modal-lg": {
     "$value": "{ps-prim-container-800}"
   },
-  "ps-sem-formulary-best": {
-    "$value": "{ps-prim-formulary-best}"
+  "ps-sem-promo-disabled": {
+    "$value": "{ps-prim-orange-100}"
   },
-  "ps-sem-formulary-verygood": {
-    "$value": "{ps-prim-formulary-verygood}"
+  "ps-sem-bg-tooltip": {
+    "$value": "{ps-prim-gray-700}"
   },
-  "ps-sem-formulary-moderate": {
-    "$value": "{ps-prim-formulary-moderate}"
+  "ps-sem-fg-input": {
+    "$value": "#000000"
   },
-  "ps-sem-formulary-fair": {
-    "$value": "{ps-prim-formulary-fair}"
+  "ps-sem-fg-input-disabled": {
+    "$value": "#DCDCDC"
   },
-  "ps-sem-formulary-poor": {
-    "$value": "{ps-prim-formulary-poor}"
+  "ps-sem-border-input": {
+    "$value": "#949494"
   },
-  "ps-sem-rewards-teal": {
-    "$value": "{ps-prim-teal-450}"
+  "ps-sem-border-input-hover": {
+    "$value": "#000000"
   },
-  "ps-sem-rewards-blue": {
-    "$value": "{ps-prim-blue-550}"
+  "ps-sem-border-control": {
+    "$value": "#4A4A4A"
   },
-  "ps-sem-dataviz-negative": {
-    "$value": "{ps-prim-red-max}"
+  "ps-sem-bg-selected": {
+    "$value": "#D0EDFC"
   },
-  "ps-sem-dataviz-active": {
-    "$value": "{ps-prim-gray-425}"
+  "ps-sem-bg-neutral": {
+    "$value": "#DCDCDC"
+  },
+  "ps-sem-bg-strong": {
+    "$value": "#CCCCCC"
+  },
+  "ps-sem-success-bg-alert": {
+    "$value": "#E2F5EE"
+  },
+  "ps-sem-success-fg-alert": {
+    "$value": "#0E7C55"
+  },
+  "ps-sem-danger-bg-alert": {
+    "$value": "#FEF0F0"
+  },
+  "ps-sem-danger-fg-alert": {
+    "$value": "#E00000"
+  },
+  "ps-sem-warning-fg-alert": {
+    "$value": "#B45309"
+  },
+  "ps-sem-text-display-hero": {
+    "$value": "{ps-prim-size-34}"
+  },
+  "ps-sem-text-mobile-h1": {
+    "$value": "{ps-prim-size-26}"
+  },
+  "ps-sem-text-mobile-h2": {
+    "$value": "{ps-prim-size-22}"
   }
 }
