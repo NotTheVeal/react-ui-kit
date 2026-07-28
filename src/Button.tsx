@@ -3,7 +3,7 @@ import * as React from 'react';
 // ──────────────────────────────────────────────────────────────────
 // Button.tsx — PartsSource Design System
 //
-// Variants:  primary | secondary | tertiary | pill | inline | arrow
+// Variants:  primary | outline | secondary | tertiary | danger | pill | arrow | inline
 // Sizes:     lg (50px) · sm (32px) · pill (48px) · arrow (28px) · tert-lg (40px)
 // States:    default | hover | focus | pressed | disabled | loading
 //
@@ -11,7 +11,8 @@ import * as React from 'react';
 // ──────────────────────────────────────────────────────────────────
 
 type Variant =
-  | "primary"           // 50px blue-outline → fills on hover (current brand direction)
+  | "primary"           // filled PS Blue, white text — Figma Button/Primary (Code Connect canonical)
+  | "outline"           // blue-outline → fills on hover (former primary; brand experiment, preserved)
   | "secondary"         // 32px white + grey border, blue fill on hover
   | "tertiary"          // 40px grey pill, secondary affordance
   | "danger"            // red destructive action, filled
@@ -55,6 +56,22 @@ const sizeShells: Record<Size, string> = {
 // can render every state without faking interactions.
 const variants = {
   primary: {
+    // Figma Button/Primary — filled PS Blue, white text, darken-on-interact.
+    // Code Connect maps Figma Primary to this variant, so it must be the filled fill.
+    default: "bg-[var(--ps-prim-blue-500)] text-white border-transparent",
+    hover:   "bg-[var(--ps-prim-blue-600)] text-white border-transparent",
+    pressed: "bg-[var(--ps-prim-blue-600)] text-white border-transparent shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
+    focus:   "bg-[var(--ps-prim-blue-500)] text-white border-transparent shadow-[0_0_0_3px_rgba(176,198,211,0.91)]",
+    disabled:"bg-[var(--ps-prim-gray-300)] text-[var(--ps-prim-gray-600)] border-transparent",
+    hoverInteractive:
+      "hover:bg-[var(--ps-prim-blue-600)] active:bg-[var(--ps-prim-blue-600)] " +
+      "active:shadow-[0_4px_4px_rgba(0,0,0,0.25)] " +
+      "focus-visible:shadow-[0_0_0_3px_rgba(176,198,211,0.91)] " +
+      "disabled:bg-[var(--ps-prim-gray-300)] disabled:text-[var(--ps-prim-gray-600)]",
+  },
+  outline: {
+    // Former "primary" — blue outline that fills on hover. Preserved as a distinct
+    // variant so the brand-experiment treatment isn't lost.
     default: "bg-white text-[var(--ps-prim-blue-500)] border-[var(--ps-prim-blue-500)]",
     hover:   "bg-[var(--ps-prim-blue-500)] text-white border-[var(--ps-prim-blue-400)]",
     pressed: "bg-[var(--ps-prim-blue-600)] text-white border-[var(--ps-prim-blue-600)] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
