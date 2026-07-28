@@ -33,6 +33,17 @@ const config: StorybookConfig = {
         prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
     },
   },
+  // GitHub Pages serves this repo from a project subpath
+  // (https://nottheveal.github.io/react-ui-kit/). Without a matching Vite
+  // `base`, the static build requests /assets/* from the domain root and the
+  // page renders blank. Set the subpath for the production export only; the
+  // local dev server (npm run storybook) keeps the default root base.
+  async viteFinal(config, { configType }) {
+    if (configType === 'PRODUCTION') {
+      config.base = '/react-ui-kit/';
+    }
+    return config;
+  },
 };
 
 export default config;
