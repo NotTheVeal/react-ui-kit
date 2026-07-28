@@ -1,17 +1,21 @@
 import figma from '@figma/code-connect'
-import { FilterChip, FilterShell } from './Filter'
+import { Filter, FilterChip } from './Filter'
 
-// FilterShell — Figma Filter (node 1570:2732). Format = Desktop/Mobile is a
+// Filter — Figma Filter (node 1570:2732). Format = Desktop/Mobile is a
 // responsive variant handled internally, so it is left unmapped.
-figma.connect(FilterShell, 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System?node-id=1570-2732', {
+figma.connect(Filter, 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System?node-id=1570-2732', {
   props: {},
   example: () => (
-    <FilterShell chips={<FilterChip label="In Stock" />} addLabel="Add filter" />
+    <Filter
+      defaultApplied={[
+        { id: 'a', facetId: 'facility', facetLabel: 'Facility', value: 'Hospital A' },
+      ]}
+    />
   ),
 })
 
 // FilterChip — the removable pill within the filter bar.
 figma.connect(FilterChip, 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System?node-id=1570-2732', {
   props: {},
-  example: () => <FilterChip label="Manufacturer: GE" />,
+  example: () => <FilterChip filterKey="Manufacturer" value="GE" />,
 })
