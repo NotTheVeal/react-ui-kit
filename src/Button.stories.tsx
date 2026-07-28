@@ -29,6 +29,10 @@ export const PillLegacy: Story = {
   args: { variant: 'pill', children: 'Propose Quote' },
   parameters: { docs: { description: { story: '⚠ Deprecated — orange CTAs fail WCAG AA. Use Primary for new work.' } } },
 };
+export const Outline: Story = {
+  args: { variant: 'outline', children: 'Buy Now' },
+  parameters: { docs: { description: { story: 'Former primary — blue outline that fills on hover. Preserved as a distinct variant.' } } },
+};
 export const Disabled: Story = { args: { variant: 'primary', disabled: true, children: 'Buy Now' } };
 export const Loading: Story = { args: { variant: 'primary', loading: true, children: 'Buy Now' } };
 
@@ -38,6 +42,7 @@ export const AllVariants: Story = {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-4">
         <Button variant="primary">Primary</Button>
+        <Button variant="outline">Outline</Button>
         <Button variant="secondary" size="sm">Secondary</Button>
         <Button variant="tertiary">Tertiary</Button>
         <Button variant="danger">Danger</Button>

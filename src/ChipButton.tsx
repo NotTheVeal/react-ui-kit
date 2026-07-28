@@ -89,7 +89,7 @@ const ChipButton: React.FC<ChipButtonProps> = ({
       className={cx(shell, sz, disabled && 'opacity-40', className)}
       {...rest}
     >
-      <span className="truncate leading-none">{children}</span>
+      <span className="truncate leading-[1.35]">{children}</span>
       <button
         type="button"
         onClick={disabled ? undefined : onRemove}
