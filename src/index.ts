@@ -4,7 +4,8 @@
 //   import { Button, Card, Modal } from '@partssource/react-kit';
 // ──────────────────────────────────────────────────────────────────
 
-export { Button, ButtonInline, BackArrowIcon } from './Button';
+export { Button, ButtonInline, InlineButton, BackArrowIcon } from './Button';
+export type { ButtonProps, ButtonInlineProps } from './Button';
 export { IconButton } from './IconButton';
 export type { IconButtonProps } from './IconButton';
 export { ChipButton } from './ChipButton';

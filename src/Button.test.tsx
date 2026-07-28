@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Button, ButtonInline, BackArrowIcon } from './Button';
+import { Button, ButtonInline, InlineButton, BackArrowIcon } from './Button';
 
 describe('Button', () => {
   it('renders children in a semantic button', () => {
@@ -69,6 +69,42 @@ describe('Button', () => {
       expect(screen.getByRole('button')).toBeInTheDocument();
     }
   );
+
+  it('accepts the ghost alias and renders it as the outline treatment', () => {
+    render(
+      <>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="outline">Outline</Button>
+      </>
+    );
+    const ghost = screen.getByRole('button', { name: 'Ghost' });
+    const outline = screen.getByRole('button', { name: 'Outline' });
+    // ghost must resolve to the exact same class set as outline.
+    expect(ghost.className).toBe(outline.className);
+  });
+
+  it('accepts leftIcon/rightIcon as aliases for iconStart/iconEnd', () => {
+    render(
+      <Button leftIcon={<span data-testid="left" />} rightIcon={<span data-testid="right" />}>
+        Aliased
+      </Button>
+    );
+    expect(screen.getByTestId('left')).toBeInTheDocument();
+    expect(screen.getByTestId('right')).toBeInTheDocument();
+  });
+
+  it('prefers iconStart/iconEnd over leftIcon/rightIcon when both are set', () => {
+    render(
+      <Button
+        iconStart={<span data-testid="start" />}
+        leftIcon={<span data-testid="left" />}
+      >
+        Both
+      </Button>
+    );
+    expect(screen.getByTestId('start')).toBeInTheDocument();
+    expect(screen.queryByTestId('left')).not.toBeInTheDocument();
+  });
 });
 
 describe('ButtonInline', () => {
@@ -80,6 +116,37 @@ describe('ButtonInline', () => {
 
   it('appends a chevron glyph for the dir kind', () => {
     const { container } = render(<ButtonInline kind="dir">Next</ButtonInline>);
+    expect(container.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('maps the contract variant "director" to the dir kind (chevron glyph)', () => {
+    const { container } = render(<ButtonInline variant="director">Next</ButtonInline>);
+    expect(container.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('lets kind win over variant when both are set', () => {
+    // variant="director" would add a chevron; kind="link" must suppress it.
+    const { container } = render(
+      <ButtonInline kind="link" variant="director">
+        Link
+      </ButtonInline>
+    );
+    expect(container.querySelector('svg')).not.toBeInTheDocument();
+  });
+});
+
+describe('InlineButton (contract alias)', () => {
+  it('is the same component as ButtonInline', () => {
+    expect(InlineButton).toBe(ButtonInline);
+  });
+
+  it('renders an anchor and maps contract variants', () => {
+    const { container } = render(
+      <InlineButton variant="director" href="/next">
+        Next
+      </InlineButton>
+    );
+    expect(screen.getByRole('link', { name: /next/i })).toHaveAttribute('href', '/next');
     expect(container.querySelector('svg')).toBeInTheDocument();
   });
 });

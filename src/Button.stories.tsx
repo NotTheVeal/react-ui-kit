@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, ButtonInline } from './Button';
+import { Button, ButtonInline, InlineButton } from './Button';
 
 const meta = {
   title: 'Components/Button',
@@ -8,7 +8,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'danger', 'pill', 'arrow'],
+      options: ['primary', 'outline', 'ghost', 'secondary', 'tertiary', 'danger', 'pill', 'arrow'],
     },
     size: { control: 'select', options: ['sm', 'lg'] },
     state: { control: 'select', options: [undefined, 'default', 'hover', 'focus', 'pressed'] },
@@ -32,6 +32,10 @@ export const PillLegacy: Story = {
 export const Outline: Story = {
   args: { variant: 'outline', children: 'Buy Now' },
   parameters: { docs: { description: { story: 'Former primary — blue outline that fills on hover. Preserved as a distinct variant.' } } },
+};
+export const Ghost: Story = {
+  args: { variant: 'ghost', children: 'Buy Now' },
+  parameters: { docs: { description: { story: 'Contract alias — `ghost` resolves to the shipped `outline` treatment. Kept so CLAUDE.md/Code Connect names stay valid.' } } },
 };
 export const Disabled: Story = { args: { variant: 'primary', disabled: true, children: 'Buy Now' } };
 export const Loading: Story = { args: { variant: 'primary', loading: true, children: 'Buy Now' } };
@@ -59,6 +63,12 @@ export const AllVariants: Story = {
         <ButtonInline kind="link" href="#">Inline link</ButtonInline>
         <ButtonInline kind="link-blue" href="#">PRODUCT TITLE</ButtonInline>
         <ButtonInline kind="dir" href="#">Directory row</ButtonInline>
+      </div>
+      {/* Contract-named alias: InlineButton with variant (director|underline|allCaps) */}
+      <div className="flex flex-wrap items-center gap-4">
+        <InlineButton variant="underline" href="#">Underline (alias)</InlineButton>
+        <InlineButton variant="allCaps" href="#">All caps (alias)</InlineButton>
+        <InlineButton variant="director" href="#">Director (alias)</InlineButton>
       </div>
     </div>
   ),

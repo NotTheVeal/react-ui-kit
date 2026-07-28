@@ -3,7 +3,8 @@ import * as React from 'react';
 // ──────────────────────────────────────────────────────────────────
 // Button.tsx — PartsSource Design System
 //
-// Variants:  primary | outline | secondary | tertiary | danger | pill | arrow | inline
+// Variants:  primary | outline | secondary | tertiary | danger | pill | arrow
+// Aliases:   ghost → outline (CLAUDE.md contract name; resolves to the outline treatment)
 // Sizes:     lg (50px) · sm (32px) · pill (48px) · arrow (28px) · tert-lg (40px)
 // States:    default | hover | focus | pressed | disabled | loading
 //
@@ -19,13 +20,20 @@ type Variant =
   | "pill"              // 48px orange pill (legacy — deprecated for ADA)
   | "arrow";            // 28px square icon-only back button
 
+/**
+ * Public variant prop. Adds the `ghost` alias from the CLAUDE.md contract,
+ * which resolves to the shipped `outline` treatment (see resolveVariant).
+ */
+type PublicVariant = Variant | "ghost";
+
 type Size = "sm" | "lg";
 
 type ForcedState = "default" | "hover" | "focus" | "pressed";
 
 interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "size"> {
-  variant?: Variant;
+  /** `ghost` is accepted as a contract alias and resolves to `outline`. */
+  variant?: PublicVariant;
   size?: Size;
   /** Force a visual state regardless of pointer/keyboard. Useful for docs. */
   state?: ForcedState;
@@ -33,8 +41,16 @@ interface ButtonProps
   /** Optional leading or trailing icon as a React node. */
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
+  /** @deprecated Alias for `iconStart` (CLAUDE.md contract name). */
+  leftIcon?: React.ReactNode;
+  /** @deprecated Alias for `iconEnd` (CLAUDE.md contract name). */
+  rightIcon?: React.ReactNode;
   fullWidth?: boolean;
 }
+
+/** Resolve public variant names (incl. the `ghost` alias) to shipped variants. */
+const resolveVariant = (variant: PublicVariant): Variant =>
+  variant === "ghost" ? "outline" : variant;
 
 // ── Base shell shared by every variant ───────────────────────────
 const base =
@@ -193,14 +209,21 @@ const Button: React.FC<ButtonProps> = ({
   loading = false,
   iconStart,
   iconEnd,
+  leftIcon,
+  rightIcon,
   fullWidth,
   className = "",
   disabled,
   children,
   ...rest
 }) => {
-  const v = variants[variant];
-  const sizeClasses = overrideSize(variant, size);
+  const resolved = resolveVariant(variant);
+  const v = variants[resolved];
+  const sizeClasses = overrideSize(resolved, size);
+
+  // Contract aliases: leftIcon/rightIcon fall back to iconStart/iconEnd.
+  const startIcon = iconStart ?? leftIcon;
+  const endIcon = iconEnd ?? rightIcon;
 
   // Static state overrides win over hover/focus interactives.
   let stateClasses: string;
@@ -229,9 +252,9 @@ const Button: React.FC<ButtonProps> = ({
         </>
       ) : (
         <>
-          {iconStart && <span className="mr-1.5 inline-flex items-center">{iconStart}</span>}
+          {startIcon && <span className="mr-1.5 inline-flex items-center">{startIcon}</span>}
           <span>{children}</span>
-          {iconEnd && <span className="ml-1.5 inline-flex items-center">{iconEnd}</span>}
+          {endIcon && <span className="ml-1.5 inline-flex items-center">{endIcon}</span>}
         </>
       )}
     </button>
@@ -241,9 +264,23 @@ const Button: React.FC<ButtonProps> = ({
 // ── Inline button variants (text-styled, not boxed) ──────────────
 type InlineKind = "link" | "link-blue" | "tall" | "dir";
 
+/** Contract variant names (CLAUDE.md) mapped onto shipped `kind` values. */
+type InlineVariant = "director" | "underline" | "allCaps";
+
+const inlineVariantToKind: Record<InlineVariant, InlineKind> = {
+  director: "dir",
+  underline: "link",
+  allCaps: "tall",
+};
+
 interface ButtonInlineProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   kind?: InlineKind;
+  /**
+   * Contract alias (CLAUDE.md `InlineButton`): director | underline | allCaps.
+   * Maps to `kind` (dir | link | tall). If both are set, `kind` wins.
+   */
+  variant?: InlineVariant;
 }
 
 const inlineStyles: Record<InlineKind, string> = {
@@ -267,14 +304,20 @@ const inlineStyles: Record<InlineKind, string> = {
 };
 
 const ButtonInline: React.FC<ButtonInlineProps> = ({
-  kind = "link",
+  kind,
+  variant,
   className = "",
   children,
   ...rest
-}) => (
-  <a className={cx(inlineStyles[kind], className)} {...rest}>
+}) => {
+  // `kind` wins when explicitly set; otherwise map the contract `variant`;
+  // otherwise fall back to the historical default.
+  const resolvedKind: InlineKind =
+    kind ?? (variant ? inlineVariantToKind[variant] : "link");
+  return (
+  <a className={cx(inlineStyles[resolvedKind], className)} {...rest}>
     {children}
-    {kind === "dir" && (
+    {resolvedKind === "dir" && (
       <svg
         width={8}
         height={11}
@@ -294,7 +337,14 @@ const ButtonInline: React.FC<ButtonInlineProps> = ({
       </svg>
     )}
   </a>
-);
+  );
+};
+
+/**
+ * @deprecated Use `ButtonInline`. Alias provided for the CLAUDE.md contract
+ * name; accepts the `variant` (director | underline | allCaps) prop.
+ */
+const InlineButton = ButtonInline;
 
 // ── Back-arrow glyph for the `arrow` variant ─────────────────────
 const BackArrowIcon: React.FC = () => (
@@ -311,4 +361,5 @@ const BackArrowIcon: React.FC = () => (
 );
 
 // Exports
-export { Button, ButtonInline, BackArrowIcon };
+export { Button, ButtonInline, InlineButton, BackArrowIcon };
+export type { ButtonProps, ButtonInlineProps, PublicVariant };
