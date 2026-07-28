@@ -10,6 +10,12 @@ import {
   WaffleChart,
   Sparkline,
   BulletChart,
+  ScatterPlot,
+  BubbleChart,
+  HeatMap,
+  TreeMap,
+  BumpChart,
+  StreamChart,
   Legend,
   SERIES_COLORS,
 } from './DataViz';
@@ -188,6 +194,134 @@ export const BulletSingle: Story = {
       height={80}
       rows={[{ label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] }]}
       valueFormat={(n) => `$${n}k`}
+    />
+  ),
+};
+
+export const Scatter: Story = {
+  render: () => (
+    <ScatterPlot
+      eyebrow="Correlation"
+      title="Lead Time vs Fill Rate"
+      subtitle="Each point is a supplier"
+      series={[
+        {
+          name: 'Imaging',
+          data: [
+            { x: 12, y: 88, label: 'GE' },
+            { x: 18, y: 82, label: 'Philips' },
+            { x: 9, y: 94, label: 'Siemens' },
+            { x: 22, y: 76, label: 'Canon' },
+            { x: 15, y: 85, label: 'Hologic' },
+          ],
+        },
+        {
+          name: 'Surgical',
+          data: [
+            { x: 20, y: 70, label: 'Stryker' },
+            { x: 28, y: 64, label: 'Medtronic' },
+            { x: 24, y: 68, label: 'Zimmer' },
+            { x: 31, y: 60, label: 'Smith+Nephew' },
+          ],
+        },
+      ]}
+      xFormat={(n) => `${n}d`}
+      yFormat={(n) => `${n}%`}
+    />
+  ),
+};
+
+export const Bubble: Story = {
+  render: () => (
+    <BubbleChart
+      eyebrow="Portfolio"
+      title="Category Performance"
+      subtitle="x = margin · y = fill rate · size = volume"
+      series={[
+        {
+          name: 'Segments',
+          data: [
+            { x: 80, y: 92, r: 16, label: 'Imaging' },
+            { x: 65, y: 85, r: 20, label: 'Surgical' },
+            { x: 45, y: 78, r: 11, label: 'ICU' },
+            { x: 30, y: 70, r: 9, label: 'Lab' },
+          ],
+        },
+      ]}
+      xFormat={(n) => `${n}%`}
+      yFormat={(n) => `${n}%`}
+    />
+  ),
+};
+
+export const Heat: Story = {
+  render: () => (
+    <HeatMap
+      eyebrow="Activity"
+      title="Order Volume by Day & Shift"
+      xLabels={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+      yLabels={['Night', 'Morning', 'Afternoon', 'Evening']}
+      values={[
+        [1, 0, 1, 2, 1, 0, 0],
+        [4, 5, 4, 6, 5, 2, 1],
+        [3, 4, 5, 4, 6, 2, 1],
+        [2, 3, 2, 3, 4, 1, 0],
+      ]}
+    />
+  ),
+};
+
+export const Tree: Story = {
+  render: () => (
+    <TreeMap
+      eyebrow="Spend"
+      title="Parts Spend by Category"
+      data={[
+        { name: 'Sales / Enterprise', value: 180, d: 0 },
+        { name: 'Imaging', value: 140, d: 1 },
+        { name: 'Surgical', value: 110, d: 1 },
+        { name: 'ICU', value: 90, d: 2 },
+        { name: 'Lab', value: 70, d: 2 },
+        { name: 'Cardiology', value: 60, d: 3 },
+        { name: 'Endoscopy', value: 48, d: 3 },
+        { name: 'Respiratory', value: 40, d: 4 },
+        { name: 'Dental', value: 30, d: 4 },
+        { name: 'Other', value: 22, d: 4 },
+      ]}
+      valueFormat={(n) => `$${n}k`}
+    />
+  ),
+};
+
+export const Bump: Story = {
+  render: () => (
+    <BumpChart
+      eyebrow="Ranking"
+      title="Supplier Rank by Quarter"
+      periods={["Q1'24", "Q2'24", "Q3'24", "Q4'24", "Q1'25"]}
+      series={[
+        { name: 'Supplier A', ranks: [1, 2, 1, 3, 2] },
+        { name: 'Supplier B', ranks: [3, 1, 2, 1, 1] },
+        { name: 'Supplier C', ranks: [2, 3, 3, 2, 3] },
+        { name: 'Supplier D', ranks: [4, 4, 4, 4, 4] },
+        { name: 'Supplier E', ranks: [5, 5, 5, 5, 5] },
+      ]}
+    />
+  ),
+};
+
+export const Stream: Story = {
+  render: () => (
+    <StreamChart
+      eyebrow="Trend"
+      title="Category Mix Over Time"
+      categories={months}
+      series={[
+        { name: 'Imaging', data: [20, 24, 22, 28, 30, 34] },
+        { name: 'Surgical', data: [16, 18, 20, 19, 22, 24] },
+        { name: 'ICU', data: [10, 12, 14, 13, 15, 16] },
+        { name: 'Lab', data: [8, 9, 8, 11, 10, 12] },
+      ]}
     />
   ),
 };

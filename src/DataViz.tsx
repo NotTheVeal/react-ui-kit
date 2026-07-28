@@ -938,3 +938,747 @@ export const BulletChart: React.FC<BulletChartProps> = ({
     </ChartFrame>
   );
 };
+
+// ══════════════════════════════════════════════════════════════════
+// Shared additions for the extended chart set
+// ══════════════════════════════════════════════════════════════════
+
+/** White/foreground colour for text drawn over dark fills. */
+const ON_DARK = 'var(--ps-sem-fg-inverse)';
+
+/** Sequential Blue ramp for heat/density encodings (light → dark). */
+export const HEATMAP_SCALE: string[] = [
+  'var(--ps-prim-blue-50)',
+  'var(--ps-prim-blue-100)',
+  'var(--ps-prim-blue-200)',
+  'var(--ps-prim-blue-400)',
+  'var(--ps-prim-blue-500)',
+  'var(--ps-prim-blue-900)',
+];
+
+const r1 = (n: number) => Math.round(n * 10) / 10;
+
+/** Catmull-Rom → cubic-Bézier segment string (no leading move command). */
+const smoothSegs = (pts: Array<[number, number]>) => {
+  let d = '';
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${r1(c1x)} ${r1(c1y)} ${r1(c2x)} ${r1(c2y)} ${r1(p2[0])} ${r1(p2[1])}`;
+  }
+  return d;
+};
+
+const smoothLine = (pts: Array<[number, number]>) =>
+  pts.length ? `M ${r1(pts[0][0])} ${r1(pts[0][1])}${smoothSegs(pts)}` : '';
+
+// ══════════════════════════════════════════════════════════════════
+// ScatterPlot
+// ══════════════════════════════════════════════════════════════════
+
+export interface ScatterPoint {
+  x: number;
+  y: number;
+  label?: string;
+}
+
+export interface ScatterSeries {
+  name: string;
+  color?: string;
+  data: ScatterPoint[];
+}
+
+export interface ScatterPlotProps {
+  series: ScatterSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  xFormat?: (n: number) => string;
+  yFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const ScatterPlot: React.FC<ScatterPlotProps> = ({
+  series,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  xFormat = (n) => `${n}`,
+  yFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 44;
+  const padR = 12;
+  const padT = 12;
+  const padB = 32;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const all = series.flatMap((s) => s.data);
+  const xMax = niceMax(Math.max(1, ...all.map((p) => p.x)));
+  const yMax = niceMax(Math.max(1, ...all.map((p) => p.y)));
+  const xTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => t * xMax);
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => t * yMax);
+  const px = (v: number) => padL + (v / xMax) * plotW;
+  const py = (v: number) => padT + plotH - (v / yMax) * plotH;
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        series.length > 1 ? (
+          <Legend items={series.map((s, i) => ({ label: s.name, color: seriesColor(i, s.color) }))} />
+        ) : undefined
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Scatter plot'}
+        style={{ fontFamily: FONT }}
+      >
+        {yTicks.map((t) => (
+          <g key={`y${t}`}>
+            <line x1={padL} x2={width - padR} y1={py(t)} y2={py(t)} stroke={GRID} strokeWidth={1} />
+            <text x={padL - 8} y={py(t) + 4} textAnchor="end" fontSize={11} fill={AXIS_TEXT}>
+              {yFormat(Math.round(t))}
+            </text>
+          </g>
+        ))}
+        {xTicks.map((t) => (
+          <text key={`x${t}`} x={px(t)} y={height - 10} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+            {xFormat(Math.round(t))}
+          </text>
+        ))}
+        {series.map((s, si) =>
+          s.data.map((p, pi) => (
+            <circle
+              key={`${si}-${pi}`}
+              cx={px(p.x)}
+              cy={py(p.y)}
+              r={5}
+              style={{ fill: seriesColor(si, s.color) }}
+              fillOpacity={0.85}
+            >
+              <title>{`${p.label ?? s.name} · ${xFormat(p.x)}, ${yFormat(p.y)}`}</title>
+            </circle>
+          )),
+        )}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// BubbleChart
+// ══════════════════════════════════════════════════════════════════
+
+export interface BubblePoint {
+  x: number;
+  y: number;
+  r: number;
+  label?: string;
+}
+
+export interface BubbleSeries {
+  name: string;
+  color?: string;
+  data: BubblePoint[];
+}
+
+export interface BubbleChartProps {
+  series: BubbleSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  maxRadius?: number;
+  xFormat?: (n: number) => string;
+  yFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const BubbleChart: React.FC<BubbleChartProps> = ({
+  series,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  maxRadius = 30,
+  xFormat = (n) => `${n}`,
+  yFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 44;
+  const padR = 12;
+  const padT = 16;
+  const padB = 32;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const all = series.flatMap((s) => s.data);
+  const xMax = niceMax(Math.max(1, ...all.map((p) => p.x)));
+  const yMax = niceMax(Math.max(1, ...all.map((p) => p.y)));
+  const rMax = Math.max(1, ...all.map((p) => p.r));
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => t * yMax);
+  const xTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => t * xMax);
+  const px = (v: number) => padL + (v / xMax) * plotW;
+  const py = (v: number) => padT + plotH - (v / yMax) * plotH;
+  const pr = (v: number) => Math.max(3, Math.sqrt(v / rMax) * maxRadius);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        series.length > 1 ? (
+          <Legend items={series.map((s, i) => ({ label: s.name, color: seriesColor(i, s.color) }))} />
+        ) : undefined
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Bubble chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {yTicks.map((t) => (
+          <g key={`y${t}`}>
+            <line x1={padL} x2={width - padR} y1={py(t)} y2={py(t)} stroke={GRID} strokeWidth={1} />
+            <text x={padL - 8} y={py(t) + 4} textAnchor="end" fontSize={11} fill={AXIS_TEXT}>
+              {yFormat(Math.round(t))}
+            </text>
+          </g>
+        ))}
+        {xTicks.map((t) => (
+          <text key={`x${t}`} x={px(t)} y={height - 10} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+            {xFormat(Math.round(t))}
+          </text>
+        ))}
+        {series.map((s, si) =>
+          s.data.map((p, pi) => (
+            <circle
+              key={`${si}-${pi}`}
+              cx={px(p.x)}
+              cy={py(p.y)}
+              r={pr(p.r)}
+              style={{ fill: seriesColor(si, s.color) }}
+              fillOpacity={0.6}
+              stroke={seriesColor(si, s.color)}
+              strokeOpacity={0.9}
+            >
+              <title>{`${p.label ?? s.name} · ${xFormat(p.x)}, ${yFormat(p.y)} (${p.r})`}</title>
+            </circle>
+          )),
+        )}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// HeatMap
+// ══════════════════════════════════════════════════════════════════
+
+export interface HeatMapProps {
+  xLabels: string[];
+  yLabels: string[];
+  /** Row-major matrix: values[rowIndex (yLabels)][colIndex (xLabels)]. */
+  values: number[][];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  scale?: string[];
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const HeatMap: React.FC<HeatMapProps> = ({
+  xLabels,
+  yLabels,
+  values,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  scale = HEATMAP_SCALE,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const labelW = 60;
+  const topH = 22;
+  const gap = 2;
+  const cols = xLabels.length;
+  const rows = yLabels.length;
+  const cellW = (width - labelW) / cols;
+  const cellH = (height - topH) / rows;
+  const maxV = Math.max(1, ...values.flat());
+  const bucket = (v: number) => Math.min(scale.length - 1, Math.floor((v / maxV) * scale.length));
+
+  return (
+    <ChartFrame eyebrow={eyebrow} title={title} subtitle={subtitle} className={className}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Heat map'}
+        style={{ fontFamily: FONT }}
+      >
+        {xLabels.map((lbl, ci) => (
+          <text
+            key={lbl}
+            x={labelW + ci * cellW + cellW / 2}
+            y={topH - 8}
+            textAnchor="middle"
+            fontSize={11}
+            fill={AXIS_TEXT}
+          >
+            {lbl}
+          </text>
+        ))}
+        {yLabels.map((lbl, ri) => (
+          <text
+            key={lbl}
+            x={labelW - 8}
+            y={topH + ri * cellH + cellH / 2 + 4}
+            textAnchor="end"
+            fontSize={11}
+            fill={AXIS_TEXT}
+          >
+            {lbl}
+          </text>
+        ))}
+        {yLabels.map((ylbl, ri) =>
+          xLabels.map((xlbl, ci) => {
+            const v = values[ri]?.[ci] ?? 0;
+            const idx = bucket(v);
+            const onDark = idx >= scale.length - 3;
+            return (
+              <g key={`${ri}-${ci}`}>
+                <rect
+                  x={labelW + ci * cellW + gap / 2}
+                  y={topH + ri * cellH + gap / 2}
+                  width={Math.max(0, cellW - gap)}
+                  height={Math.max(0, cellH - gap)}
+                  rx={2}
+                  style={{ fill: scale[idx] }}
+                >
+                  <title>{`${ylbl} · ${xlbl}: ${valueFormat(v)}`}</title>
+                </rect>
+                {cellW >= 28 && cellH >= 18 && (
+                  <text
+                    x={labelW + ci * cellW + cellW / 2}
+                    y={topH + ri * cellH + cellH / 2 + 4}
+                    textAnchor="middle"
+                    fontSize={10}
+                    fill={onDark ? ON_DARK : TITLE_TEXT}
+                  >
+                    {valueFormat(v)}
+                  </text>
+                )}
+              </g>
+            );
+          }),
+        )}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// TreeMap (squarified)
+// ══════════════════════════════════════════════════════════════════
+
+export interface TreeMapNode {
+  name: string;
+  value: number;
+  /** Depth index → colour band. */
+  d?: number;
+}
+
+export interface TreeMapProps {
+  data: TreeMapNode[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  depthColors?: string[];
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+interface TreeCell {
+  node: TreeMapNode;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+const worstRatio = (areas: number[], length: number) => {
+  const sum = areas.reduce((a, b) => a + b, 0);
+  const max = Math.max(...areas);
+  const min = Math.min(...areas);
+  const s2 = sum * sum;
+  const l2 = length * length;
+  return Math.max((l2 * max) / s2, s2 / (l2 * min));
+};
+
+const squarify = (
+  scaled: Array<{ node: TreeMapNode; area: number }>,
+  x0: number,
+  y0: number,
+  w0: number,
+  h0: number,
+): TreeCell[] => {
+  const cells: TreeCell[] = [];
+  let x = x0;
+  let y = y0;
+  let w = w0;
+  let h = h0;
+  let items = scaled.slice().sort((a, b) => b.area - a.area);
+  let row: Array<{ node: TreeMapNode; area: number }> = [];
+
+  const layoutRow = () => {
+    const rowArea = row.reduce((a, b) => a + b.area, 0);
+    if (rowArea <= 0) return;
+    if (w >= h) {
+      const stripW = rowArea / h;
+      let cy = y;
+      for (const it of row) {
+        const cellH = it.area / stripW;
+        cells.push({ node: it.node, x, y: cy, w: stripW, h: cellH });
+        cy += cellH;
+      }
+      x += stripW;
+      w -= stripW;
+    } else {
+      const stripH = rowArea / w;
+      let cx = x;
+      for (const it of row) {
+        const cellW = it.area / stripH;
+        cells.push({ node: it.node, x: cx, y, w: cellW, h: stripH });
+        cx += cellW;
+      }
+      y += stripH;
+      h -= stripH;
+    }
+  };
+
+  while (items.length) {
+    const next = items[0];
+    const len = Math.min(w, h);
+    const cur = row.map((r) => r.area);
+    const withNext = [...cur, next.area];
+    if (row.length === 0 || worstRatio(withNext, len) <= worstRatio(cur, len)) {
+      row.push(next);
+      items = items.slice(1);
+    } else {
+      layoutRow();
+      row = [];
+    }
+  }
+  if (row.length) layoutRow();
+  return cells;
+};
+
+export const TreeMap: React.FC<TreeMapProps> = ({
+  data,
+  eyebrow,
+  title,
+  subtitle,
+  height = 280,
+  width = 520,
+  depthColors = [
+    'var(--ps-prim-blue-500)',
+    'var(--ps-prim-blue-400)',
+    'var(--ps-prim-blue-300)',
+    'var(--ps-prim-blue-200)',
+    'var(--ps-prim-blue-50)',
+  ],
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const total = Math.max(1, data.reduce((s, n) => s + n.value, 0));
+  const area = width * height;
+  const scaled = data.map((n) => ({ node: n, area: (n.value / total) * area }));
+  const cells = squarify(scaled, 0, 0, width, height);
+  const gap = 2;
+
+  return (
+    <ChartFrame eyebrow={eyebrow} title={title} subtitle={subtitle} className={className}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Tree map'}
+        style={{ fontFamily: FONT }}
+      >
+        {cells.map((c, i) => {
+          const depth = c.node.d ?? 0;
+          const fill = depthColors[depth % depthColors.length];
+          const onDark = depth <= 2;
+          const showLabel = c.w >= 54 && c.h >= 30;
+          return (
+            <g key={`${c.node.name}-${i}`}>
+              <rect
+                x={c.x + gap / 2}
+                y={c.y + gap / 2}
+                width={Math.max(0, c.w - gap)}
+                height={Math.max(0, c.h - gap)}
+                rx={2}
+                style={{ fill }}
+              >
+                <title>{`${c.node.name}: ${valueFormat(c.node.value)}`}</title>
+              </rect>
+              {showLabel && (
+                <>
+                  <text
+                    x={c.x + 8}
+                    y={c.y + 18}
+                    fontSize={12}
+                    fontWeight={600}
+                    fill={onDark ? ON_DARK : TITLE_TEXT}
+                  >
+                    {c.node.name}
+                  </text>
+                  <text
+                    x={c.x + 8}
+                    y={c.y + 34}
+                    fontSize={11}
+                    fill={onDark ? ON_DARK : AXIS_TEXT}
+                    opacity={0.9}
+                  >
+                    {valueFormat(c.node.value)}
+                  </text>
+                </>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// BumpChart (rank-over-time)
+// ══════════════════════════════════════════════════════════════════
+
+export interface BumpSeries {
+  name: string;
+  color?: string;
+  /** Rank at each period (1 = best/top). */
+  ranks: number[];
+}
+
+export interface BumpChartProps {
+  periods: string[];
+  series: BumpSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const BumpChart: React.FC<BumpChartProps> = ({
+  periods,
+  series,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 44;
+  const padR = 44;
+  const padT = 16;
+  const padB = 28;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const maxRank = Math.max(1, ...series.flatMap((s) => s.ranks));
+  const px = (i: number) => padL + (periods.length <= 1 ? 0 : (i / (periods.length - 1)) * plotW);
+  const py = (rank: number) => padT + (maxRank <= 1 ? 0 : ((rank - 1) / (maxRank - 1)) * plotH);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={series.map((s, i) => ({ label: s.name, color: seriesColor(i, s.color) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Bump chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {periods.map((p, i) => (
+          <text key={p} x={px(i)} y={height - 10} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+            {p}
+          </text>
+        ))}
+        {series.map((s, si) => {
+          const color = seriesColor(si, s.color);
+          const pts: Array<[number, number]> = s.ranks.map((rank, i) => [px(i), py(rank)]);
+          return (
+            <g key={s.name}>
+              <path d={smoothLine(pts)} fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" />
+              {pts.map(([cx, cy], i) => (
+                <g key={i}>
+                  <circle cx={cx} cy={cy} r={9} style={{ fill: color }}>
+                    <title>{`${s.name} · ${periods[i]}: #${s.ranks[i]}`}</title>
+                  </circle>
+                  <text x={cx} y={cy + 3.5} textAnchor="middle" fontSize={10} fontWeight={600} fill={ON_DARK}>
+                    {s.ranks[i]}
+                  </text>
+                </g>
+              ))}
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// StreamChart (centred stacked area / streamgraph)
+// ══════════════════════════════════════════════════════════════════
+
+export interface StreamSeries {
+  name: string;
+  color?: string;
+  data: number[];
+}
+
+export interface StreamChartProps {
+  categories: string[];
+  series: StreamSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const StreamChart: React.FC<StreamChartProps> = ({
+  categories,
+  series,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 12;
+  const padR = 12;
+  const padT = 12;
+  const padB = 28;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const n = categories.length;
+  const totals = categories.map((_, ci) => series.reduce((s, ser) => s + (ser.data[ci] ?? 0), 0));
+  const maxTotal = Math.max(1, ...totals);
+  const midY = padT + plotH / 2;
+  const px = (i: number) => padL + (n <= 1 ? 0 : (i / (n - 1)) * plotW);
+  const scaleY = (plotH * 0.92) / maxTotal;
+
+  // Running baseline per category, offset so each stack is vertically centred.
+  const baselines = categories.map((_, ci) => -totals[ci] / 2);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={series.map((s, i) => ({ label: s.name, color: seriesColor(i, s.color) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Stream chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {(() => {
+          const running = baselines.slice();
+          return series.map((s, si) => {
+            const bottom: Array<[number, number]> = [];
+            const top: Array<[number, number]> = [];
+            categories.forEach((_, ci) => {
+              const v = s.data[ci] ?? 0;
+              const b = running[ci];
+              const t = b + v;
+              bottom.push([px(ci), midY + b * scaleY]);
+              top.push([px(ci), midY + t * scaleY]);
+              running[ci] = t;
+            });
+            const revBottom = bottom.slice().reverse();
+            const d =
+              `M ${r1(top[0][0])} ${r1(top[0][1])}` +
+              smoothSegs(top) +
+              ` L ${r1(revBottom[0][0])} ${r1(revBottom[0][1])}` +
+              smoothSegs(revBottom) +
+              ' Z';
+            return (
+              <path key={s.name} d={d} style={{ fill: seriesColor(si, s.color) }} fillOpacity={0.92}>
+                <title>{s.name}</title>
+              </path>
+            );
+          });
+        })()}
+        {categories.map((c, i) => (
+          <text key={c} x={px(i)} y={height - 10} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+            {c}
+          </text>
+        ))}
+      </svg>
+    </ChartFrame>
+  );
+};
