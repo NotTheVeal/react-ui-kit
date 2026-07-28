@@ -53,6 +53,7 @@
     "test:watch": "NODE_ENV=test vitest",
     "test:coverage": "NODE_ENV=test vitest run --coverage",
     "clean": "rm -rf dist storybook-static",
+    "scaffold": "node scripts/scaffold-component.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
     "test:tokens": "node scripts/token-gate.mjs",
     "export:tokens": "node scripts/figma-export-tokens.mjs",

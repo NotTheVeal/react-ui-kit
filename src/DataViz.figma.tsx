@@ -8,6 +8,7 @@ import {
   WaffleChart,
   FunnelChart,
   RadarChart,
+  BulletChart,
 } from './DataViz'
 
 const FIG = 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System'
@@ -109,6 +110,20 @@ figma.connect(RadarChart, `${FIG}?node-id=4750-205`, {
       title="Supplier Scorecard"
       axes={['Price', 'Speed', 'Quality', 'Support', 'Availability']}
       series={[{ name: 'Supplier A', data: [80, 65, 90, 70, 85] }]}
+    />
+  ),
+})
+
+// Bullet Chart
+figma.connect(BulletChart, `${FIG}?node-id=4751-1155`, {
+  example: () => (
+    <BulletChart
+      title="KPI vs Target"
+      rows={[
+        { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
+        { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
+        { label: 'NPS', measure: 48, target: 70, ranges: [40, 70, 100] },
+      ]}
     />
   ),
 })

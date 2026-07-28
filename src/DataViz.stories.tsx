@@ -9,6 +9,7 @@ import {
   FunnelChart,
   WaffleChart,
   Sparkline,
+  BulletChart,
   Legend,
   SERIES_COLORS,
 } from './DataViz';
@@ -162,6 +163,32 @@ export const SparklineTrend: Story = {
       <Sparkline data={[12, 18, 15, 22, 20, 28, 34]} />
       <span className="text-[14px] font-semibold text-[var(--ps-prim-green-600)]">+18%</span>
     </div>
+  ),
+};
+
+export const Bullet: Story = {
+  render: () => (
+    <BulletChart
+      eyebrow="Bullet Chart"
+      title="KPI vs Target"
+      subtitle="Performance against qualitative ranges"
+      rows={[
+        { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
+        { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
+        { label: 'NPS', measure: 48, target: 70, ranges: [40, 70, 100] },
+      ]}
+    />
+  ),
+};
+
+export const BulletSingle: Story = {
+  render: () => (
+    <BulletChart
+      title="Revenue attainment"
+      height={80}
+      rows={[{ label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] }]}
+      valueFormat={(n) => `$${n}k`}
+    />
   ),
 };
 

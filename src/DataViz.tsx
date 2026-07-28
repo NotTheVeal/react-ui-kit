@@ -779,3 +779,162 @@ export const Sparkline: React.FC<SparklineProps> = ({
     </svg>
   );
 };
+
+// ══════════════════════════════════════════════════════════════════
+// BulletChart (KPI vs qualitative ranges + target marker)
+// ══════════════════════════════════════════════════════════════════
+
+/** Poor → Average → Good qualitative band palette (bad = darker grey). */
+export const BULLET_RANGE_COLORS: string[] = [
+  'var(--ps-prim-gray-200)',
+  'var(--ps-prim-gray-150)',
+  'var(--ps-prim-blue-100)',
+];
+
+export interface BulletRow {
+  /** Row label, e.g. "Revenue". */
+  label: string;
+  /** The measured value (the featured measure bar). */
+  measure: number;
+  /** Comparative target (rendered as a vertical marker). */
+  target: number;
+  /** Ascending qualitative thresholds, e.g. [50, 75, 100] → Poor/Average/Good. */
+  ranges: number[];
+  /** Scale maximum. Defaults to the largest of ranges/measure/target. */
+  max?: number;
+}
+
+export interface BulletChartProps {
+  rows: BulletRow[];
+  /** Legend labels for the qualitative bands. */
+  rangeLabels?: string[];
+  /** Band colours, poor → good. */
+  rangeColors?: string[];
+  measureColor?: string;
+  targetColor?: string;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const BulletChart: React.FC<BulletChartProps> = ({
+  rows,
+  rangeLabels = ['Poor range', 'Average range', 'Good range'],
+  rangeColors = BULLET_RANGE_COLORS,
+  measureColor = 'var(--ps-prim-blue-500)',
+  targetColor = 'var(--ps-prim-blue-900)',
+  eyebrow,
+  title,
+  subtitle,
+  height = 220,
+  width = 520,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padT = 10;
+  const padB = 10;
+  const padR = 12;
+  const labelW = 68;
+  const plotX0 = labelW;
+  const plotX1 = width - padR;
+  const plotW = plotX1 - plotX0;
+  const rowH = (height - padT - padB) / Math.max(1, rows.length);
+  const bandPad = rowH * 0.16;
+  const bandColor = (i: number) => rangeColors[i % rangeColors.length];
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            ...rangeLabels.map((label, i) => ({ label, color: bandColor(i) })),
+            { label: 'Measure', color: measureColor },
+            { label: 'Target marker', color: targetColor },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Bullet chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {rows.map((row, ri) => {
+          const scaleMax = Math.max(
+            1,
+            row.max ?? Math.max(row.measure, row.target, ...row.ranges),
+          );
+          const xOf = (v: number) => plotX0 + (v / scaleMax) * plotW;
+          const yTop = padT + ri * rowH + bandPad;
+          const bandH = rowH - bandPad * 2;
+          const measureH = bandH * 0.42;
+          const measureY = yTop + (bandH - measureH) / 2;
+          const tx = xOf(row.target);
+
+          return (
+            <g key={row.label}>
+              {row.ranges.map((r, bi) => {
+                const prev = bi === 0 ? 0 : row.ranges[bi - 1];
+                const bx = xOf(prev);
+                const bw = xOf(r) - bx;
+                return (
+                  <rect
+                    key={bi}
+                    x={bx}
+                    y={yTop}
+                    width={Math.max(0, bw)}
+                    height={bandH}
+                    style={{ fill: bandColor(bi) }}
+                  >
+                    <title>{`${row.label} · ${rangeLabels[bi] ?? `Range ${bi + 1}`}: ${valueFormat(prev)}–${valueFormat(r)}`}</title>
+                  </rect>
+                );
+              })}
+              <rect
+                x={plotX0}
+                y={measureY}
+                width={Math.max(0, xOf(row.measure) - plotX0)}
+                height={measureH}
+                rx={1}
+                style={{ fill: measureColor }}
+              >
+                <title>{`${row.label} · Measure: ${valueFormat(row.measure)}`}</title>
+              </rect>
+              <line
+                x1={tx}
+                x2={tx}
+                y1={yTop - 2}
+                y2={yTop + bandH + 2}
+                strokeWidth={2}
+                style={{ stroke: targetColor }}
+              >
+                <title>{`${row.label} · Target: ${valueFormat(row.target)}`}</title>
+              </line>
+              <text
+                x={labelW - 8}
+                y={yTop + bandH / 2 + 4}
+                textAnchor="end"
+                fontSize={11}
+                fill={AXIS_TEXT}
+              >
+                {row.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};

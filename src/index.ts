@@ -75,6 +75,8 @@ export {
   FunnelChart,
   WaffleChart,
   Sparkline,
+  BulletChart,
+  BULLET_RANGE_COLORS,
 } from './DataViz';
 export {
   TypingIndicator,
