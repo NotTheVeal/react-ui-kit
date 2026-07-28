@@ -71,8 +71,18 @@ module.exports = {
   },
   overrides: [
     {
-      // Stories and tests can reference raw colors for illustration.
-      files: ['src/**/*.stories.tsx', 'src/**/*.test.tsx'],
+      // Stories, tests, and Code Connect examples can reference raw
+      // colors and hex-shaped literals (card last4, order numbers) for
+      // illustration. A 4-digit last4 or "#48213" work-order number is
+      // structurally indistinguishable from a hex color to the regex.
+      files: ['src/**/*.stories.tsx', 'src/**/*.test.tsx', 'src/**/*.figma.tsx'],
+      rules: { 'no-restricted-syntax': 'off' },
+    },
+    {
+      // Payment-network brand marks must render each network's exact
+      // brand color per that network's brand guidelines. This is the
+      // one sanctioned raw-color exception in the kit (see file header).
+      files: ['src/CardBrandIcon.tsx'],
       rules: { 'no-restricted-syntax': 'off' },
     },
   ],

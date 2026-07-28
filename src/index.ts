@@ -12,6 +12,16 @@ export type { ChipButtonProps } from './ChipButton';
 export { SegmentedButton } from './SegmentedButton';
 export type { SegmentedButtonProps, SegmentedOption } from './SegmentedButton';
 export { Input, Dropdown } from './Input';
+export { InlineSearch, HiddenSearch } from './Search';
+export type { InlineSearchProps, HiddenSearchProps } from './Search';
+export { ProgressBar } from './ProgressBar';
+export type { ProgressBarProps } from './ProgressBar';
+export { QuantityStepper } from './QuantityStepper';
+export type { QuantityStepperProps } from './QuantityStepper';
+export { ExchangeDetailCard } from './ExchangeDetailCard';
+export type { ExchangeDetailCardProps, ExchangeItemRow } from './ExchangeDetailCard';
+export { ReturnEligibilityCard } from './ReturnEligibilityCard';
+export type { ReturnEligibilityCardProps, EligibilityTone } from './ReturnEligibilityCard';
 export { EventCard, StatusCard, AlertCard } from './Card';
 export { AiDataCard, ProductCard, AnalyticsCard, ListCard } from './CardExtras';
 export { StatusBadge, ListTypeBadge } from './Badge';
@@ -33,3 +43,51 @@ export { Carousel } from './Carousel';
 export { FileUpload } from './FileUpload';
 export { Popover } from './Popover';
 export { PageShell } from './PageShell';
+export { CardBrandIcon } from './CardBrandIcon';
+export type { CardBrandIconProps, CardBrand } from './CardBrandIcon';
+export { SavedPaymentMethodCard } from './SavedPaymentMethodCard';
+export type { SavedPaymentMethodCardProps } from './SavedPaymentMethodCard';
+export { AddPaymentMethodForm } from './AddPaymentMethodForm';
+export type { AddPaymentMethodFormProps } from './AddPaymentMethodForm';
+export { ModuleCard } from './ModuleCard';
+export type { ModuleCardProps, ModuleStatus } from './ModuleCard';
+export { ModuleDetailDrawer } from './ModuleDetailDrawer';
+export type { ModuleDetailDrawerProps, ModuleDetailState, CurriculumLesson } from './ModuleDetailDrawer';
+export { AssetUptimeSummaryCard } from './AssetUptimeSummaryCard';
+export type { AssetUptimeSummaryCardProps, UptimeSegment, UptimeLegendItem } from './AssetUptimeSummaryCard';
+export { WorkOrderCard } from './WorkOrderCard';
+export type { WorkOrderCardProps, WorkOrderPriority, WorkOrderMeta } from './WorkOrderCard';
+export { NotificationCard } from './NotificationCard';
+export type { NotificationCardProps, NotificationTone } from './NotificationCard';
+export { NewsFeedItem } from './NewsFeedItem';
+export type { NewsFeedItemProps } from './NewsFeedItem';
+export {
+  SERIES_COLORS,
+  SERIES_SEMANTIC,
+  Legend,
+  BarChart,
+  LineChart,
+  AreaChart,
+  PieChart,
+  DonutChart,
+  RadarChart,
+  FunnelChart,
+  WaffleChart,
+  Sparkline,
+} from './DataViz';
+export {
+  TypingIndicator,
+  IntelligenceSources,
+  IntelligenceMessage,
+  SuggestedPrompts,
+  IntelligencePromptBar,
+  IntelligencePanel,
+} from './Intelligence';
+export type {
+  IntelligenceSource,
+  IntelligenceSourcesProps,
+  IntelligenceMessageProps,
+  SuggestedPromptsProps,
+  IntelligencePromptBarProps,
+  IntelligencePanelProps,
+} from './Intelligence';
