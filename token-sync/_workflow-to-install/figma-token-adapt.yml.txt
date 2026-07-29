@@ -1,0 +1,105 @@
+name: Figma token adapt (Brücke → DTCG)
+
+# The NATIVE-VARIABLES path (complements the REST value-sync in
+# figma-token-sync.yml). A Tokens-Brücke / Plugin-API dump of the three SoT
+# collections is committed under fixtures/ (dump_*.json). On change, this
+# workflow:
+#   1. builds a BASELINE tokens.css from the currently-committed src/tokens
+#      ("the UI cannot change" anchor);
+#   2. RECONCILES the dump against the committed tokens — proves value-identity
+#      in light + dark for all three tiers BEFORE anything is rewritten;
+#   3. ADAPTS fixtures → src/tokens (bruecke_to_canonical.py) — a purely
+#      ADDITIVE, non-destructive merge: existing tokens keep their authored form
+#      (composite refs preserved), only net-new tokens are added;
+#   4. REBUILDS tokens.css via Style Dictionary v4;
+#   5. GATES additively — every baseline custom property must resolve
+#      value-identical in light AND dark; new tokens are permitted. An empty
+#      disqualifying diff proves the live UI cannot change.
+# If the gate passes and something changed, it opens a PR. Nothing lands on
+# `main` without human review + full CI on the PR.
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches-ignore: [main]
+    paths:
+      - 'fixtures/**'
+      - 'bruecke_to_canonical.py'
+      - 'gate.py'
+      - 'build.mjs'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: figma-token-adapt
+  cancel-in-progress: true
+
+jobs:
+  adapt:
+    name: Adapt Brücke dump → DTCG & open PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Ordered chain: baseline → reconcile → adapt → build → additive gate.
+      # sync.sh runs WITHOUT --restore in CI so the additive changes stay on the
+      # branch to be committed into the PR. It exits non-zero if the gate rejects
+      # the result (i.e. the UI would change), failing the job before any PR.
+      - name: Run token sync (baseline → reconcile → adapt → build → gate)
+        run: bash sync.sh
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- src/tokens build/tokens.css; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No additive token changes from the Figma dump."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- src/tokens build/tokens.css
+          fi
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/figma-token-adapt
+          base: main
+          commit-message: "chore(tokens): additive sync from Figma Variables (Brücke)"
+          title: "chore(tokens): additive sync from Figma Variables (Brücke)"
+          delete-branch: true
+          add-paths: |
+            src/tokens
+            build/tokens.css
+          body: |
+            Automated ADDITIVE sync from a native Figma Variables dump (Tokens
+            Brücke / Plugin API), converted by `bruecke_to_canonical.py`.
+
+            - Reconcile proved every existing token value-identical in light + dark
+              (`tokens:reconcile`) **before** any rewrite.
+            - The merge is additive & non-destructive: existing tokens keep their
+              authored form (composite refs like `2px solid {ps-sem-fg-brand}`
+              preserved so dark mode still cascades); only net-new tokens added.
+            - The additive value-identity gate passed
+              (`gate.py --additive`), so `tokens.css` cannot change the live UI —
+              it only gains new custom properties.
+
+            Review the diff, then merge. CI re-runs the full gate on the PR.

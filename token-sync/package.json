@@ -1,0 +1,21 @@
+{
+  "name": "trackb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tokens:adapt": "python3 bruecke_to_canonical.py",
+    "tokens:reconcile": "python3 reconcile_primitive.py && python3 reconcile_semantic.py && python3 reconcile_component.py",
+    "tokens:build": "node build.mjs",
+    "tokens:gate": "python3 gate.py build/tokens.css.baseline build/tokens.css",
+    "tokens:gate:additive": "python3 gate.py --additive build/tokens.css.baseline build/tokens.css",
+    "tokens:sync": "bash sync.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "style-dictionary": "^4.4.0"
+  }
+}
