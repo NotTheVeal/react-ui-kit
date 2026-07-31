@@ -111,7 +111,7 @@ const SegmentedButton: React.FC<SegmentedButtonProps> = ({
             onClick={segDisabled ? undefined : () => onChange(opt.id)}
             className={cx(
               "inline-flex items-center justify-center gap-1.5 w-32 h-[30px] px-3 border-0",
-              "font-['Source_Sans_Pro',sans-serif] font-medium text-[14px] leading-none",
+              "font-['Source_Sans_Pro',sans-serif] font-normal text-[14px] leading-none",
               'outline-none select-none transition-colors duration-150 ease-in-out',
               'focus-visible:relative focus-visible:z-10',
               'focus-visible:shadow-[0_0_0_2px_var(--ps-prim-blue-500)]',

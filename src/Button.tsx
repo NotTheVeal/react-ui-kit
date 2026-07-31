@@ -62,9 +62,12 @@ const base =
 // Canonical PartsSource button radius is 4px (per HTML preview + brand
 // checklist). Figma node 115:631 shows 3px on this specific symbol but
 // we treat that as Figma drift — 4px is the source of truth.
+// Secondary shells (also the default for outline/ghost).
+// Figma "Future Button Sets": Secondary/LG = 50px SemiBold 16px uppercase, 2px
+// border, 4px radius. Secondary/SM = 48px SemiBold 12px, 1px border (proven 1:1).
 const sizeShells: Record<Size, string> = {
   sm: "h-[48px] min-w-[87px] px-4 py-[5px] text-[12px] font-semibold rounded border",
-  lg: "h-[50px] min-w-[325px] px-[15px] text-[15px] font-normal rounded border-2",
+  lg: "h-[50px] min-w-[325px] px-[15px] text-[16px] font-semibold uppercase tracking-[0.5px] rounded border-2",
 };
 
 // ── Variant × state matrices ─────────────────────────────────────
@@ -166,15 +169,31 @@ const variants = {
 // ── Per-variant size overrides ───────────────────────────────────
 const overrideSize = (variant: Variant, size: Size): string => {
   if (variant === "pill") {
+    // Legacy orange CTA — deliberately kept out of the unification (bold, pill).
     return "h-12 px-8 text-[14px] font-bold uppercase tracking-[0.5px] rounded-[100px] border-2";
   }
   if (variant === "tertiary") {
-    return "h-10 min-w-[175px] px-6 text-[14px] font-normal rounded-full border";
+    // Figma Future/Tertiary — 38px, Regular 14px, pill, no border.
+    return "h-[38px] min-w-[175px] px-[15px] py-[10px] text-[14px] font-normal rounded-full border-0";
   }
   if (variant === "arrow") {
+    // Figma Future/Arrow — 28px icon-only, 4px radius.
     return "h-7 w-7 min-w-0 p-0 rounded border";
   }
-  // primary / secondary use shared size shells
+  if (variant === "primary") {
+    // Figma Future/Primary — LG 52px SemiBold 16px uppercase, filled 4px radius.
+    // SM shares the 48px SemiBold 12px secondary shell.
+    return size === "sm"
+      ? sizeShells.sm
+      : "h-[52px] min-w-[325px] px-[15px] text-[16px] font-semibold uppercase tracking-[0.5px] rounded border-2";
+  }
+  if (variant === "danger") {
+    // Figma Future/Destructive — 48px SemiBold 16px, 1px border, 4px radius.
+    return size === "sm"
+      ? "h-[48px] min-w-[87px] px-4 py-[5px] text-[12px] font-semibold rounded border"
+      : "h-[48px] min-w-[325px] px-4 py-[6px] text-[16px] font-semibold rounded border";
+  }
+  // secondary / outline / ghost use the shared secondary size shells
   return sizeShells[size];
 };
 
