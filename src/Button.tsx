@@ -63,7 +63,7 @@ const base =
 // checklist). Figma node 115:631 shows 3px on this specific symbol but
 // we treat that as Figma drift — 4px is the source of truth.
 const sizeShells: Record<Size, string> = {
-  sm: "h-8 min-w-[87px] px-2 text-[10px] font-medium rounded border",
+  sm: "h-8 min-w-[87px] px-3 text-[12px] font-semibold rounded border",
   lg: "h-[50px] min-w-[325px] px-[15px] text-[15px] font-normal rounded border-2",
 };
 
