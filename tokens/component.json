@@ -60,7 +60,7 @@
     "$value": "{ps-sem-radius-control}"
   },
   "ps-cmp-button-secondary-weight": {
-    "$value": "{ps-prim-weight-medium}"
+    "$value": "{ps-sem-weight-emphasis}"
   },
   "ps-cmp-button-tertiary-bg-default": {
     "$value": "{ps-prim-gray-150}"
@@ -130,6 +130,50 @@
   "ps-cmp-button-pill-tracking": {
     "$value": "{ps-prim-tracking-wide}"
   },
+  "ps-cmp-button-primary-height": { "$value": "52px", "$type": "dimension" },
+  "ps-cmp-button-primary-padding-x": { "$value": "15px", "$type": "dimension" },
+  "ps-cmp-button-primary-text-size": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-primary-weight": { "$value": "{ps-sem-weight-emphasis}" },
+  "ps-cmp-button-primary-transform": { "$value": "uppercase" },
+  "ps-cmp-button-primary-border-width": { "$value": "{ps-prim-border-2}" },
+  "ps-cmp-button-secondary-height": { "$value": "50px", "$type": "dimension" },
+  "ps-cmp-button-secondary-padding-x": { "$value": "15px", "$type": "dimension" },
+  "ps-cmp-button-secondary-text-size": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-secondary-transform": { "$value": "uppercase" },
+  "ps-cmp-button-secondary-border-width": { "$value": "{ps-prim-border-2}" },
+  "ps-cmp-button-secondary-sm-height": { "$value": "48px", "$type": "dimension" },
+  "ps-cmp-button-secondary-sm-padding-x": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-secondary-sm-padding-y": { "$value": "5px", "$type": "dimension" },
+  "ps-cmp-button-secondary-sm-text-size": { "$value": "12px", "$type": "dimension" },
+  "ps-cmp-button-secondary-sm-weight": { "$value": "{ps-sem-weight-emphasis}" },
+  "ps-cmp-button-secondary-sm-border-width": { "$value": "{ps-prim-border-1}" },
+  "ps-cmp-button-danger-height": { "$value": "48px", "$type": "dimension" },
+  "ps-cmp-button-danger-padding-x": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-danger-padding-y": { "$value": "6px", "$type": "dimension" },
+  "ps-cmp-button-danger-text-size": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-danger-weight": { "$value": "{ps-sem-weight-emphasis}" },
+  "ps-cmp-button-danger-radius": { "$value": "{ps-sem-radius-control}" },
+  "ps-cmp-button-danger-border-width": { "$value": "{ps-prim-border-1}" },
+  "ps-cmp-button-tertiary-text-size": { "$value": "14px", "$type": "dimension" },
+  "ps-cmp-button-tertiary-padding-y": { "$value": "10px", "$type": "dimension" },
+  "ps-cmp-button-tertiary-border-width": { "$value": "0", "$type": "dimension" },
+  "ps-cmp-button-arrow-height": { "$value": "28px", "$type": "dimension" },
+  "ps-cmp-button-arrow-width": { "$value": "28px", "$type": "dimension" },
+  "ps-cmp-button-arrow-radius": { "$value": "{ps-sem-radius-control}" },
+  "ps-cmp-button-arrow-border-width": { "$value": "{ps-prim-border-1}" },
+  "ps-cmp-button-segmented-height": { "$value": "30px", "$type": "dimension" },
+  "ps-cmp-button-segmented-padding-x": { "$value": "12px", "$type": "dimension" },
+  "ps-cmp-button-segmented-text-size": { "$value": "14px", "$type": "dimension" },
+  "ps-cmp-button-segmented-weight": { "$value": "{ps-sem-weight-body}" },
+  "ps-cmp-button-segmented-radius": { "$value": "{ps-sem-radius-control}" },
+  "ps-cmp-button-chip-lg-height": { "$value": "33px", "$type": "dimension" },
+  "ps-cmp-button-chip-lg-text-size": { "$value": "16px", "$type": "dimension" },
+  "ps-cmp-button-chip-sm-height": { "$value": "26px", "$type": "dimension" },
+  "ps-cmp-button-chip-sm-text-size": { "$value": "14px", "$type": "dimension" },
+  "ps-cmp-button-chip-weight": { "$value": "{ps-sem-weight-body}" },
+  "ps-cmp-button-chip-radius": { "$value": "{ps-prim-radius-full}" },
+  "ps-cmp-button-inline-text-size": { "$value": "14px", "$type": "dimension" },
+  "ps-cmp-button-inline-weight": { "$value": "{ps-sem-weight-body}" },
   "ps-cmp-input-bg": {
     "$value": "{ps-sem-bg-surface}"
   },
