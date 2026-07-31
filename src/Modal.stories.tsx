@@ -7,7 +7,10 @@ const meta = {
   title: 'Components/Modal',
   component: Modal,
   tags: ['autodocs'],
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: { story: { inline: false, height: '720px' } },
+  },
 } satisfies Meta<typeof Modal>;
 
 export default meta;

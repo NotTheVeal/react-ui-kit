@@ -9,7 +9,10 @@ const meta = {
   title: 'Components/Drawer',
   component: Drawer,
   tags: ['autodocs'],
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: { story: { inline: false, height: '860px' } },
+  },
 } satisfies Meta<typeof Drawer>;
 
 export default meta;
