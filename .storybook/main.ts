@@ -16,6 +16,11 @@ const config: StorybookConfig = {
     options: {},
   },
   stories: ['../src/**/*.stories.@(ts|tsx|mdx)'],
+  // Files under public/ are copied verbatim into the static export, so the
+  // standalone Pipeline Tracker (public/tracker/index.html) ships with the
+  // Storybook deploy and is served at
+  // https://nottheveal.github.io/react-ui-kit/tracker/.
+  staticDirs: ['../public'],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',

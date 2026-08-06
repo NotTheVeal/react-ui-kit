@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PartsSource Design Tokens — Pipeline Tracker</title>
+<style>
+  :root{
+    color-scheme: light;
+    --ps-midnight:#002F48;
+    --ps-blue:#005BA7;
+    --ps-blue-weak:#E6EFF6;
+    --ps-orange:#FF9505;
+    --ps-green:#17AB78;
+    --ps-green-weak:#E4F4EE;
+    --ps-red:#C8102E;
+    --ps-red-weak:#FBE7EA;
+    --ps-amber:#B26A00;
+    --ps-amber-weak:#FDF0DA;
+    --ps-ink:#002F48;
+    --ps-ink-2:#4A5A66;
+    --ps-ink-3:#7A8A94;
+    --ps-line:#D7DEE3;
+    --ps-surface:#FFFFFF;
+    --ps-page:#F4F7F9;
+    --ps-radius:4px;
+    --ps-pill:9999px;
+    --ps-shadow:0 1px 2px rgba(0,47,72,.08), 0 2px 8px rgba(0,47,72,.06);
+    --ps-font:'Source Sans 3','Source Sans Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--ps-font);
+    background:var(--ps-page);
+    color:var(--ps-ink);
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 24px 64px}
+  header.app{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+  h1{font-weight:300;font-size:30px;letter-spacing:-.2px;color:var(--ps-midnight);margin:0 0 4px}
+  .sub{color:var(--ps-ink-2);font-size:15px;margin:0}
+  .eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-size:11px;font-weight:700;color:var(--ps-blue);margin:0 0 6px}
+  button{font-family:inherit;cursor:pointer}
+  .btn{
+    border:2px solid var(--ps-blue);background:var(--ps-blue);color:#fff;
+    height:40px;padding:0 18px;border-radius:var(--ps-radius);font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:8px;transition:background .15s,border-color .15s;
+  }
+  .btn:hover{background:#004B8C;border-color:#004B8C}
+  .btn.secondary{background:#fff;color:var(--ps-blue)}
+  .btn.secondary:hover{background:var(--ps-blue-weak)}
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--ps-blue);height:32px;padding:0 10px}
+  .btn.ghost:hover{background:var(--ps-blue-weak)}
+  .btn:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ps-blue)}
+
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .meta{font-size:12.5px;color:var(--ps-ink-3)}
+  .meta b{color:var(--ps-ink-2);font-weight:600}
+
+  /* config */
+  details.config{margin:18px 0 22px;background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow)}
+  details.config>summary{list-style:none;cursor:pointer;padding:14px 18px;font-weight:600;color:var(--ps-midnight);display:flex;align-items:center;gap:10px}
+  details.config>summary::-webkit-details-marker{display:none}
+  .config-body{padding:4px 18px 18px;border-top:1px solid var(--ps-line)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+  label.fld{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--ps-ink-2)}
+  label.fld input{
+    font-family:inherit;font-size:14px;color:var(--ps-ink);height:38px;padding:0 10px;
+    border:1px solid var(--ps-line);border-radius:var(--ps-radius);background:#fff;
+  }
+  label.fld input:focus{outline:none;border-color:var(--ps-blue);box-shadow:0 0 0 2px var(--ps-blue-weak)}
+  .hint{font-weight:400;color:var(--ps-ink-3);font-size:12px}
+  .config-actions{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
+
+  /* banner */
+  .banner{border-radius:var(--ps-radius);padding:11px 14px;font-size:13.5px;margin-bottom:18px;display:none;align-items:center;gap:10px}
+  .banner.show{display:flex}
+  .banner.err{background:var(--ps-red-weak);color:#7a0c1c;border:1px solid #f2c0c8}
+  .banner.warn{background:var(--ps-amber-weak);color:#7a4a00;border:1px solid #f0d8a8}
+  .banner.info{background:var(--ps-blue-weak);color:#083b63;border:1px solid #bcd6ea}
+
+  /* overall strip */
+  .strip{display:flex;align-items:center;gap:14px;background:var(--ps-surface);border:1px solid var(--ps-line);border-left:4px solid var(--ps-ink-3);border-radius:var(--ps-radius);padding:14px 18px;box-shadow:var(--ps-shadow);margin-bottom:22px}
+  .strip.ok{border-left-color:var(--ps-green)}
+  .strip.run{border-left-color:var(--ps-blue)}
+  .strip.bad{border-left-color:var(--ps-red)}
+  .strip.warn{border-left-color:var(--ps-orange)}
+  .strip .big{font-size:17px;font-weight:600;color:var(--ps-midnight)}
+  .strip .lil{font-size:13px;color:var(--ps-ink-2)}
+
+  /* stages */
+  .section-title{font-weight:300;font-size:20px;color:var(--ps-midnight);margin:26px 0 14px}
+  .stages{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:900px){.stages{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.stages{grid-template-columns:1fr}}
+  .stage{position:relative;background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);padding:14px 14px 12px;box-shadow:var(--ps-shadow);min-height:118px;display:flex;flex-direction:column;gap:8px}
+  .stage .idx{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--ps-ink-3)}
+  .stage .nm{font-size:14px;font-weight:700;color:var(--ps-midnight);padding-right:22px}
+  .stage .dt{font-size:12.5px;color:var(--ps-ink-2);flex:1}
+  .stage a.mini{font-size:12px;color:var(--ps-blue);text-decoration:none;font-weight:600}
+  .stage a.mini:hover{text-decoration:underline}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:3px 9px;border-radius:var(--ps-pill);width:fit-content}
+  .pill.ok{background:var(--ps-green-weak);color:#0c6b48}
+  .pill.run{background:var(--ps-blue-weak);color:#08487a}
+  .pill.bad{background:var(--ps-red-weak);color:#8a1122}
+  .pill.wait{background:#EEF1F3;color:#5a6a74}
+  .pill.warn{background:var(--ps-amber-weak);color:#7a4a00}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+  .pill.run .dot{animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+  /* runs table */
+  table{width:100%;border-collapse:collapse;background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;box-shadow:var(--ps-shadow)}
+  th,td{text-align:left;padding:10px 14px;font-size:13px;border-bottom:1px solid var(--ps-line)}
+  th{background:#F0F4F7;color:var(--ps-ink-2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:11px}
+  tr:last-child td{border-bottom:none}
+  td a{color:var(--ps-blue);text-decoration:none;font-weight:600}
+  td a:hover{text-decoration:underline}
+  .mono{font-variant-numeric:tabular-nums;color:var(--ps-ink-2)}
+  .empty{padding:26px;text-align:center;color:var(--ps-ink-3);font-size:14px}
+  footer.app{margin-top:26px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ps-ink-3)}
+  .spin{width:14px;height:14px;border:2px solid var(--ps-blue-weak);border-top-color:var(--ps-blue);border-radius:50%;display:inline-block;animation:rot .7s linear infinite;vertical-align:-2px}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  code{background:#EEF1F3;padding:1px 5px;border-radius:3px;font-size:12px}
+
+  /* ---- tab bar ---- */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ps-line);margin:18px 0 4px}
+  .tab{
+    appearance:none;border:0;border-top:3px solid transparent;background:transparent;
+    font-family:inherit;font-size:14px;font-weight:600;color:var(--ps-ink-2);
+    padding:11px 18px 12px;border-radius:0;position:relative;top:1px;
+    display:inline-flex;align-items:center;gap:8px;transition:color .12s,background .12s;
+  }
+  .tab:hover{color:var(--ps-midnight);background:var(--ps-blue-weak)}
+  .tab[aria-selected="true"]{
+    background:var(--ps-surface);color:var(--ps-midnight);
+    border-top:3px solid var(--ps-blue);
+    border-left:1px solid var(--ps-line);border-right:1px solid var(--ps-line);
+    box-shadow:0 -1px 2px rgba(0,47,72,.05);
+  }
+  .tab:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ps-blue)}
+  .tab .cnt{font-size:11px;font-weight:700;background:#DCE3E8;color:var(--ps-ink-2);border-radius:var(--ps-pill);padding:1px 8px}
+
+  .view{display:none;animation:fade .18s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+  /* ---- changelog embed ---- */
+  .embedwrap{background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);overflow:hidden}
+  .embedwrap iframe{display:block;width:100%;height:1400px;border:0}
+  .embedhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--ps-line);background:#F7FAFC}
+  .embedhead .t{font-weight:600;color:var(--ps-midnight);font-size:14px}
+  .embedhead .d{font-size:12.5px;color:var(--ps-ink-3)}
+
+  /* ---- guide ---- */
+  .guide{background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);padding:8px 30px 34px;max-width:840px}
+  .guide h2{font-weight:300;font-size:23px;color:var(--ps-midnight);margin:30px 0 6px;padding-top:22px;border-top:1px solid var(--ps-line)}
+  .guide h2:first-of-type{border-top:0;padding-top:8px}
+  .guide h3{font-weight:600;font-size:15px;color:var(--ps-midnight);margin:20px 0 6px}
+  .guide p{font-size:14.5px;color:var(--ps-ink-2);margin:8px 0}
+  .guide ol,.guide ul{font-size:14.5px;color:var(--ps-ink-2);margin:8px 0;padding-left:22px}
+  .guide li{margin:5px 0}
+  .guide .lead{font-size:15.5px;color:var(--ps-ink);margin:12px 0 4px}
+  .guide code{font-size:12.5px}
+  .guide .callout{border-left:4px solid var(--ps-blue);background:var(--ps-blue-weak);border-radius:var(--ps-radius);padding:12px 16px;margin:14px 0;font-size:14px;color:#083b63}
+  .guide .callout.warn{border-left-color:var(--ps-orange);background:var(--ps-amber-weak);color:#7a4a00}
+  .guide .callout.ok{border-left-color:var(--ps-green);background:var(--ps-green-weak);color:#0c6b48}
+  .guide .callout b{font-weight:700}
+  .guide .kv{border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;margin:14px 0}
+  .guide .kv div{display:flex;gap:12px;padding:9px 14px;border-bottom:1px solid var(--ps-line);font-size:13.5px}
+  .guide .kv div:last-child{border-bottom:0}
+  .guide .kv .k{flex:0 0 190px;font-weight:700;color:var(--ps-ink-2)}
+  .guide .kv .v{color:var(--ps-ink)}
+  .guide .step{counter-reset:none}
+  .guide .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 9px;border-radius:var(--ps-pill);background:var(--ps-green-weak);color:#0c6b48;vertical-align:1px}
+  .guide .tag.warn{background:var(--ps-amber-weak);color:#7a4a00}
+
+  /* ---- component library ---- */
+  .cl-intro{color:var(--ps-ink-2);font-size:15px;margin:-6px 0 16px;max-width:820px}
+  .cl-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 18px}
+  .cl-seg{display:inline-flex;background:#EAF0F4;border:1px solid var(--ps-line);border-radius:var(--ps-pill);padding:3px}
+  .cl-seg button{appearance:none;border:0;background:transparent;font-family:inherit;font-size:13px;font-weight:600;
+    color:var(--ps-ink-2);padding:6px 16px;border-radius:var(--ps-pill);cursor:pointer;transition:background .12s,color .12s}
+  .cl-seg button[aria-pressed="true"]{background:var(--ps-surface);color:var(--ps-midnight);box-shadow:var(--ps-shadow)}
+  .cl-seg button:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ps-blue)}
+  .cl-search{flex:1;min-width:180px;max-width:280px;height:36px;padding:0 12px;font-family:inherit;font-size:14px;
+    color:var(--ps-ink);border:1px solid var(--ps-line);border-radius:var(--ps-radius);background:#fff}
+  .cl-search:focus{outline:none;border-color:var(--ps-blue);box-shadow:0 0 0 2px var(--ps-blue-weak)}
+  .cl-count{font-size:12.5px;color:var(--ps-ink-3);margin-left:auto}
+
+  .cl-catgroup{margin:0 0 26px}
+  .cl-cathead{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+  .cl-cathead h3{font-weight:600;font-size:14px;color:var(--ps-midnight);margin:0;text-transform:uppercase;letter-spacing:.6px}
+  .cl-cathead .n{font-size:12px;color:var(--ps-ink-3)}
+  .cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:14px}
+
+  .cl-card{display:flex;flex-direction:column;background:var(--ps-surface);border:1px solid var(--ps-line);
+    border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);overflow:hidden;transition:box-shadow .15s,border-color .15s}
+  .cl-card:hover{border-color:#B9C7D1;box-shadow:0 2px 6px rgba(0,47,72,.10),0 6px 18px rgba(0,47,72,.08)}
+  .cl-stage{height:104px;display:flex;align-items:center;justify-content:center;padding:12px;
+    background:linear-gradient(0deg,#F7FAFC,#FBFDFE);border-bottom:1px solid var(--ps-line);overflow:hidden}
+  .cl-mono{width:44px;height:44px;border-radius:var(--ps-radius);display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:17px;color:#fff;letter-spacing:.3px}
+  .cl-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:7px;flex:1}
+  .cl-name{font-weight:700;font-size:14px;color:var(--ps-midnight);display:flex;align-items:center;gap:7px}
+  .cl-blurb{font-size:12.5px;color:var(--ps-ink-2);line-height:1.4;flex:1}
+  .cl-meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ps-ink-3);flex-wrap:wrap}
+  .cl-dot{width:3px;height:3px;border-radius:50%;background:var(--ps-ink-3)}
+  .cl-links{display:flex;gap:8px;margin-top:3px}
+  .cl-lnk{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:30px;border-radius:var(--ps-radius);
+    font-size:12px;font-weight:600;text-decoration:none;border:1px solid var(--ps-line);color:var(--ps-blue);background:#fff;transition:background .12s}
+  .cl-lnk:hover{background:var(--ps-blue-weak)}
+  .cl-lnk.fig{color:#7a4a00}
+  .cl-lnk.fig:hover{background:var(--ps-amber-weak)}
+
+  .cl-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+    padding:2px 7px;border-radius:var(--ps-pill)}
+  .cl-tag.stable{background:#EEF1F3;color:#5a6a74}
+  .cl-tag.new{background:var(--ps-green-weak);color:#0c6b48}
+  .cl-tag.updated{background:var(--ps-blue-weak);color:#08487a}
+  .cl-tag.legacy{background:var(--ps-amber-weak);color:#7a4a00}
+
+  /* history timeline */
+  .cl-tl{position:relative;max-width:860px;margin:2px 0 0;padding-left:26px}
+  .cl-tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--ps-line)}
+  .cl-ev{position:relative;margin:0 0 20px}
+  .cl-ev::before{content:"";position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;
+    background:var(--ps-surface);border:2px solid var(--ps-blue)}
+  .cl-ev.leg::before{border-color:var(--ps-orange)}
+  .cl-ev .cl-when{font-size:12px;font-weight:700;color:var(--ps-ink-3);text-transform:uppercase;letter-spacing:.5px}
+  .cl-ev .cl-h{font-weight:700;font-size:14.5px;color:var(--ps-midnight);margin:2px 0 4px}
+  .cl-ev .cl-h a{color:var(--ps-blue);text-decoration:none;font-size:12px;font-weight:600;margin-left:6px}
+  .cl-ev .cl-h a:hover{text-decoration:underline}
+  .cl-ev p{font-size:13.5px;color:var(--ps-ink-2);margin:4px 0}
+  .cl-ba{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap;margin:10px 0 2px}
+  .cl-ba .col{flex:1;min-width:150px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;background:#fff}
+  .cl-ba .lab{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px 10px;border-bottom:1px solid var(--ps-line)}
+  .cl-ba .col.b .lab{color:#7a4a00;background:var(--ps-amber-weak)}
+  .cl-ba .col.a .lab{color:#0c6b48;background:var(--ps-green-weak)}
+  .cl-ba .disp{min-height:66px;display:flex;align-items:center;justify-content:center;padding:12px;background:#FBFDFE}
+  .cl-arrow{display:flex;align-items:center;color:var(--ps-ink-3);font-size:18px}
+  @media(max-width:560px){.cl-arrow{transform:rotate(90deg)}}
+
+  /* mini specimens (reused catalog + history) */
+  .sp{font-family:var(--ps-font);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .sp-btn{height:34px;padding:0 16px;border-radius:var(--ps-radius);font-size:12px;font-weight:600;border:2px solid transparent;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+  .sp-btn.blue{background:var(--ps-blue);color:#fff}
+  .sp-btn.orange{background:var(--ps-orange);color:#fff;border-radius:var(--ps-pill);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+  .sp-btn.out{background:#fff;color:var(--ps-blue);border-color:var(--ps-blue)}
+  .sp-chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 11px;border-radius:var(--ps-pill);background:#EAF0F4;color:var(--ps-midnight);font-size:12px;font-weight:600;line-height:1}
+  .sp-chip b{font-size:13px;color:var(--ps-ink-3);cursor:default}
+  .sp-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:3px 8px;border-radius:4px;border:1px solid}
+  .sp-input{width:150px;height:34px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);display:flex;align-items:center;padding:0 10px;font-size:12px;color:var(--ps-ink-3);background:#fff}
+  .sp-toggle{width:38px;height:22px;border-radius:var(--ps-pill);background:var(--ps-blue);position:relative;display:inline-block}
+  .sp-toggle::after{content:"";position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff}
+  .sp-track{width:150px;height:4px;border-radius:var(--ps-pill);background:var(--ps-line);position:relative}
+  .sp-track::before{content:"";position:absolute;left:0;top:0;height:4px;width:60%;border-radius:var(--ps-pill);background:var(--ps-blue)}
+  .sp-track::after{content:"";position:absolute;left:calc(60% - 7px);top:-5px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--ps-blue)}
+  .sp-tabs{display:flex;gap:0;border-bottom:1px solid var(--ps-line)}
+  .sp-tabs span{font-size:11px;font-weight:600;color:var(--ps-ink-3);padding:6px 12px;border-top:3px solid transparent}
+  .sp-tabs span.on{color:var(--ps-midnight);border-top-color:var(--ps-blue);background:#fff}
+  .sp-alert{display:flex;gap:8px;align-items:center;width:100%;max-width:190px;padding:8px 10px;border-radius:var(--ps-radius);background:var(--ps-blue-weak);border-left:3px solid var(--ps-blue);font-size:11.5px;color:#083b63}
+  .sp-bar{width:150px;height:8px;border-radius:var(--ps-pill);background:var(--ps-line);overflow:hidden}
+  .sp-bar i{display:block;height:100%;width:66%;background:var(--ps-green);border-radius:var(--ps-pill)}
+  .sp-qty{display:inline-flex;align-items:center;border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;height:32px;font-size:13px}
+  .sp-qty span{padding:0 10px;color:var(--ps-ink-2)}
+  .sp-qty b{padding:0 12px;border-left:1px solid var(--ps-line);border-right:1px solid var(--ps-line);color:var(--ps-midnight)}
+  .sp-seg{display:inline-flex;border:1px solid var(--ps-blue);border-radius:var(--ps-radius);overflow:hidden;font-size:11px;font-weight:600}
+  .sp-seg span{padding:6px 12px;color:var(--ps-blue)}
+  .sp-seg span.on{background:var(--ps-blue);color:#fff}
+  .sp-icnbtn{width:34px;height:34px;border-radius:var(--ps-radius);background:var(--ps-orange);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
+  .sp-nav{width:180px;height:30px;border-radius:var(--ps-radius);background:var(--ps-midnight);display:flex;align-items:center;gap:8px;padding:0 10px}
+  .sp-nav i{width:26px;height:8px;border-radius:2px;background:rgba(255,255,255,.5);display:block}
+  .sp-nav i:first-child{background:#fff;width:34px}
+  .sp-table{width:170px;border:1px solid var(--ps-line);border-radius:4px;overflow:hidden;font-size:0}
+  .sp-table i{display:block;height:9px;border-bottom:1px solid var(--ps-line)}
+  .sp-table i:first-child{background:#F0F4F7;height:11px}
+  .sp-table i:last-child{border-bottom:0}
+  .sp-pop{width:130px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);background:#fff;padding:8px;position:relative}
+  .sp-pop::after{content:"";position:absolute;bottom:-6px;left:20px;width:10px;height:10px;background:#fff;border-right:1px solid var(--ps-line);border-bottom:1px solid var(--ps-line);transform:rotate(45deg)}
+  .sp-pop i{display:block;height:6px;border-radius:2px;background:var(--ps-line);margin-bottom:5px}
+  .sp-pop i:first-child{width:60%;background:var(--ps-ink-3)}
+  .sp-card{width:150px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;background:#fff}
+  .sp-card .im{height:26px;background:var(--ps-blue-weak)}
+  .sp-card .bd{padding:8px}
+  .sp-card .bd i{display:block;height:6px;border-radius:2px;background:var(--ps-line);margin-bottom:5px}
+  .sp-card .bd i:first-child{width:70%;background:var(--ps-ink-3);height:8px}
+  .sp-check{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ps-ink-2)}
+  .sp-check i{width:16px;height:16px;border-radius:3px;background:var(--ps-blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px}
+  .sp-check em{width:16px;height:16px;border-radius:50%;border:2px solid var(--ps-blue);display:inline-block;position:relative}
+  .sp-check em::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--ps-blue)}
+  .sp-div{width:150px}
+  .sp-div i{display:block;height:1px;background:var(--ps-line)}
+  .sp-div span{display:block;font-size:9px;color:var(--ps-ink-3);text-align:center;margin:4px 0}
+  /* richer, true-to-life specimens (cards / overlays / layout) */
+  .sp-pill{display:inline-flex;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 6px;border-radius:4px;line-height:1.4}
+  .sp-pill.g{color:#0c6b48;background:var(--ps-green-weak)}
+  .sp-pill.b{color:#08487a;background:var(--ps-blue-weak)}
+  .sp-pill.r{color:#9c2822;background:#FBE9E7}
+  .sp-x{width:172px;background:#fff;border:1px solid var(--ps-line);border-radius:var(--ps-radius);padding:8px 9px;text-align:left;font-family:var(--ps-font)}
+  .sp-x .im{height:20px;border-radius:3px;background:var(--ps-blue-weak);margin-bottom:6px}
+  .sp-x .t{font-size:10.5px;font-weight:700;color:var(--ps-midnight);margin-bottom:5px;line-height:1.2}
+  .sp-x .k{display:flex;justify-content:space-between;font-size:9px;color:var(--ps-ink-3);margin-bottom:3px}
+  .sp-x .k b{color:var(--ps-midnight);font-weight:600}
+  .sp-x .k:last-child{margin-bottom:0}
+  .sp-modal{position:relative;width:172px;height:74px;border-radius:var(--ps-radius);background:#E7EEF3;display:flex;align-items:center;justify-content:center}
+  .sp-modal .dlg{width:120px;background:#fff;border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);padding:8px}
+  .sp-modal .dlg b{display:block;height:6px;width:58%;border-radius:2px;background:var(--ps-midnight);margin-bottom:6px}
+  .sp-modal .dlg i{display:block;height:4px;border-radius:2px;background:var(--ps-line);margin-bottom:4px}
+  .sp-modal .dlg .row{display:flex;gap:5px;margin-top:7px;justify-content:flex-end}
+  .sp-modal .dlg .row u{width:30px;height:12px;border-radius:3px;background:var(--ps-blue)}
+  .sp-modal .dlg .row u.o{background:#fff;border:1px solid var(--ps-blue)}
+  .sp-drawer{position:relative;width:172px;height:74px;border-radius:var(--ps-radius);background:#E7EEF3;overflow:hidden}
+  .sp-drawer .pn{position:absolute;top:0;right:0;bottom:0;width:96px;background:#fff;box-shadow:-4px 0 12px rgba(0,47,72,.12);padding:9px;box-sizing:border-box}
+  .sp-drawer .pn b{display:block;height:6px;width:60%;border-radius:2px;background:var(--ps-midnight);margin-bottom:7px}
+  .sp-drawer .pn i{display:block;height:4px;border-radius:2px;background:var(--ps-line);margin-bottom:4px}
+  .sp-shell{width:172px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;background:#fff}
+  .sp-shell .hd{height:13px;background:var(--ps-midnight)}
+  .sp-shell .bd{display:flex;height:52px}
+  .sp-shell .bd .sd{width:32px;background:#EAF0F4;border-right:1px solid var(--ps-line)}
+  .sp-shell .bd .ct{flex:1;padding:7px}
+  .sp-shell .bd .ct i{display:block;height:5px;border-radius:2px;background:var(--ps-line);margin-bottom:5px}
+  .sp-shell .bd .ct i:first-child{width:60%;background:var(--ps-ink-3);height:6px}
+  .sp-carou{width:172px}
+  .sp-carou .row{display:flex;gap:6px;overflow:hidden}
+  .sp-carou .row i{flex:0 0 auto;width:52px;height:42px;border-radius:4px;background:var(--ps-blue-weak);border:1px solid var(--ps-line)}
+  .sp-carou .row i:nth-child(3){opacity:.5}
+  .sp-carou .dots{display:flex;gap:4px;justify-content:center;margin-top:8px}
+  .sp-carou .dots u{width:5px;height:5px;border-radius:50%;background:var(--ps-line)}
+  .sp-carou .dots u.on{background:var(--ps-blue);width:13px;border-radius:3px}
+  .sp-notif{width:172px;display:flex;gap:8px;align-items:flex-start;background:#fff;border:1px solid var(--ps-line);border-radius:var(--ps-radius);padding:9px;text-align:left;box-sizing:border-box}
+  .sp-notif .ic{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--ps-blue-weak);border:1px solid var(--ps-blue)}
+  .sp-notif .tx{flex:1}
+  .sp-notif .tx b{display:block;font-size:10px;color:var(--ps-midnight);font-weight:700;margin-bottom:5px}
+  .sp-notif .tx i{display:block;height:4px;border-radius:2px;background:var(--ps-line);margin-bottom:4px}
+  .sp-metric{width:172px;background:#fff;border:1px solid var(--ps-line);border-radius:var(--ps-radius);padding:9px 10px;text-align:left;box-sizing:border-box}
+  .sp-metric .lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ps-ink-3);margin-bottom:4px}
+  .sp-metric .val{font-size:26px;font-weight:300;color:var(--ps-midnight);line-height:1}
+  .sp-metric .trend{font-size:10px;font-weight:700;color:#0c6b48;margin-top:5px}
+  .sp-pay{width:172px;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--ps-line);border-radius:var(--ps-radius);padding:10px 9px;text-align:left;box-sizing:border-box}
+  .sp-pay .vs{flex:0 0 auto;font-size:11px;font-weight:800;font-style:italic;color:#08487a;border:1px solid #B9C7D1;border-radius:3px;padding:2px 5px}
+  .sp-pay .no{flex:1;font-size:11px;color:var(--ps-midnight);font-weight:600;letter-spacing:.5px}
+  .sp-cms{width:172px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);overflow:hidden;background:#fff}
+  .sp-cms .ban{height:20px;background:var(--ps-midnight)}
+  .sp-cms .bd{padding:8px}
+  .sp-cms .bd i{display:block;height:5px;border-radius:2px;background:var(--ps-line);margin-bottom:5px}
+  .sp-cms .bd i:first-child{width:65%;background:var(--ps-ink-3);height:6px}
+  .sp-cms .grid{display:flex;gap:5px;margin-top:6px}
+  .sp-cms .grid u{flex:1;height:18px;border-radius:3px;background:var(--ps-blue-weak);border:1px solid var(--ps-line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app">
+    <div>
+      <p class="eyebrow">PartsSource Design System</p>
+      <h1>Design Tokens · Pipeline Tracker</h1>
+      <p class="sub">Live status of the Figma → GitHub → Storybook token pipeline for <b id="repoLabel">NotTheVeal/react-ui-kit</b>.</p>
+    </div>
+    <div class="toolbar">
+      <span class="meta" id="clock"></span>
+      <button class="btn secondary" id="refreshBtn" type="button">↻ Refresh now</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Tracker views">
+    <button class="tab" role="tab" id="tab-pipeline" aria-controls="view-pipeline" aria-selected="true" data-view="pipeline" type="button">Pipeline</button>
+    <button class="tab" role="tab" id="tab-changelog" aria-controls="view-changelog" aria-selected="false" data-view="changelog" type="button">Changelog</button>
+    <button class="tab" role="tab" id="tab-guide" aria-controls="view-guide" aria-selected="false" data-view="guide" type="button">How to use</button>
+    <button class="tab" role="tab" id="tab-components" aria-controls="view-components" aria-selected="false" data-view="components" type="button">Components</button>
+  </nav>
+
+  <section id="view-pipeline" class="view active" role="tabpanel" aria-labelledby="tab-pipeline">
+
+  <div class="banner" id="banner"></div>
+
+  <details class="config" id="cfg">
+    <summary>⚙ Connection settings <span class="hint" id="cfgHint"></span></summary>
+    <div class="config-body">
+      <p class="sub" style="font-size:13.5px">Reads the public GitHub Actions API — about 2 calls per refresh. Anonymously GitHub allows only <b>60 calls/hr</b>, so auto-refresh is clamped to ≥180s and pauses automatically if the limit is hit. Add a read-only token to refresh as fast as every 10s. The token is stored in <b>this browser only</b> (localStorage) and is sent solely to <code>api.github.com</code> — it never reaches Claude or any other server.</p>
+      <div class="grid">
+        <label class="fld">Owner
+          <input id="owner" type="text" placeholder="NotTheVeal" autocomplete="off" spellcheck="false"/>
+        </label>
+        <label class="fld">Repository
+          <input id="repo" type="text" placeholder="react-ui-kit" autocomplete="off" spellcheck="false"/>
+        </label>
+        <label class="fld">Read-only token <span class="hint">optional · fine-grained · Actions:read</span>
+          <input id="token" type="password" placeholder="github_pat_… (optional)" autocomplete="off" spellcheck="false"/>
+        </label>
+        <label class="fld">Auto-refresh <span class="hint">seconds · 0 = off</span>
+          <input id="interval" type="number" min="0" max="600" step="5" value="20"/>
+        </label>
+      </div>
+      <div class="config-actions">
+        <button class="btn" id="saveBtn" type="button">Save &amp; connect</button>
+        <button class="btn ghost" id="clearTokenBtn" type="button">Clear token</button>
+        <span class="meta" id="rate"></span>
+      </div>
+    </div>
+  </details>
+
+  <div class="strip" id="strip">
+    <div>
+      <div class="big" id="stripBig">Not connected</div>
+      <div class="lil" id="stripLil">Open connection settings and press “Save &amp; connect”.</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Pipeline stages</h2>
+  <div class="stages" id="stages"></div>
+
+  <h2 class="section-title">Recent workflow runs</h2>
+  <div id="runsWrap">
+    <div class="empty">No data yet.</div>
+  </div>
+
+  </section><!-- /view-pipeline -->
+
+  <section id="view-changelog" class="view" role="tabpanel" aria-labelledby="tab-changelog" hidden>
+    <h2 class="section-title">Change log</h2>
+    <p class="sub" style="margin:-6px 0 14px">What actually shipped to <b>NotTheVeal/react-ui-kit</b> — merged PRs and releases, classified Added / Changed / Fixed / Removed. Grouped by day with a timeline, or by type. Uses the same GitHub connection as the Pipeline tab; add a read-only token there for live data.</p>
+    <div class="embedwrap">
+      <div class="embedhead">
+        <span class="t">Release &amp; merge history</span>
+        <span class="d">Loads changelog-dashboard-v2.html · open the tab in its own window for full width</span>
+      </div>
+      <iframe id="clFrame" title="Change log dashboard" loading="lazy" data-src="changelog-dashboard-v2.html"></iframe>
+    </div>
+  </section><!-- /view-changelog -->
+
+  <section id="view-guide" class="view" role="tabpanel" aria-labelledby="tab-guide" hidden>
+    <h2 class="section-title">How to use this project</h2>
+    <div class="guide">
+
+      <p class="lead">This is the PartsSource design-token pipeline and the 1:1 React component library that consumes it. One design source in Figma flows automatically to living code and a published Storybook. This page is the operator's manual.</p>
+
+      <h2>1 · What the pieces are</h2>
+      <div class="kv">
+        <div><span class="k">Figma (design source)</span><span class="v">Variables + components. The one place a designer changes a color, space, radius, or type value.</span></div>
+        <div><span class="k">Tokens Studio plugin</span><span class="v">The bridge. Pushes Figma Variables into the GitHub repo as token JSON. <b>This is the sync path we use.</b></span></div>
+        <div><span class="k">NotTheVeal/react-ui-kit</span><span class="v">Source of truth. Holds the token source, <code>tokens.css</code>, every React component, tests, and Code Connect.</span></div>
+        <div><span class="k">GitHub Actions</span><span class="v">Rebuilds tokens, runs the drift gate + CI, and deploys Storybook — automatically on each change.</span></div>
+        <div><span class="k">Storybook (GitHub Pages)</span><span class="v">The published component workshop: <code>nottheveal.github.io/react-ui-kit</code>.</span></div>
+      </div>
+
+      <h2>2 · The everyday loop — changing a token</h2>
+      <p>When you change a value in Figma (say a brand blue), this is how it reaches code:</p>
+      <ol>
+        <li>Edit the Variable in Figma.</li>
+        <li>Open <b>Plugins → Tokens Studio for Figma</b>.</li>
+        <li>Confirm the sync target is <code>NotTheVeal/react-ui-kit</code> (settings in §5 below).</li>
+        <li>Click <b>Push</b> → write a short commit message → confirm. Push to a branch and let it open a PR.</li>
+        <li>Watch it move through the <b>Pipeline</b> tab: tokens rebuild → drift gate → CI → merge → Storybook redeploys.</li>
+      </ol>
+      <div class="callout ok"><b>That's the whole sync.</b> No terminal, no manual token build. The plugin push is the only action you take; GitHub does the rest.</div>
+
+      <h2>3 · Reading the Pipeline tab</h2>
+      <p>The <b>Pipeline</b> tab shows the live Figma → GitHub → Storybook flow for the repo, straight from the GitHub Actions API.</p>
+      <ul>
+        <li><b>Status strip</b> — one-line health: green = idle/all clear, blue = something running, red = a stage failed.</li>
+        <li><b>8 stage cards</b> — push → rebuild tokens → drift gate → PR → CI → merge → deploy → Storybook live. Each shows a status pill and a link to the exact run.</li>
+        <li><b>Recent workflow runs</b> — the last dozen runs across all four workflows, newest first, each linking to its log.</li>
+        <li><b>⚙ Connection settings</b> — set owner/repo and, optionally, a read-only fine-grained token (<code>Actions:read</code>) to refresh as fast as every 10s. Anonymous is capped to ≥180s to stay under GitHub's 60-calls/hour limit. The token lives in <b>this browser only</b> and is sent solely to <code>api.github.com</code>.</li>
+      </ul>
+
+      <h2>4 · Reading the Changelog tab</h2>
+      <p>The <b>Changelog</b> tab is the human-readable record of what shipped — merged PRs and releases, de-duplicated across squash-merges and classified Added / Changed / Fixed / Removed (the "Keep a Changelog" convention). Group by <b>Day</b> for a dated timeline, by <b>Type</b> to see all fixes or all additions together, or filter by type chips, author, and date range. It reads the same repo as the Pipeline tab.</p>
+
+      <h2>5 · Tokens Studio sync-provider settings <span class="tag">verify before first push</span></h2>
+      <p>In Figma: <b>Tokens Studio → Settings (gear) → Sync providers → GitHub</b>. Confirm:</p>
+      <div class="kv">
+        <div><span class="k">Provider</span><span class="v">GitHub</span></div>
+        <div><span class="k">Repository</span><span class="v"><code>NotTheVeal/react-ui-kit</code></span></div>
+        <div><span class="k">Branch</span><span class="v">a feature branch (e.g. <code>chore/tokens-sync</code>) so it opens a PR — not a direct commit to <code>main</code></span></div>
+        <div><span class="k">Token storage / file path</span><span class="v">the repo's token source directory (where the DTCG JSON lives) — match what's already committed, don't invent a new path</span></div>
+        <div><span class="k">Personal access token</span><span class="v">a GitHub PAT with <code>repo</code> scope (read/write contents + PRs). This is a standard GitHub PAT — <b>not</b> a Figma token, and it does <b>not</b> need any Enterprise scope.</span></div>
+      </div>
+      <div class="callout"><b>Push style:</b> use "Push → create branch + PR" rather than committing to <code>main</code>, so CI runs and you get a reviewable diff before it merges.</div>
+
+      <h2>6 · Adding a new component</h2>
+      <ol>
+        <li>Design/confirm the component in Figma with its Variables bound (no raw values).</li>
+        <li>Build the React component in <code>react-ui-kit</code> against <code>--ps-*</code> tokens — never hardcoded colors — with all states, a Storybook story, unit + a11y tests, and a Code Connect mapping.</li>
+        <li>Open a PR. CI runs lint → tsc → token build → drift gate → tests → Storybook build. Green PR → merge → auto-deploy.</li>
+      </ol>
+
+      <h2>7 · What's outstanding</h2>
+      <div class="callout ok"><b>Automation: complete.</b> All 11 project phases read as Delivered in Confluence. The token loop runs end-to-end via the Tokens Studio push; nothing is blocked.</div>
+      <ul>
+        <li><b>PR #20 — Brücke adapter (your decision, not a blocker).</b> Proven to reconcile 118/119 (the 1 delta is composites/units, expected). Merge it to wire the Figma-native Variables → canonical DTCG path into CI, or leave it vendored under <code>token-sync/</code>. Nothing depends on the choice.</li>
+        <li><b>Confluence doc hygiene.</b> The parent project-outline timeline still lists Phase 10 as "in process (10%)" and Phase 11 as "pending", but both phase pages are stamped <b>Delivered (20 Jul 2026)</b>. The table just needs reconciling to match — a documentation edit, not project work.</li>
+        <li><b>The REST token exporter is a dead end, and that's fine.</b> <code>figma-token-sync.yml</code> needs an Enterprise-only Figma scope you don't have; it's soft-skip-guarded so it stays green as a no-op. The Tokens Studio push is the real path and needs none of it.</li>
+      </ul>
+
+    </div>
+  </section><!-- /view-guide -->
+
+  <section id="view-components" class="view" role="tabpanel" aria-labelledby="tab-components" hidden>
+    <h2 class="section-title">Component library</h2>
+    <div class="cl-intro">
+      <p class="lead">Every component shipped in <b>NotTheVeal/react-ui-kit</b> — the 1:1 React library built on the design tokens. Each card carries a mini specimen, its status, when it last shipped, and jump-links to its live Storybook page and its Figma source. Switch to <b>History</b> to see what changed and what a component looked like before.</p>
+    </div>
+    <div class="cl-bar">
+      <div class="cl-seg" role="tablist" aria-label="Component view">
+        <button data-clview="catalog" role="tab" aria-pressed="true" type="button">Current</button>
+        <button data-clview="history" role="tab" aria-pressed="false" type="button">History</button>
+      </div>
+      <input id="cl-search" class="cl-search" type="text" placeholder="Filter components…" autocomplete="off" spellcheck="false" aria-label="Filter components"/>
+      <span class="cl-count" id="cl-count"></span>
+    </div>
+    <div id="cl-catalog"></div>
+    <div id="cl-history" hidden></div>
+  </section><!-- /view-components -->
+
+  <footer class="app">
+    <span id="lastUpdated">Never refreshed.</span>
+    <span>Source: GitHub Actions REST API · figma-token-sync · tokens-autobuild · ci · deploy-storybook</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var LS="ps-pipeline-tracker";
+  var WF={
+    figmaSync:"figma-token-sync.yml",
+    autobuild:"tokens-autobuild.yml",
+    ci:"ci.yml",
+    deploy:"deploy-storybook.yml"
+  };
+  var STAGE_DEFS=[
+    {k:"push",   nm:"1 · Figma push",        d:"Designer pushes token values (REST export or Tokens Studio plugin)."},
+    {k:"tokens", nm:"2 · Rebuild tokens",    d:"export:tokens + build:tokens regenerate tokens/*.json and tokens.css."},
+    {k:"gate",   nm:"3 · Drift gate",        d:"test:tokens proves tokens.css is value-identical to source."},
+    {k:"pr",     nm:"4 · Pull request",      d:"PR opened into main (chore/figma-token-sync)."},
+    {k:"ci",     nm:"5 · CI gate",           d:"“Lint, typecheck & build”: lint → tsc → tokens → build → storybook."},
+    {k:"merge",  nm:"6 · Merge to main",     d:"Reviewed PR merged; main advances."},
+    {k:"deploy", nm:"7 · Deploy Storybook",  d:"deploy-storybook builds and uploads the Pages artifact."},
+    {k:"pages",  nm:"8 · Storybook live",    d:"GitHub Pages serves the component workshop."}
+  ];
+  var $=function(id){return document.getElementById(id)};
+  var timer=null, cfg=load();
+
+  function load(){
+    var d={owner:"NotTheVeal",repo:"react-ui-kit",token:"",interval:20};
+    try{var s=JSON.parse(localStorage.getItem(LS)||"{}");Object.assign(d,s)}catch(e){}
+    return d;
+  }
+  // Anonymous GitHub allows only 60 req/hr. Each refresh now costs ~2 calls, so
+  // without a token we clamp the auto-refresh to a safe floor (or off) to avoid 403s.
+  function effInterval(){
+    var iv=cfg.interval|0;
+    if(iv<=0)return 0;                 // manual only
+    if(cfg.token)return Math.max(10,iv);   // authed: 5000/hr, fast is fine
+    return Math.max(180,iv);           // anonymous: >=180s keeps us under 60/hr
+  }
+  function save(){
+    cfg.owner=$("owner").value.trim()||"NotTheVeal";
+    cfg.repo=$("repo").value.trim()||"react-ui-kit";
+    cfg.token=$("token").value.trim();
+    cfg.interval=Math.max(0,parseInt($("interval").value,10)||0);
+    localStorage.setItem(LS,JSON.stringify(cfg));
+    reflectCfg();
+  }
+  function reflectCfg(){
+    $("owner").value=cfg.owner;$("repo").value=cfg.repo;$("token").value=cfg.token;$("interval").value=cfg.interval;
+    $("repoLabel").textContent=cfg.owner+"/"+cfg.repo;
+    $("cfgHint").textContent=cfg.token?"· token saved":"· anonymous";
+  }
+  function banner(kind,msg){
+    var b=$("banner");
+    if(!msg){b.className="banner";return;}
+    b.className="banner show "+kind;b.textContent=msg;
+  }
+  var rateReset=0;
+  function api(path){
+    var url="https://api.github.com/repos/"+cfg.owner+"/"+cfg.repo+path;
+    var h={"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
+    if(cfg.token)h["Authorization"]="Bearer "+cfg.token;
+    return fetch(url,{headers:h}).then(function(r){
+      var rem=r.headers.get("x-ratelimit-remaining");
+      var rst=r.headers.get("x-ratelimit-reset");
+      if(rst)rateReset=parseInt(rst,10)*1000;
+      if(rem!==null){
+        $("rate").textContent="API calls left this hour: "+rem+(cfg.token?"":" of 60 (anonymous)");
+        $("rate").style.color=(parseInt(rem,10)<=8?"var(--ps-red)":"");
+      }
+      if(r.status===404)throw{code:404,msg:"Not found (private repo needs a token, or wrong owner/repo)."};
+      if(r.status===401)throw{code:401,msg:"Token rejected (401). Check the token value/scope."};
+      if(r.status===403||r.status===429){
+        var when=rateReset?(" Resets at "+new Date(rateReset).toLocaleTimeString()+"."):"";
+        throw{code:403,rate:true,msg:"GitHub rate limit reached."+when+(cfg.token?"":" Add a read-only token (Settings ⚙) for live updates.")};
+      }
+      if(!r.ok)throw{code:r.status,msg:"GitHub API error "+r.status+"."};
+      return r.json();
+    });
+  }
+  // One call fetches all recent runs across every workflow; bucket by file client-side.
+  function allRuns(){
+    return api("/actions/runs?per_page=40").then(function(d){
+      var runs=(d&&d.workflow_runs)||[];
+      var byFile=function(f){return runs.filter(function(r){return (r.path||"").split("/").pop()===f;});};
+      return {figmaSync:byFile(WF.figmaSync),autobuild:byFile(WF.autobuild),ci:byFile(WF.ci),deploy:byFile(WF.deploy)};
+    }).catch(function(e){ if(e&&e.code===404)return {figmaSync:[],autobuild:[],ci:[],deploy:[]}; throw e; });
+  }
+  function openPRs(){
+    return api("/pulls?state=open&per_page=30").then(function(d){return d||[]}).catch(function(){return []});
+  }
+  function pages(){
+    return api("/pages").then(function(d){return d}).catch(function(){return null});
+  }
+
+  function pill(status,concl){
+    if(status==="in_progress"||status==="queued"||status==="waiting"||status==="pending")
+      return {c:"run",t:status==="queued"?"Queued":"Running"};
+    if(status==="completed"){
+      if(concl==="success")return {c:"ok",t:"Passed"};
+      if(concl==="failure"||concl==="timed_out")return {c:"bad",t:"Failed"};
+      if(concl==="cancelled")return {c:"wait",t:"Cancelled"};
+      if(concl==="skipped")return {c:"wait",t:"Skipped"};
+      if(concl==="neutral")return {c:"warn",t:"Neutral"};
+      return {c:"wait",t:concl||"Done"};
+    }
+    return {c:"wait",t:"—"};
+  }
+  function ago(iso){
+    if(!iso)return "";
+    var s=Math.floor((Date.now()-new Date(iso).getTime())/1000);
+    if(s<60)return s+"s ago";
+    if(s<3600)return Math.floor(s/60)+"m ago";
+    if(s<86400)return Math.floor(s/3600)+"h ago";
+    return Math.floor(s/86400)+"d ago";
+  }
+  function latest(runs){return runs&&runs.length?runs[0]:null;}
+
+  function render(data){
+    // ---- stages ----
+    var fs=latest(data.figmaSync), ab=latest(data.autobuild), ci=latest(data.ci), dep=latest(data.deploy);
+    var tokenRun=fs||ab;                       // whichever token door fired most recently
+    var prList=(data.prs||[]).filter(function(p){return p.base&&p.base.ref==="main";});
+    var tokenPR=prList.find(function(p){return /token|figma/i.test(p.head.ref);})||prList[0]||null;
+
+    var st={};
+    // stage 1 push — proxy: a token workflow run exists
+    st.push = tokenRun
+      ? {p:pill(tokenRun.status,tokenRun.conclusion),d:"Latest via "+(tokenRun.name||"token workflow")+" · "+ago(tokenRun.created_at),link:tokenRun.html_url,linkt:"Run"}
+      : {p:{c:"wait",t:"Idle"},d:"No token workflow run yet.",link:null};
+    // stage 2 tokens & stage 3 gate — folded into the token run's outcome
+    st.tokens = tokenRun
+      ? {p:pill(tokenRun.status,tokenRun.conclusion),d:"export:tokens + build:tokens",link:tokenRun.html_url,linkt:"Logs"}
+      : {p:{c:"wait",t:"Idle"},d:"Waiting on a token push."};
+    st.gate = tokenRun
+      ? {p:pill(tokenRun.status,tokenRun.conclusion),d:"test:tokens value-identity gate",link:tokenRun.html_url,linkt:"Logs"}
+      : {p:{c:"wait",t:"Idle"},d:"Waiting on a token push."};
+    // stage 4 PR
+    st.pr = tokenPR
+      ? {p:{c:"run",t:"Open"},d:"#"+tokenPR.number+" "+truncate(tokenPR.title,40)+" · "+ago(tokenPR.created_at),link:tokenPR.html_url,linkt:"PR"}
+      : {p:{c:"wait",t:"None open"},d:"No open token PR into main.",link:"https://github.com/"+cfg.owner+"/"+cfg.repo+"/pulls",linkt:"All PRs"};
+    // stage 5 CI
+    st.ci = ci
+      ? {p:pill(ci.status,ci.conclusion),d:(ci.head_branch||"")+" · "+ago(ci.created_at),link:ci.html_url,linkt:"CI run"}
+      : {p:{c:"wait",t:"Idle"},d:"No CI run found."};
+    // stage 6 merge — main's latest run event=push on main OR deploy presence
+    var mainCi=(data.ci||[]).find(function(r){return r.head_branch==="main";});
+    st.merge = mainCi
+      ? {p:pill(mainCi.status,mainCi.conclusion),d:"main @ "+(mainCi.head_sha||"").slice(0,7)+" · "+ago(mainCi.created_at),link:mainCi.html_url,linkt:"Run"}
+      : {p:{c:"wait",t:"—"},d:"No run on main yet."};
+    // stage 7 deploy
+    st.deploy = dep
+      ? {p:pill(dep.status,dep.conclusion),d:(dep.head_branch||"main")+" · "+ago(dep.created_at),link:dep.html_url,linkt:"Deploy run"}
+      : {p:{c:"wait",t:"Not set up"},d:"deploy-storybook has no runs (enable Pages).",link:null};
+    // stage 8 pages — /pages needs auth (404s anonymously), so fall back to deploy success + the deterministic Pages URL
+    var pg=data.pages;
+    var pagesUrl="https://"+cfg.owner+".github.io/"+cfg.repo+"/";
+    var lastDeploy=(data.deploy||[])[0];
+    var deployOk=lastDeploy&&lastDeploy.conclusion==="success";
+    if(pg&&pg.html_url){
+      st.pages={p:{c:(pg.status==="built"?"ok":"run"),t:(pg.status==="built"?"Live":(pg.status||"Building"))},d:pg.html_url.replace(/^https?:\/\//,""),link:pg.html_url,linkt:"Open Storybook"};
+    }else if(deployOk){
+      st.pages={p:{c:"ok",t:"Live"},d:pagesUrl.replace(/^https?:\/\//,""),link:pagesUrl,linkt:"Open Storybook"};
+    }else{
+      st.pages={p:{c:"wait",t:"Off"},d:"No successful deploy yet (add a token in ⚙ for exact Pages status).",link:pagesUrl,linkt:"Open Storybook"};
+    }
+
+    var host=$("stages");host.innerHTML="";
+    STAGE_DEFS.forEach(function(def,i){
+      var s=st[def.k]||{p:{c:"wait",t:"—"},d:def.d};
+      var card=document.createElement("div");card.className="stage";
+      card.innerHTML=
+        '<span class="idx">'+(i+1)+'</span>'+
+        '<div class="nm">'+def.nm.replace(/^\d+ · /,"")+'</div>'+
+        '<span class="pill '+s.p.c+'"><span class="dot"></span>'+s.p.t+'</span>'+
+        '<div class="dt">'+(s.d||def.d)+'</div>'+
+        (s.link?'<a class="mini" href="'+s.link+'" target="_blank" rel="noopener">'+(s.linkt||"Open")+' →</a>':'');
+      host.appendChild(card);
+    });
+
+    // ---- overall strip ----
+    var anyRun=[fs,ab,ci,dep,tokenPR].some(function(r){return r&&(r.status==="in_progress"||r.status==="queued"||(r.base&&r.state==="open"))});
+    var anyBad=[fs,ab,ci,dep].some(function(r){return r&&r.status==="completed"&&(r.conclusion==="failure"||r.conclusion==="timed_out");});
+    var strip=$("strip");
+    if(anyBad){strip.className="strip bad";$("stripBig").textContent="Attention — a stage failed";$("stripLil").textContent="Open the failed run below to see which step broke.";}
+    else if(anyRun){strip.className="strip run";$("stripBig").textContent="Pipeline in progress";$("stripLil").textContent="A workflow or PR is active right now.";}
+    else {strip.className="strip ok";$("stripBig").textContent="Idle — all clear";$("stripLil").textContent="No failures; nothing running. Latest known states shown below.";}
+
+    // ---- runs table ----
+    var all=[];
+    [["figma-token-sync",data.figmaSync],["tokens-autobuild",data.autobuild],["ci",data.ci],["deploy-storybook",data.deploy]]
+      .forEach(function(pair){ (pair[1]||[]).slice(0,4).forEach(function(r){ r.__wf=pair[0]; all.push(r); }); });
+    all.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at)});
+    all=all.slice(0,12);
+    var wrap=$("runsWrap");
+    if(!all.length){wrap.innerHTML='<div class="empty">No workflow runs found for this repo yet.</div>';}
+    else{
+      var rows=all.map(function(r){
+        var p=pill(r.status,r.conclusion);
+        return '<tr>'+
+          '<td><b>'+r.__wf+'</b></td>'+
+          '<td class="mono">'+(r.head_branch||"")+'</td>'+
+          '<td class="mono">'+(r.event||"")+'</td>'+
+          '<td><span class="pill '+p.c+'"><span class="dot"></span>'+p.t+'</span></td>'+
+          '<td class="mono">'+ago(r.created_at)+'</td>'+
+          '<td><a href="'+r.html_url+'" target="_blank" rel="noopener">view →</a></td>'+
+        '</tr>';
+      }).join("");
+      wrap.innerHTML='<table><thead><tr><th>Workflow</th><th>Branch</th><th>Event</th><th>Status</th><th>Started</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+    }
+    $("lastUpdated").textContent="Last refreshed "+new Date().toLocaleTimeString();
+  }
+  function truncate(s,n){s=s||"";return s.length>n?s.slice(0,n-1)+"…":s;}
+
+  var pagesCache=null, refreshCount=0, inFlight=false;
+  function refresh(){
+    if(!cfg.owner||!cfg.repo||inFlight)return;
+    inFlight=true;
+    banner("");
+    $("refreshBtn").innerHTML='<span class="spin"></span> Loading';
+    var needPages=(refreshCount%5===0);      // Pages state changes rarely — poll it 1-in-5
+    refreshCount++;
+    Promise.all([
+      allRuns(), openPRs(), needPages?pages():Promise.resolve(pagesCache)
+    ]).then(function(res){
+      var runs=res[0];
+      if(needPages)pagesCache=res[2];
+      render({figmaSync:runs.figmaSync,autobuild:runs.autobuild,ci:runs.ci,deploy:runs.deploy,prs:res[1],pages:pagesCache});
+    }).catch(function(e){
+      var rate=e&&e.rate;
+      banner(rate?"warn":"err",(e&&e.msg)||"Could not reach the GitHub API. Check owner/repo, or add a token.");
+      var strip=$("strip");strip.className="strip "+(rate?"warn":"bad");
+      $("stripBig").textContent=rate?"Paused — rate limited":"Not connected";
+      $("stripLil").textContent=(e&&e.msg)||"See the message above.";
+      if(rate)pauseForRate();
+    }).finally(function(){
+      inFlight=false;
+      $("refreshBtn").innerHTML='↻ Refresh now';
+    });
+  }
+  // On a 403 rate-limit, stop hammering the API and auto-resume just after the reset.
+  function pauseForRate(){
+    if(timer){clearInterval(timer);timer=null;}
+    var wait=rateReset?Math.max(5000,rateReset-Date.now()+2000):120000;
+    setTimeout(function(){ banner("info","Rate limit reset — resuming."); refresh(); schedule(); }, wait);
+  }
+  function schedule(){
+    if(timer){clearInterval(timer);timer=null;}
+    var ms=effInterval()*1000;
+    if(ms>0)timer=setInterval(refresh,ms);
+  }
+  function tick(){$("clock").textContent=new Date().toLocaleString();}
+
+  // wire up
+  $("saveBtn").addEventListener("click",function(){save();schedule();refresh();$("cfg").open=false;});
+  $("refreshBtn").addEventListener("click",refresh);
+  $("clearTokenBtn").addEventListener("click",function(){cfg.token="";$("token").value="";localStorage.setItem(LS,JSON.stringify(cfg));reflectCfg();banner("info","Token cleared from this browser.");});
+  reflectCfg();tick();setInterval(tick,1000);
+  schedule();
+
+  // ---- push-initiated entry: opened automatically by the watcher on a new token push ----
+  (function(){
+    var q={};location.search.replace(/^\?/,"").split("&").forEach(function(kv){var p=kv.split("=");if(p[0])q[decodeURIComponent(p[0])]=decodeURIComponent(p[1]||"");});
+    if(q.auto==="1"){
+      var who=q.wf?(" via "+q.wf):"";
+      var rn=q.run?(" · run #"+q.run):"";
+      banner("info","Auto-opened by a Figma token push"+who+rn+" — tracking the pipeline live.");
+      $("cfg").open=false;
+      // tighten the refresh cadence while a push is actively moving through
+      if(!cfg.interval||cfg.interval>15){cfg.interval=10;schedule();}
+    }
+  })();
+
+  // first load
+  refresh();
+})();
+</script>
+<script>
+/* ---- tab switching (independent of the pipeline IIFE) ---- */
+(function(){
+  var TABKEY="ps-pipeline-tracker-tab";
+  var tabs=[].slice.call(document.querySelectorAll(".tab[data-view]"));
+  var views={
+    pipeline:document.getElementById("view-pipeline"),
+    changelog:document.getElementById("view-changelog"),
+    guide:document.getElementById("view-guide"),
+    components:document.getElementById("view-components")
+  };
+  function activate(name){
+    if(!views[name])name="pipeline";
+    tabs.forEach(function(t){
+      var on=t.getAttribute("data-view")===name;
+      t.setAttribute("aria-selected",on?"true":"false");
+      t.tabIndex=on?0:-1;
+    });
+    Object.keys(views).forEach(function(k){
+      var v=views[k];if(!v)return;
+      if(k===name){v.classList.add("active");v.hidden=false;}
+      else{v.classList.remove("active");v.hidden=true;}
+    });
+    // lazy-load the changelog iframe on first reveal
+    if(name==="changelog"){
+      var f=document.getElementById("clFrame");
+      if(f&&!f.getAttribute("src")&&f.getAttribute("data-src")){f.setAttribute("src",f.getAttribute("data-src"));}
+    }
+    try{localStorage.setItem(TABKEY,name);}catch(e){}
+  }
+  tabs.forEach(function(t){
+    t.addEventListener("click",function(){activate(t.getAttribute("data-view"));});
+    t.addEventListener("keydown",function(e){
+      var i=tabs.indexOf(t),n=null;
+      if(e.key==="ArrowRight"||e.key==="ArrowDown")n=tabs[(i+1)%tabs.length];
+      else if(e.key==="ArrowLeft"||e.key==="ArrowUp")n=tabs[(i-1+tabs.length)%tabs.length];
+      if(n){e.preventDefault();n.focus();activate(n.getAttribute("data-view"));}
+    });
+  });
+  // initial tab: ?tab= wins, then last-used, else pipeline
+  var q={};location.search.replace(/^\?/,"").split("&").forEach(function(kv){var p=kv.split("=");if(p[0])q[decodeURIComponent(p[0])]=decodeURIComponent(p[1]||"");});
+  var start=q.tab||(function(){try{return localStorage.getItem(TABKEY);}catch(e){return null;}})()||"pipeline";
+  activate(start);
+})();
+</script>
+<script>
+/* ---- component library (Current catalog + History) ---- */
+(function(){
+  var SB="https://nottheveal.github.io/react-ui-kit/?path=/docs/";
+  var FIG="https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/Design-System---Component-library";
+  var CARD='<span class="sp-card"><span class="im"></span><span class="bd"><i></i><i></i></span></span>';
+  var BARS='<span style="display:flex;align-items:flex-end;gap:3px;height:42px">'
+    +'<i style="width:9px;height:40%;background:var(--ps-blue);border-radius:2px"></i>'
+    +'<i style="width:9px;height:72%;background:var(--ps-blue);border-radius:2px"></i>'
+    +'<i style="width:9px;height:54%;background:var(--ps-green);border-radius:2px"></i>'
+    +'<i style="width:9px;height:92%;background:var(--ps-blue);border-radius:2px"></i>'
+    +'<i style="width:9px;height:64%;background:var(--ps-orange);border-radius:2px"></i></span>';
+  var BRAND='<span class="sp-badge" style="color:#08487a;border-color:#B9C7D1;background:#fff;font-size:11px">VISA</span>';
+  var CRUMB='<span style="font-size:12px;color:var(--ps-ink-3)">Home &rsaquo; Catalog &rsaquo; <b style="color:var(--ps-midnight)">Part</b></span>';
+
+  var CATS=[
+    ["actions","Buttons & actions"],
+    ["forms","Forms & inputs"],
+    ["feedback","Feedback & status"],
+    ["overlays","Overlays"],
+    ["navlayout","Navigation & layout"],
+    ["cards","Cards & content"],
+    ["dataai","Data & AI"],
+    ["cms","CMS blocks"]
+  ];
+
+  var M=[
+    {n:"Button",cat:"actions",sb:"components-button",fig:"115-66",tag:"updated",date:"2026-07-28",commits:5,
+      blurb:"Primary, outline, secondary, tertiary, danger &mdash; plus the legacy orange pill.",
+      sp:'<span class="sp-btn blue">Buy Now</span><span class="sp-btn orange">Pill</span>'},
+    {n:"ChipButton",cat:"actions",sb:"components-chipbutton",tag:"new",date:"2026-07-28",commits:2,
+      blurb:"Removable filter pill with descender-safe baseline.",sp:'<span class="sp-chip">Brand <b>&times;</b></span>'},
+    {n:"SegmentedButton",cat:"actions",sb:"components-segmentedbutton",tag:"new",date:"2026-07-21",commits:1,
+      blurb:"Two-option current / future toggle.",sp:'<span class="sp-seg"><span class="on">Current</span><span>Future</span></span>'},
+    {n:"IconButton",cat:"actions",sb:"components-iconbutton-legacy",tag:"legacy",date:"2026-07-21",commits:1,
+      blurb:"Legacy orange square icon button &mdash; deprecated.",sp:'<span class="sp-icnbtn">+</span>'},
+
+    {n:"Input",cat:"forms",sb:"components-input",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Text, dropdown and date-picker fields with floating labels.",sp:'<span class="sp-input">Search parts&hellip;</span>'},
+    {n:"Controls",cat:"forms",sb:"components-controls",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Toggles and switches.",sp:'<span class="sp-toggle"></span>'},
+    {n:"Selections",cat:"forms",sb:"components-selections",tag:"updated",date:"2026-07-20",commits:2,
+      blurb:"Checkbox and radio groups, WCAG-hardened.",sp:'<span class="sp-check"><i></i>Remember me</span>'},
+    {n:"Search",cat:"forms",sb:"components-search",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Inline and hidden search fields.",sp:'<span class="sp-input">Search&hellip;</span>'},
+    {n:"Filter",cat:"forms",sb:"components-filter",tag:"updated",date:"2026-07-28",commits:3,
+      blurb:"Filter bar, chips and dropdowns &mdash; 1:1 with reference.",sp:'<span class="sp-chip">Category <b>&times;</b></span>'},
+    {n:"FileUpload",cat:"forms",sb:"components-fileupload",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Drag-and-drop upload zone.",sp:'<span class="sp-input">Drop a file&hellip;</span>'},
+    {n:"Slider",cat:"forms",sb:"components-slider",tag:"new",date:"2026-07-20",commits:2,
+      blurb:"Range slider on the brand track.",sp:'<span class="sp-track"></span>'},
+    {n:"QuantityStepper",cat:"forms",sb:"components-quantitystepper",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Minus / value / plus quantity control.",sp:'<span class="sp-qty"><span>&minus;</span><b>2</b><span>+</span></span>'},
+
+    {n:"Alert",cat:"feedback",sb:"components-alert",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Inline success, error, info and warning banners.",sp:'<span class="sp-alert">Order confirmed</span>'},
+    {n:"Feedback",cat:"feedback",sb:"components-feedback",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Toasts and inline feedback messages.",sp:'<span class="sp-alert">Saved</span>'},
+    {n:"Badge",cat:"feedback",sb:"components-badge",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Status and list-type pills.",sp:'<span class="sp-badge" style="color:#0c6b48;border-color:#0c6b48;background:var(--ps-green-weak)">Active</span>'},
+    {n:"ProgressBar",cat:"feedback",sb:"components-progressbar",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Determinate progress indicator.",sp:'<span class="sp-bar"><i></i></span>'},
+
+    {n:"Modal",cat:"overlays",sb:"components-modal",tag:"updated",date:"2026-07-22",commits:2,
+      blurb:"Responsive dialog with focus trap and accessible name.",
+      sp:'<span class="sp-modal"><span class="dlg"><b></b><i></i><i style="width:82%"></i><span class="row"><u class="o"></u><u></u></span></span></span>'},
+    {n:"Drawer",cat:"overlays",sb:"components-drawer",tag:"updated",date:"2026-07-20",commits:2,
+      blurb:"Right-side overlay panel, Esc-to-close.",
+      sp:'<span class="sp-drawer"><span class="pn"><b></b><i></i><i></i><i style="width:65%"></i></span></span>'},
+    {n:"Popover",cat:"overlays",sb:"components-popover",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Anchored popover with arrow.",sp:'<span class="sp-pop"><i></i><i></i></span>'},
+
+    {n:"Navigation",cat:"navlayout",sb:"components-navigation",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Top and left navigation.",sp:'<span class="sp-nav"><i></i><i></i><i></i></span>'},
+    {n:"Tabs",cat:"navlayout",sb:"components-tabs",tag:"updated",date:"2026-07-20",commits:3,
+      blurb:"Keyboard-navigable tab bar with count badges.",sp:'<span class="sp-tabs"><span class="on">Open</span><span>Closed</span></span>'},
+    {n:"Layout",cat:"navlayout",sb:"layout-breadcrumb",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Breadcrumb and layout primitives.",sp:CRUMB},
+    {n:"PageShell",cat:"navlayout",sb:"layout-pageshell",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Max-width responsive page wrapper.",
+      sp:'<span class="sp-shell"><span class="hd"></span><span class="bd"><span class="sd"></span><span class="ct"><i></i><i></i><i style="width:75%"></i></span></span></span>'},
+    {n:"Carousel",cat:"navlayout",sb:"components-carousel",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Horizontally scrolling content carousel.",
+      sp:'<span class="sp-carou"><span class="row"><i></i><i></i><i></i></span><span class="dots"><u class="on"></u><u></u><u></u></span></span>'},
+    {n:"Divider",cat:"navlayout",sb:"components-divider",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Labeled and plain dividers.",sp:'<span class="sp-div"><i></i><span>or</span><i></i></span>'},
+    {n:"Table",cat:"navlayout",sb:"components-table",tag:"new",date:"2026-07-20",commits:1,
+      blurb:"Data table with header and rows.",sp:'<span class="sp-table"><i></i><i></i><i></i><i></i></span>'},
+
+    {n:"Card",cat:"cards",sb:"components-card",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Base, event, status, data and analytics cards.",
+      sp:'<span class="sp-x"><span class="im"></span><div class="t">Suction Canister 1200ml</div><div class="k"><span>SKU 4821-A</span><b>$129</b></div><span class="sp-pill g">In stock</span></span>'},
+    {n:"CardExtras",cat:"cards",sb:"cards-extras",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Supplementary card slots and extras.",
+      sp:'<span class="sp-x"><div class="t">Order #4821</div><div class="k"><span>Placed</span><b>Jul 28</b></div><div class="k"><span>Items</span><b>3</b></div><span class="sp-pill b">Processing</span></span>'},
+    {n:"CardBrandIcon",cat:"cards",sb:"components-cardbrandicon",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Payment-network brand glyphs.",sp:BRAND},
+    {n:"ReturnEligibilityCard",cat:"cards",sb:"components-returneligibilitycard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Return-window eligibility summary.",
+      sp:'<span class="sp-x"><div class="t">Return eligibility</div><span class="sp-pill g">Eligible</span><div class="k" style="margin-top:6px"><span>Window</span><b>14 days left</b></div></span>'},
+    {n:"ExchangeDetailCard",cat:"cards",sb:"components-exchangedetailcard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Exchange / core-return detail card.",
+      sp:'<span class="sp-x"><div class="t">Core exchange</div><div class="k"><span>Core due</span><b>$85</b></div><div class="k"><span>Status</span><b>Awaiting core</b></div><span class="sp-pill b">Exchange</span></span>'},
+    {n:"NotificationCard",cat:"cards",sb:"asset-uptime-notificationcard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Asset-uptime notification row.",
+      sp:'<span class="sp-notif"><span class="ic"></span><span class="tx"><b>Filter service overdue</b><i style="width:92%"></i><i style="width:58%"></i></span></span>'},
+    {n:"WorkOrderCard",cat:"cards",sb:"asset-uptime-workordercard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Work-order summary card.",
+      sp:'<span class="sp-x"><div class="k" style="margin-bottom:6px"><b style="font-size:10.5px">WO-2291</b><span class="sp-pill b">Open</span></div><div class="t" style="margin-bottom:6px">Infusion pump repair</div><div class="k"><span>Tech</span><b>J. Ruiz</b></div></span>'},
+    {n:"NewsFeedItem",cat:"cards",sb:"asset-uptime-newsfeeditem",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"News-feed list item.",
+      sp:'<span class="sp-notif"><span class="ic" style="border-radius:3px"></span><span class="tx"><b>New recall notice</b><i style="width:88%"></i><i style="width:44%;background:var(--ps-blue-weak)"></i></span></span>'},
+    {n:"AssetUptimeSummaryCard",cat:"cards",sb:"asset-uptime-assetuptimesummarycard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Fleet uptime summary metric card.",
+      sp:'<span class="sp-metric"><div class="lbl">Fleet uptime</div><div class="val">98.6%</div><div class="trend">&uarr; 2.4% vs last mo</div></span>'},
+    {n:"ModuleCard",cat:"cards",sb:"talent-modulecard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Talent learning-module card.",
+      sp:'<span class="sp-x"><span class="im"></span><div class="t">Sterile Processing 101</div><span class="sp-bar" style="width:100%;margin-bottom:5px"><i style="width:45%"></i></span><div class="k"><span>Progress</span><b>45%</b></div></span>'},
+    {n:"ModuleDetailDrawer",cat:"cards",sb:"talent-moduledetaildrawer",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Talent module detail drawer.",
+      sp:'<span class="sp-drawer"><span class="pn"><b></b><i></i><i style="width:70%"></i><span class="sp-bar" style="width:100%;margin-top:7px"><i style="width:60%"></i></span></span></span>'},
+    {n:"SavedPaymentMethodCard",cat:"cards",sb:"components-savedpaymentmethodcard",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"Saved card-on-file row.",
+      sp:'<span class="sp-pay"><span class="vs">VISA</span><span class="no">&bull;&bull;&bull;&bull; 4242</span><span class="sp-pill b">Default</span></span>'},
+    {n:"AddPaymentMethodForm",cat:"cards",sb:"commerce-addpaymentmethodform",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"New payment-method entry form.",sp:'<span class="sp-input">Card number</span>'},
+
+    {n:"DataViz",cat:"dataai",sb:"data-viz-charts",tag:"new",date:"2026-07-28",commits:3,
+      blurb:"18 dependency-free inline-SVG chart types.",sp:BARS},
+    {n:"Intelligence",cat:"dataai",sb:"ai-ps-intelligence",tag:"new",date:"2026-07-28",commits:1,
+      blurb:"PS Intelligence AI insight surface.",sp:'<span class="sp-alert" style="background:var(--ps-blue-weak);border-left-color:var(--ps-blue)">PS Intelligence</span>'},
+
+    {n:"CMS",cat:"cms",sb:"cms-blocks-banner",tag:"stable",date:"2026-05-29",commits:1,
+      blurb:"Banner, image, text and card-grid blocks.",
+      sp:'<span class="sp-cms"><span class="ban"></span><span class="bd"><i></i><i style="width:85%"></i><span class="grid"><u></u><u></u><u></u></span></span></span>'}
+  ];
+
+  var HIST=[
+    {d:"2026-07-28",n:"Button",sb:"components-button",h:"Reconciled taxonomy + filled primary",pr:"#17 &middot; #13",leg:true,
+      p:"The blue-outline CTA and the legacy orange pill were reconciled into one taxonomy: a filled-blue primary is now the default; the orange pill is kept as a deprecated legacy variant; outline and ghost resolve through non-breaking aliases.",
+      ba:{b:'<span class="sp-btn orange">Propose Quote</span>',bl:"Was &mdash; legacy orange pill",a:'<span class="sp-btn blue">Buy Now</span>',al:"Now &mdash; filled brand primary"}},
+    {d:"2026-07-28",n:"Filter",sb:"components-filter",h:"Rebuilt 1:1 with reference",pr:"#15 &middot; #14",
+      p:"Filter bar, active chips and dropdown panels rebuilt pixel-for-pixel against the filter.html reference."},
+    {d:"2026-07-28",n:"Data Viz",sb:"data-viz-charts",h:"Six new chart types",pr:"#18 &middot; #16",
+      p:"Added Scatter, Bubble, HeatMap, TreeMap, Bump and Stream &mdash; all dependency-free inline SVG."},
+    {d:"2026-07-22",n:"Modal",sb:"components-modal",h:"Accessible name + focus trap",pr:"a11y",
+      p:"The dialog now exposes an accessible name and traps focus while open, restoring it on close."},
+    {d:"2026-07-20",n:"Tabs",sb:"components-tabs",h:"Keyboard navigation",pr:"a11y",
+      p:"Arrow-key roving, Enter / Space select, and full ARIA tablist semantics."},
+    {d:"2026-07-20",n:"Drawer",sb:"components-drawer",h:"WCAG fixes",pr:"a11y",
+      p:"Esc-to-close, scrim click-dismiss, and a labeled close control."},
+    {d:"2026-07-20",n:"Slider",sb:"components-slider",h:"Token fix",pr:"tokens",
+      p:"Replaced a hardcoded #fff with the --ps-prim-gray-0 token."},
+    {d:"2026-07-20",n:"Selections",sb:"components-selections",h:"WCAG fixes",pr:"a11y",
+      p:"Checkbox and radio groups hardened for keyboard and screen-reader use."}
+  ];
+
+  var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmt(iso){var p=iso.split("-");return MON[(+p[1])-1]+" "+(+p[2])+", "+p[0];}
+  function figFor(m){return FIG+(m.fig?("?node-id="+m.fig):"");}
+  function esc(s){return s;}
+
+  /* ---- build catalog ---- */
+  var catWrap=document.getElementById("cl-catalog");
+  var catHtml="";
+  CATS.forEach(function(c){
+    var key=c[0],label=c[1];
+    var items=M.filter(function(m){return m.cat===key;});
+    if(!items.length)return;
+    catHtml+='<div class="cl-catgroup" data-cat="'+key+'">'
+      +'<div class="cl-cathead"><h3>'+label+'</h3><span class="n">'+items.length+'</span></div>'
+      +'<div class="cl-grid">';
+    items.forEach(function(m){
+      catHtml+='<div class="cl-card" data-name="'+m.n.toLowerCase()+'" data-blurb="'+m.blurb.replace(/&[a-z]+;/g,"").toLowerCase()+'">'
+        +'<div class="cl-stage"><span class="sp">'+m.sp+'</span></div>'
+        +'<div class="cl-body">'
+          +'<div class="cl-name">'+m.n+'<span class="cl-tag '+m.tag+'">'+m.tag+'</span></div>'
+          +'<div class="cl-blurb">'+m.blurb+'</div>'
+          +'<div class="cl-meta">'+m.commits+' commit'+(m.commits>1?"s":"")+'<span class="cl-dot"></span>last shipped '+fmt(m.date)+'</div>'
+          +'<div class="cl-links">'
+            +'<a class="cl-lnk" href="'+SB+m.sb+'--docs" target="_blank" rel="noopener">Storybook</a>'
+            +'<a class="cl-lnk fig" href="'+figFor(m)+'" target="_blank" rel="noopener">Figma</a>'
+          +'</div>'
+        +'</div></div>';
+    });
+    catHtml+='</div></div>';
+  });
+  catWrap.innerHTML=catHtml;
+
+  /* ---- build history ---- */
+  var histWrap=document.getElementById("cl-history");
+  var hHtml='<p class="cl-intro" style="margin-top:0">The notable changes since the v0.1 baseline &mdash; newest first. Each links to the component’s current Storybook page.</p><div class="cl-tl">';
+  HIST.forEach(function(e){
+    hHtml+='<div class="cl-ev'+(e.leg?" leg":"")+'">'
+      +'<div class="cl-when">'+fmt(e.d)+' &middot; '+e.n+(e.pr?' &middot; '+e.pr:"")+'</div>'
+      +'<div class="cl-h">'+e.h+'<a href="'+SB+e.sb+'--docs" target="_blank" rel="noopener">View →</a></div>'
+      +'<p>'+e.p+'</p>';
+    if(e.ba){
+      hHtml+='<div class="cl-ba">'
+        +'<div class="col b"><div class="lab">'+e.ba.bl+'</div><div class="disp"><span class="sp">'+e.ba.b+'</span></div></div>'
+        +'<div class="cl-arrow">→</div>'
+        +'<div class="col a"><div class="lab">'+e.ba.al+'</div><div class="disp"><span class="sp">'+e.ba.a+'</span></div></div>'
+      +'</div>';
+    }
+    hHtml+='</div>';
+  });
+  hHtml+='</div>';
+  histWrap.innerHTML=hHtml;
+
+  /* ---- seg toggle + search ---- */
+  var segBtns=[].slice.call(document.querySelectorAll("#view-components .cl-seg button"));
+  var search=document.getElementById("cl-search");
+  var countEl=document.getElementById("cl-count");
+  var mode="catalog";
+
+  function updateCount(){
+    if(mode==="history"){countEl.textContent=HIST.length+" notable changes";return;}
+    var vis=catWrap.querySelectorAll('.cl-card:not([hidden])').length;
+    countEl.textContent=(vis===M.length)?(M.length+" components"):(vis+" of "+M.length+" components");
+  }
+  function applySearch(){
+    var q=(search.value||"").trim().toLowerCase();
+    catWrap.querySelectorAll(".cl-catgroup").forEach(function(g){
+      var any=false;
+      g.querySelectorAll(".cl-card").forEach(function(c){
+        var hit=!q||c.getAttribute("data-name").indexOf(q)>=0||c.getAttribute("data-blurb").indexOf(q)>=0;
+        c.hidden=!hit;if(hit)any=true;
+      });
+      g.hidden=!any;
+    });
+    updateCount();
+  }
+  function setMode(m){
+    mode=m;
+    segBtns.forEach(function(b){var on=b.getAttribute("data-clview")===m;b.setAttribute("aria-pressed",on?"true":"false");});
+    catWrap.hidden=(m!=="catalog");
+    histWrap.hidden=(m!=="history");
+    search.style.visibility=(m==="catalog")?"visible":"hidden";
+    updateCount();
+  }
+  segBtns.forEach(function(b){b.addEventListener("click",function(){setMode(b.getAttribute("data-clview"));});});
+  search.addEventListener("input",applySearch);
+
+  setMode("catalog");
+})();
+</script>
+</body>
+</html>
