@@ -540,6 +540,7 @@
   --ps-cmp-button-danger-border-width: var(--ps-prim-border-1);
   --ps-cmp-button-arrow-border-width: var(--ps-prim-border-1);
   --ps-cmp-button-chip-radius: var(--ps-prim-radius-full);
+  --ps-cmp-button-chip-bg: var(--ps-prim-blue-100);
   --ps-cmp-input-fg: var(--ps-prim-gray-900);
   --ps-cmp-input-fg-disabled: var(--ps-prim-gray-300);
   --ps-cmp-input-border-default: var(--ps-prim-gray-500);
@@ -746,6 +747,9 @@
   --ps-cmp-button-segmented-weight: var(--ps-sem-weight-body);
   --ps-cmp-button-segmented-radius: var(--ps-sem-radius-control);
   --ps-cmp-button-chip-weight: var(--ps-sem-weight-body);
+  --ps-cmp-button-chip-fg: var(--ps-sem-fg-primary);
+  --ps-cmp-button-chip-icon: var(--ps-sem-fg-primary);
+  --ps-cmp-button-chip-icon-hover: var(--ps-sem-action-default);
   --ps-cmp-button-inline-weight: var(--ps-sem-weight-body);
   --ps-cmp-input-bg: var(--ps-sem-bg-surface);
   --ps-cmp-input-bg-disabled: var(--ps-sem-bg-surface);

@@ -13,9 +13,9 @@ describe('ChipButton accessibility', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it('has no violations — future pill', async () => {
+  it('has no violations — small', async () => {
     const { container } = render(
-      <ChipButton pill onRemove={() => {}}>Category: Imaging</ChipButton>
+      <ChipButton size="sm" onRemove={() => {}}>Category: Imaging</ChipButton>
     );
     expect(await axe(container)).toHaveNoViolations();
   });

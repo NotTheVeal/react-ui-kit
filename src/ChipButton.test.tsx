@@ -48,8 +48,9 @@ describe('ChipButton', () => {
     expect(screen.getByText(size)).toBeInTheDocument();
   });
 
-  it('renders the future full-pill variant', () => {
-    render(<ChipButton pill onRemove={() => {}}>Future</ChipButton>);
-    expect(screen.getByText('Future')).toBeInTheDocument();
+  it('is always a full-pill chip (single shape)', () => {
+    const { container } = render(<ChipButton onRemove={() => {}}>Pill</ChipButton>);
+    const shell = container.querySelector('span');
+    expect(shell?.className).toContain('rounded-[var(--ps-cmp-button-chip-radius)]');
   });
 });

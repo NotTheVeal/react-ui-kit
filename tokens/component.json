@@ -172,6 +172,10 @@
   "ps-cmp-button-chip-sm-text-size": { "$value": "14px", "$type": "dimension" },
   "ps-cmp-button-chip-weight": { "$value": "{ps-sem-weight-body}" },
   "ps-cmp-button-chip-radius": { "$value": "{ps-prim-radius-full}" },
+  "ps-cmp-button-chip-bg": { "$value": "{ps-prim-blue-100}" },
+  "ps-cmp-button-chip-fg": { "$value": "{ps-sem-fg-primary}" },
+  "ps-cmp-button-chip-icon": { "$value": "{ps-sem-fg-primary}" },
+  "ps-cmp-button-chip-icon-hover": { "$value": "{ps-sem-action-default}" },
   "ps-cmp-button-inline-text-size": { "$value": "14px", "$type": "dimension" },
   "ps-cmp-button-inline-weight": { "$value": "{ps-sem-weight-body}" },
   "ps-cmp-input-bg": {
