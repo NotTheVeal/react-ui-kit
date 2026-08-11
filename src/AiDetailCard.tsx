@@ -141,12 +141,9 @@ const Divider: React.FC = () => (
 );
 
 const DetailRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="flex w-full shrink-0 items-baseline justify-between gap-2 overflow-clip">
-    <span className="shrink-0 whitespace-nowrap text-[length:var(--ps-sem-text-caption)] font-semibold leading-normal text-[color:var(--ps-sem-fg-tertiary)]">
-      {label}
-    </span>
-    <span className="min-w-px flex-1 truncate text-right text-[length:var(--ps-sem-text-caption)] font-normal leading-normal text-[color:var(--ps-sem-fg-secondary)]">
-      {value}
+  <div className="flex w-full shrink-0 items-baseline gap-1 overflow-clip">
+    <span className="min-w-px truncate text-[length:var(--ps-sem-text-caption)] font-normal leading-normal text-[color:var(--ps-sem-fg-secondary)]">
+      {label}: {value}
     </span>
   </div>
 );
@@ -194,8 +191,8 @@ const AiDetailCard: React.FC<AiDetailCardProps> = ({
 
   const rows: Array<{ label: string; value?: string; show: boolean }> = [
     { label: 'Facility', value: facility, show: showFacility },
-    { label: 'Reference', value: reference, show: showRef },
-    { label: 'PO', value: po, show: showPo },
+    { label: 'Ref #', value: reference, show: showRef },
+    { label: 'PO #', value: po, show: showPo },
     { label: 'Requester', value: requester, show: showRequester },
     { label: 'Condition', value: condition, show: showCondition },
     { label: 'Vendor', value: vendor, show: showVendor },
@@ -296,6 +293,7 @@ const AiDetailCard: React.FC<AiDetailCardProps> = ({
                 <DetailRow key={r.label} label={r.label} value={r.value as string} />
               ))}
             </div>
+            <Divider />
           </>
         )}
 

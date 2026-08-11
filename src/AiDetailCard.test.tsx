@@ -43,8 +43,8 @@ describe('AiDetailCard', () => {
         showVendor={false}
       />,
     );
-    expect(screen.getByText('Mercy General')).toBeInTheDocument();
-    expect(screen.queryByText('GE Healthcare')).not.toBeInTheDocument();
+    expect(screen.getByText(/Facility: Mercy General/)).toBeInTheDocument();
+    expect(screen.queryByText(/GE Healthcare/)).not.toBeInTheDocument();
   });
 
   it('renders the delivery-status date', () => {
