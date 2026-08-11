@@ -314,39 +314,40 @@ const AiDetailCard: React.FC<AiDetailCardProps> = ({
           </div>
         )}
 
-        {/* Feedback row */}
-        {showFeedbackRow && (
-          <div className="flex w-full shrink-0 items-center gap-3 overflow-clip">
-            <button
-              type="button"
-              aria-label="Helpful"
-              className="flex size-6 shrink-0 items-center justify-center rounded-[var(--ps-sem-radius-control)] text-[color:var(--ps-sem-fg-tertiary)] hover:text-[color:var(--ps-sem-fg-secondary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ps-sem-border-focus)]"
-            >
-              <ThumbsUp size={16} strokeWidth={1.75} />
-            </button>
-            <button
-              type="button"
-              aria-label="Not helpful"
-              className="flex size-6 shrink-0 items-center justify-center rounded-[var(--ps-sem-radius-control)] text-[color:var(--ps-sem-fg-tertiary)] hover:text-[color:var(--ps-sem-fg-secondary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ps-sem-border-focus)]"
-            >
-              <ThumbsDown size={16} strokeWidth={1.75} />
-            </button>
-            {feedback?.sourcesHref && (
-              <a
-                href={feedback.sourcesHref}
-                className="text-[length:var(--ps-sem-text-caption)] font-normal text-[color:var(--ps-sem-fg-tertiary)] underline"
-              >
-                View Sources
-              </a>
-            )}
-            {feedback?.timestamp && (
-              <span className="ml-auto whitespace-nowrap text-[length:var(--ps-sem-text-caption)] font-normal text-[color:var(--ps-sem-fg-tertiary)]">
-                {feedback.timestamp}
-              </span>
-            )}
-          </div>
-        )}
       </article>
+
+      {/* Feedback row — sits outside/below the card */}
+      {showFeedbackRow && (
+        <div className="flex w-full shrink-0 items-center gap-3 overflow-clip">
+          <button
+            type="button"
+            aria-label="Helpful"
+            className="flex size-6 shrink-0 items-center justify-center rounded-[var(--ps-sem-radius-control)] text-[color:var(--ps-sem-fg-tertiary)] hover:text-[color:var(--ps-sem-fg-secondary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ps-sem-border-focus)]"
+          >
+            <ThumbsUp size={16} strokeWidth={1.75} />
+          </button>
+          <button
+            type="button"
+            aria-label="Not helpful"
+            className="flex size-6 shrink-0 items-center justify-center rounded-[var(--ps-sem-radius-control)] text-[color:var(--ps-sem-fg-tertiary)] hover:text-[color:var(--ps-sem-fg-secondary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ps-sem-border-focus)]"
+          >
+            <ThumbsDown size={16} strokeWidth={1.75} />
+          </button>
+          {feedback?.sourcesHref && (
+            <a
+              href={feedback.sourcesHref}
+              className="text-[length:var(--ps-sem-text-caption)] font-normal text-[color:var(--ps-sem-fg-tertiary)] underline"
+            >
+              View Sources
+            </a>
+          )}
+          {feedback?.timestamp && (
+            <span className="ml-auto whitespace-nowrap text-[length:var(--ps-sem-text-caption)] font-normal text-[color:var(--ps-sem-fg-tertiary)]">
+              {feedback.timestamp}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 };
