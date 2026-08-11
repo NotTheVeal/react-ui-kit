@@ -154,7 +154,7 @@ const DetailRow: React.FC<{ label: string; value: string }> = ({ label, value })
 const AiDetailCard: React.FC<AiDetailCardProps> = ({
   variant = 'full',
   aiSummary = 'Summary of this order and its current status, generated from the latest activity.',
-  orderNumber = '4821',
+  orderNumber,
   status = 'Processing',
   product = {
     name: 'X-RAY TUBE, 40/80 KW',
