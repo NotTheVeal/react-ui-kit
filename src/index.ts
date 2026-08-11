@@ -21,6 +21,8 @@ export { QuantityStepper } from './QuantityStepper';
 export type { QuantityStepperProps } from './QuantityStepper';
 export { ExchangeDetailCard } from './ExchangeDetailCard';
 export type { ExchangeDetailCardProps, ExchangeItemRow } from './ExchangeDetailCard';
+export { AiDetailCard } from './AiDetailCard';
+export type { AiDetailCardProps, AiDetailProduct } from './AiDetailCard';
 export { ReturnEligibilityCard } from './ReturnEligibilityCard';
 export type { ReturnEligibilityCardProps, EligibilityTone } from './ReturnEligibilityCard';
 export { EventCard, StatusCard, AlertCard } from './Card';
