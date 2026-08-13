@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Alert, Toast } from './Alert';
 
 const meta = {
-  title: 'Components/Alert',
+  title: 'Feedback/Alert',
   component: Alert,
   tags: ['autodocs'],
   argTypes: {

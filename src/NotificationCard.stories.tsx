@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { NotificationCard } from './NotificationCard';
 
 const meta: Meta<typeof NotificationCard> = {
-  title: 'Asset Uptime/NotificationCard',
+  title: 'Cards/NotificationCard',
   component: NotificationCard,
   parameters: { layout: 'centered' },
 };

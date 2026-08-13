@@ -6,7 +6,7 @@ import { Input } from './Input';
 import { Checkbox } from './Selections';
 
 const meta = {
-  title: 'Components/Drawer',
+  title: 'Overlays/Drawer',
   component: Drawer,
   tags: ['autodocs'],
   parameters: {

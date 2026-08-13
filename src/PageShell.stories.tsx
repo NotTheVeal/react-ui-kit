@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PageShell } from './PageShell';
 
 const meta = {
-  title: 'Components/PageShell',
+  title: 'Navigation/PageShell',
   component: PageShell,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },

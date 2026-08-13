@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FolderTabs, SegmentedTabs, PillTabs } from './Tabs';
 
 const meta = {
-  title: 'Components/Tabs',
+  title: 'Navigation/Tabs',
   component: FolderTabs,
   tags: ['autodocs'],
 } satisfies Meta<typeof FolderTabs>;

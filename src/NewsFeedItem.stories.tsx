@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { NewsFeedItem } from './NewsFeedItem';
 
 const meta: Meta<typeof NewsFeedItem> = {
-  title: 'Asset Uptime/NewsFeedItem',
+  title: 'Cards/NewsFeedItem',
   component: NewsFeedItem,
   parameters: { layout: 'centered' },
 };

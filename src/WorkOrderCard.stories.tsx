@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { WorkOrderCard } from './WorkOrderCard';
 
 const meta: Meta<typeof WorkOrderCard> = {
-  title: 'Asset Uptime/WorkOrderCard',
+  title: 'Cards/WorkOrderCard',
   component: WorkOrderCard,
   parameters: { layout: 'centered' },
 };

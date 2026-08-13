@@ -4,7 +4,7 @@ import { Modal, ConfirmDialog } from './Modal';
 import { Button } from './Button';
 
 const meta = {
-  title: 'Components/Modal',
+  title: 'Overlays/Modal',
   component: Modal,
   tags: ['autodocs'],
   parameters: {

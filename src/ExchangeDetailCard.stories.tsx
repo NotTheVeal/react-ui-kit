@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ExchangeDetailCard } from './ExchangeDetailCard';
 
 const meta: Meta<typeof ExchangeDetailCard> = {
-  title: 'Components/ExchangeDetailCard',
+  title: 'Cards/ExchangeDetailCard',
   component: ExchangeDetailCard,
   tags: ['autodocs'],
   argTypes: {

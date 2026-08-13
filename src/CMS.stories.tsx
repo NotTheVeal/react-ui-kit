@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Banner, ImageBlock, TextBlock, CardGrid } from './CMS';
 
 const meta = {
-  title: 'CMS Blocks/Banner',
+  title: 'CMS/Banner',
   component: Banner,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },

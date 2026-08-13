@@ -10,7 +10,7 @@ const ServiceEventIcon = () => (
 );
 
 const meta = {
-  title: 'Components/Card',
+  title: 'Cards/Card',
   component: EventCard,
   tags: ['autodocs'],
 } satisfies Meta<typeof EventCard>;

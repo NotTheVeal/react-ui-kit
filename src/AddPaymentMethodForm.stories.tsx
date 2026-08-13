@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { AddPaymentMethodForm } from './AddPaymentMethodForm';
 
 const meta: Meta<typeof AddPaymentMethodForm> = {
-  title: 'Commerce/AddPaymentMethodForm',
+  title: 'Forms/AddPaymentMethodForm',
   component: AddPaymentMethodForm,
   parameters: { layout: 'centered' },
 };

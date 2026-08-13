@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Breadcrumb, BreadcrumbBack, Accordion, AccordionCount, Stepper } from './Layout';
 
 const meta = {
-  title: 'Layout/Breadcrumb',
+  title: 'Navigation/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

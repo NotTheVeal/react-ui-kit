@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { SegmentedButton } from './SegmentedButton';
 
 const meta = {
-  title: 'Components/SegmentedButton',
+  title: 'Buttons/SegmentedButton',
   component: SegmentedButton,
   tags: ['autodocs'],
   argTypes: {

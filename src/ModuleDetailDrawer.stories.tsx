@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ModuleDetailDrawer } from './ModuleDetailDrawer';
 
 const meta: Meta<typeof ModuleDetailDrawer> = {
-  title: 'Talent/ModuleDetailDrawer',
+  title: 'Overlays/ModuleDetailDrawer',
   component: ModuleDetailDrawer,
   parameters: { layout: 'fullscreen' },
 };

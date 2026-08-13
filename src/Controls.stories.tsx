@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Pagination, DatePicker } from './Controls';
 
 const meta = {
-  title: 'Controls/Pagination',
+  title: 'Forms/Pagination',
   component: Pagination,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

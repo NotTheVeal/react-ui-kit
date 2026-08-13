@@ -9,7 +9,7 @@ import {
 } from './Intelligence';
 
 const meta: Meta = {
-  title: 'AI/PS Intelligence',
+  title: 'Data & AI/PS Intelligence',
   parameters: { layout: 'centered' },
 };
 export default meta;

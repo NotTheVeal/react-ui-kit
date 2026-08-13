@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { QuantityStepper } from "./QuantityStepper";
 
 const meta: Meta<typeof QuantityStepper> = {
-  title: "Components/QuantityStepper",
+  title: 'Forms/QuantityStepper',
   component: QuantityStepper,
   tags: ["autodocs"],
   argTypes: {
