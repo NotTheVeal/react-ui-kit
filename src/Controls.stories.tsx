@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { Pagination, DatePicker } from './Controls';
+import { Pagination } from './Controls';
 
 const meta = {
   title: 'Forms/Pagination',
@@ -49,8 +49,4 @@ export const Compact: StoryObj = {
     const [page, setPage] = React.useState(1);
     return <Pagination page={page} totalPages={3} onPageChange={setPage} compact />;
   },
-};
-
-export const DateRangePicker: StoryObj = {
-  render: () => <DatePicker title="Preferred Window" />,
 };
