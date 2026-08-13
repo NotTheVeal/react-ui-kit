@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { InlineSearch, HiddenSearch } from './Search';
 
 const meta = {
-  title: 'Components/Search',
+  title: 'Forms/Search',
   component: InlineSearch,
   tags: ['autodocs'],
   argTypes: {

@@ -19,7 +19,7 @@ const leftNavItems = [
 ];
 
 const meta = {
-  title: 'Components/Navigation',
+  title: 'Navigation/Navigation',
   component: TopNav,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },

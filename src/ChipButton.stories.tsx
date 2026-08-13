@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ChipButton } from './ChipButton';
 
 const meta = {
-  title: 'Components/ChipButton',
+  title: 'Buttons/ChipButton',
   component: ChipButton,
   tags: ['autodocs'],
   argTypes: {

@@ -31,7 +31,7 @@ const columns = [
 ];
 
 const meta = {
-  title: 'Components/Table',
+  title: 'Navigation/Table',
   component: Table,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

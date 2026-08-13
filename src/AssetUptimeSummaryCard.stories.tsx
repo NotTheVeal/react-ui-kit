@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { AssetUptimeSummaryCard } from './AssetUptimeSummaryCard';
 
 const meta: Meta<typeof AssetUptimeSummaryCard> = {
-  title: 'Asset Uptime/AssetUptimeSummaryCard',
+  title: 'Cards/AssetUptimeSummaryCard',
   component: AssetUptimeSummaryCard,
   parameters: { layout: 'centered' },
 };

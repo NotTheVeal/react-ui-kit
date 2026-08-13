@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { EventCard, StatusCard, AlertCard } from './Card';
-import { AiDataCard, ProductCard, AnalyticsCard, ListCard } from './CardExtras';
 
 const ServiceEventIcon = () => (
   <svg width={23} height={23} viewBox="0 0 23 23" fill="currentColor" aria-hidden="true">
@@ -10,7 +9,7 @@ const ServiceEventIcon = () => (
 );
 
 const meta = {
-  title: 'Components/Card',
+  title: 'Cards/Card',
   component: EventCard,
   tags: ['autodocs'],
 } satisfies Meta<typeof EventCard>;
@@ -43,100 +42,6 @@ export const Alert: StoryObj = {
       severity="error"
       location="Imaging — Room 314"
       datetime="2 hours ago"
-    />
-  ),
-};
-
-export const AiData: StoryObj = {
-  render: () => (
-    <AiDataCard
-      title="BATTERY RECHARGEABLE, LITHIUM ION, 7.2V, 1.35 AH"
-      manufacturer="by Welch Allyn Inc."
-      meta={
-        <>
-          <div>FedEx &nbsp;·&nbsp; <span className="text-[var(--ps-prim-blue-500)] font-semibold">#032523123242</span></div>
-          <div>Est. Delivery: Today by 1:00 PM</div>
-        </>
-      }
-      badges={[{ tone: 'notShipped', label: 'Not Shipped' }]}
-      cost="$2,400"
-    />
-  ),
-};
-
-export const Analytics: StoryObj = {
-  parameters: { layout: 'padded' },
-  render: () => (
-    <div className="flex gap-6 items-start">
-      <AnalyticsCard
-        layout="wide"
-        title="Parts Spend"
-        value="$1.2M"
-        label="Parts Spend"
-        delta={{ value: '5.3%', direction: 'up' }}
-        benchmark="15% below peer benchmark"
-        linkLabel="View Details"
-      />
-      <AnalyticsCard
-        layout="square"
-        title="Avg Resolution Time"
-        value="2.3"
-        label="Days"
-        sub="Average in selected period"
-        showMenu
-      />
-      <AnalyticsCard
-        layout="square"
-        title="Critical Rate"
-        value="74.2%"
-        sub="Resolved in less than 2 days"
-        highlight
-        showMenu
-      />
-    </div>
-  ),
-};
-
-export const ListVariants: StoryObj = {
-  parameters: { layout: 'padded' },
-  render: () => (
-    <div className="flex gap-6 items-start flex-wrap">
-      <ListCard
-        title="My Favorites"
-        pill={{ tone: 'shopping', label: 'Shopping' }}
-        count="7 items"
-        shareCount={0}
-      />
-      <ListCard variant="create" />
-      <ListCard
-        variant="standing"
-        title="Maintenance Parts Bundle"
-        meta={[
-          { label: 'Frequency', value: 'Every 3 Months' },
-          { label: 'Creator', value: 'Robert Chen' },
-          { label: 'Next Order', value: 'MM/DD/YY' },
-        ]}
-        statusDate="MM/DD/YY"
-      />
-    </div>
-  ),
-};
-
-export const Product: StoryObj = {
-  parameters: { layout: 'padded' },
-  render: () => (
-    <ProductCard
-      title="PATIENT CABLE, SPO2 SPOT CHECK, RED LNC-01 SERIES"
-      date="CREATED 04/21/2026"
-      info={[
-        { label: 'Facility', value: 'Chatham Memorial Clinic' },
-        { label: 'Ref #', value: '9535566' },
-        { label: 'Requester', value: 'PETE ZILKO' },
-        { label: 'Qty', value: '1' },
-      ]}
-      statusTitle="Quote Available"
-      statusBody="Item is ready for purchase."
-      primaryLabel="SEE BUYING OPTIONS (2)"
     />
   ),
 };

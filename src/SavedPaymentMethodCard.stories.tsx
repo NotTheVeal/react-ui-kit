@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SavedPaymentMethodCard } from './SavedPaymentMethodCard';
 
 const meta: Meta<typeof SavedPaymentMethodCard> = {
-  title: 'Components/SavedPaymentMethodCard',
+  title: 'Cards/SavedPaymentMethodCard',
   component: SavedPaymentMethodCard,
   tags: ['autodocs'],
   argTypes: {

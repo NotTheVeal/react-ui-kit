@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ReturnEligibilityCard } from './ReturnEligibilityCard';
 
 const meta: Meta<typeof ReturnEligibilityCard> = {
-  title: 'Components/ReturnEligibilityCard',
+  title: 'Cards/ReturnEligibilityCard',
   component: ReturnEligibilityCard,
   tags: ['autodocs'],
   argTypes: {

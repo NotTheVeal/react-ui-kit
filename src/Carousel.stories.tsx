@@ -19,7 +19,7 @@ const Item = ({ n }: { n: number }) => (
 );
 
 const meta = {
-  title: 'Components/Carousel',
+  title: 'Navigation/Carousel',
   component: Carousel,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

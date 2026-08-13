@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FileUpload } from './FileUpload';
 
 const meta = {
-  title: 'Components/FileUpload',
+  title: 'Forms/FileUpload',
   component: FileUpload,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

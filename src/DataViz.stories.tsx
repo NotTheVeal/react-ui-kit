@@ -21,7 +21,7 @@ import {
 } from './DataViz';
 
 const meta: Meta = {
-  title: 'Data Viz/Charts',
+  title: 'Data & AI/Charts',
   parameters: { layout: 'centered' },
 };
 export default meta;

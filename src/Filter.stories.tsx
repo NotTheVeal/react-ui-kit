@@ -10,7 +10,7 @@ import {
 } from './Filter';
 
 const meta = {
-  title: 'Components/Filter',
+  title: 'Forms/Filter',
   component: Filter,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
