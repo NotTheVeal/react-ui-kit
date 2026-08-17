@@ -195,7 +195,7 @@
   .clx-state .big{font-size:15px;font-weight:600;color:var(--ps-midnight);margin-bottom:5px}
 
   /* ---- guide ---- */
-  .guide{background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);padding:8px 30px 34px;max-width:840px}
+  .guide{background:var(--ps-surface);border:1px solid var(--ps-line);border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);padding:8px 30px 34px;max-width:1040px}
   .guide h2{font-weight:300;font-size:23px;color:var(--ps-midnight);margin:30px 0 6px;padding-top:22px;border-top:1px solid var(--ps-line)}
   .guide h2:first-of-type{border-top:0;padding-top:8px}
   .guide h3{font-weight:600;font-size:15px;color:var(--ps-midnight);margin:20px 0 6px}
@@ -216,6 +216,31 @@
   .guide .step{counter-reset:none}
   .guide .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 9px;border-radius:var(--ps-pill);background:var(--ps-green-weak);color:#0c6b48;vertical-align:1px}
   .guide .tag.warn{background:var(--ps-amber-weak);color:#7a4a00}
+  .guide .where{display:inline-flex;align-items:center;gap:8px;background:var(--ps-blue-weak);color:#083b63;border-radius:var(--ps-pill);font-size:12px;font-weight:700;padding:4px 12px;margin:0 0 6px}
+  .guide .where .wdot{width:8px;height:8px;border-radius:50%;background:var(--ps-blue)}
+  .guide .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 22px}
+  .guide .flow .node{background:#fff;border:1.5px solid var(--ps-blue);color:var(--ps-midnight);border-radius:var(--ps-radius);padding:10px 14px;font-size:14px;font-weight:600;flex:1;min-width:140px;text-align:center}
+  .guide .flow .node small{display:block;font-weight:400;color:var(--ps-ink-3);font-size:12px;margin-top:2px}
+  .guide .flow .arrow{color:var(--ps-blue);font-size:20px;font-weight:700;flex:none}
+  @media(max-width:720px){.guide .flow{flex-direction:column;align-items:stretch}.guide .flow .arrow{transform:rotate(90deg);align-self:center}}
+  .guide .steps{list-style:none;padding:0;margin:14px 0;counter-reset:step}
+  .guide .steps>li{position:relative;padding:14px 16px 14px 56px;border:1px solid var(--ps-line);border-radius:var(--ps-radius);margin:9px 0;background:#fff;font-size:14.5px;color:var(--ps-ink)}
+  .guide .steps>li::before{counter-increment:step;content:counter(step);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:var(--ps-pill);background:var(--ps-blue);color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .guide .steps>li b{color:var(--ps-midnight)}
+  .guide .steps>li .say{display:block;color:var(--ps-ink-3);font-size:13px;margin-top:3px}
+  .guide details{border:1px solid var(--ps-line);border-radius:var(--ps-radius);margin:10px 0;background:#fff;overflow:hidden}
+  .guide details>summary{list-style:none;cursor:pointer;padding:15px 18px;font-weight:600;font-size:16px;color:var(--ps-midnight);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .guide details>summary::-webkit-details-marker{display:none}
+  .guide details>summary::after{content:"+";font-size:22px;font-weight:700;color:var(--ps-blue);line-height:1;width:16px;text-align:center;flex:none}
+  .guide details[open]>summary::after{content:"\2013"}
+  .guide details[open]>summary{border-bottom:1px solid var(--ps-line)}
+  .guide details>summary:hover{background:var(--ps-blue-weak)}
+  .guide details .acc-body{padding:6px 18px 18px;font-size:14.5px;color:var(--ps-ink-2)}
+  .guide details .acc-body ul{padding-left:20px;margin:8px 0}
+  .guide details .acc-body li{margin:5px 0}
+  .guide details .acc-body h3{font-weight:600;font-size:15px;color:var(--ps-midnight);margin:18px 0 6px}
+  .guide details .acc-body .stepgroup{margin:20px 0 6px;padding-top:14px;border-top:1px solid var(--ps-line);font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ps-blue)}
+  .guide details .acc-body .stepgroup:first-of-type{border-top:0;padding-top:0}
 
   /* ---- component library ---- */
   .cl-intro{color:var(--ps-ink-2);font-size:15px;margin:-6px 0 16px;max-width:820px}
@@ -240,7 +265,7 @@
     border-radius:var(--ps-radius);box-shadow:var(--ps-shadow);overflow:hidden;transition:box-shadow .15s,border-color .15s}
   .cl-card:hover{border-color:#B9C7D1;box-shadow:0 2px 6px rgba(0,47,72,.10),0 6px 18px rgba(0,47,72,.08)}
   .cl-stage{height:104px;display:flex;align-items:center;justify-content:center;padding:12px;
-    background:linear-gradient(0deg,#F7FAFC,#FBFDFE);border-bottom:1px solid var(--ps-line);overflow:hidden}
+    background:var(--ps-page);border-bottom:1px solid var(--ps-line);overflow:hidden}
   .cl-mono{width:44px;height:44px;border-radius:var(--ps-radius);display:flex;align-items:center;justify-content:center;
     font-weight:700;font-size:17px;color:#fff;letter-spacing:.3px}
   .cl-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:7px;flex:1}
@@ -479,65 +504,221 @@
     <h2 class="section-title">How to use this project</h2>
     <div class="guide">
 
-      <p class="lead">This is the PartsSource design-token pipeline and the 1:1 React component library that consumes it. One design source in Figma flows automatically to living code and a published Storybook. This page is the operator's manual.</p>
+      <span class="where"><span class="wdot"></span>Section: How to use</span>
 
-      <h2>1 · What the pieces are</h2>
-      <div class="kv">
-        <div><span class="k">Figma (design source)</span><span class="v">Variables + components. The one place a designer changes a color, space, radius, or type value.</span></div>
-        <div><span class="k">Tokens Studio plugin</span><span class="v">The bridge. Pushes Figma Variables into the GitHub repo as token JSON. <b>This is the sync path we use.</b></span></div>
-        <div><span class="k">NotTheVeal/react-ui-kit</span><span class="v">Source of truth. Holds the token source, <code>tokens.css</code>, every React component, tests, and Code Connect.</span></div>
-        <div><span class="k">GitHub Actions</span><span class="v">Rebuilds tokens, runs the drift gate + CI, and deploys Storybook — automatically on each change.</span></div>
-        <div><span class="k">Storybook (GitHub Pages)</span><span class="v">The published component workshop: <code>nottheveal.github.io/react-ui-kit</code>.</span></div>
+      <p class="lead">This page shows how your design work turns into real, working code. You do not need to write code. Most days, you press one button in Figma. Open any box below to learn how.</p>
+
+      <div class="flow">
+        <div class="node">1. You design<small>in Figma</small></div>
+        <span class="arrow">&rarr;</span>
+        <div class="node">2. You push<small>Token Studio</small></div>
+        <span class="arrow">&rarr;</span>
+        <div class="node">3. It builds<small>GitHub</small></div>
+        <span class="arrow">&rarr;</span>
+        <div class="node">4. It shows up<small>Storybook</small></div>
       </div>
 
-      <h2>2 · The everyday loop — changing a token</h2>
-      <p>When you change a value in Figma (say a brand blue), this is how it reaches code:</p>
-      <ol>
-        <li>Edit the Variable in Figma.</li>
-        <li>Open <b>Plugins → Tokens Studio for Figma</b>.</li>
-        <li>Confirm the sync target is <code>NotTheVeal/react-ui-kit</code> (settings in §5 below).</li>
-        <li>Click <b>Push</b> → write a short commit message → confirm. Push to a branch and let it open a PR.</li>
-        <li>Watch it move through the <b>Pipeline</b> tab: tokens rebuild → drift gate → CI → merge → Storybook redeploys.</li>
-      </ol>
-      <div class="callout ok"><b>That's the whole sync.</b> No terminal, no manual token build. The plugin push is the only action you take; GitHub does the rest.</div>
+      <details open>
+        <summary>What is all this?</summary>
+        <div class="acc-body">
+          <p>We keep all our design choices in <b>one place</b> in Figma. Things like colors, spaces, and text sizes. When you change one there, it can flow all the way to the code that runs our website. This saves time and stops mistakes.</p>
+          <p>Here is the short version: you design in Figma, you push with a plugin called Token Studio, GitHub builds it for you, and it shows up in Storybook. Storybook is a web page where we can see every part we have built.</p>
+        </div>
+      </details>
 
-      <h2>3 · Reading the Pipeline tab</h2>
-      <p>The <b>Pipeline</b> tab shows the live Figma → GitHub → Storybook flow for the repo, straight from the GitHub Actions API.</p>
-      <ul>
-        <li><b>Status strip</b> — one-line health: green = idle/all clear, blue = something running, red = a stage failed.</li>
-        <li><b>8 stage cards</b> — push → rebuild tokens → drift gate → PR → CI → merge → deploy → Storybook live. Each shows a status pill and a link to the exact run.</li>
-        <li><b>Recent workflow runs</b> — the last dozen runs across all four workflows, newest first, each linking to its log.</li>
-        <li><b>⚙ Connection settings</b> — set owner/repo and, optionally, a read-only fine-grained token (<code>Actions:read</code>) to refresh as fast as every 10s. Anonymous is capped to ≥180s to stay under GitHub's 60-calls/hour limit. The token lives in <b>this browser only</b> and is sent solely to <code>api.github.com</code>.</li>
-      </ul>
+      <details>
+        <summary>Words to know</summary>
+        <div class="acc-body">
+          <p>Here are the words you will see. They are simple once you know them.</p>
+          <div class="kv">
+            <div><span class="k">Token</span><span class="v">A saved value with a name. Like "brand blue" or "small space." You use the name, not the number.</span></div>
+            <div><span class="k">Figma</span><span class="v">The app where we design. This is where design choices start.</span></div>
+            <div><span class="k">Token Studio</span><span class="v">A plugin inside Figma. It is the bridge. It sends your design choices to the code.</span></div>
+            <div><span class="k">GitHub</span><span class="v">Where the code lives. It also builds and checks the work on its own.</span></div>
+            <div><span class="k">Component</span><span class="v">A part we build once and use again. Like a button, a card, or a menu.</span></div>
+            <div><span class="k">Pull request (PR)</span><span class="v">A "please add my change" note. It lets the work get checked before it goes live.</span></div>
+            <div><span class="k">Storybook</span><span class="v">A web page that shows every part we have built, live and up to date.</span></div>
+            <div><span class="k">Pipeline</span><span class="v">The path your change takes, from Figma all the way to Storybook.</span></div>
+          </div>
+        </div>
+      </details>
 
-      <h2>4 · Reading the Changelog tab</h2>
-      <p>The <b>Changelog</b> tab is the human-readable record of what shipped — merged PRs and releases, de-duplicated across squash-merges and classified Added / Changed / Fixed / Removed (the "Keep a Changelog" convention). Group by <b>Day</b> for a dated timeline, by <b>Type</b> to see all fixes or all additions together, or filter by type chips, author, and date range. It reads the same repo as the Pipeline tab.</p>
+      <details>
+        <summary>How to start the pipeline from Token Studio</summary>
+        <div class="acc-body">
+          <p>Do this when you changed a value in Figma, like a color or a space, and you want it in the code.</p>
+          <ol class="steps">
+            <li><b>Open your file in Figma.</b><span class="say">The one where you made the change.</span></li>
+            <li><b>Open the plugin.</b><span class="say">Click the <b>Plugins</b> menu, then click <b>Tokens Studio for Figma</b>.</span></li>
+            <li><b>Check it points to the right place.</b><span class="say">It should say <code>NotTheVeal/react-ui-kit</code>. The first-time setup box below shows how to check this.</span></li>
+            <li><b>Click Push.</b><span class="say">The Push button sends your change out.</span></li>
+            <li><b>Write a short note.</b><span class="say">Say what you changed, like "New brand blue." A few words is fine.</span></li>
+            <li><b>Choose "branch and pull request."</b><span class="say">Do not push straight to <code>main</code>. A pull request lets the work get checked first.</span></li>
+            <li><b>Click OK. You are done.</b><span class="say">GitHub takes over now. You do not touch the code.</span></li>
+          </ol>
+          <div class="callout ok"><b>That is the whole push.</b> No code. No typing commands. The one button is Push. GitHub does the rest.</div>
+        </div>
+      </details>
 
-      <h2>5 · Tokens Studio sync-provider settings <span class="tag">verify before first push</span></h2>
-      <p>In Figma: <b>Tokens Studio → Settings (gear) → Sync providers → GitHub</b>. Confirm:</p>
-      <div class="kv">
-        <div><span class="k">Provider</span><span class="v">GitHub</span></div>
-        <div><span class="k">Repository</span><span class="v"><code>NotTheVeal/react-ui-kit</code></span></div>
-        <div><span class="k">Branch</span><span class="v">a feature branch (e.g. <code>chore/tokens-sync</code>) so it opens a PR — not a direct commit to <code>main</code></span></div>
-        <div><span class="k">Token storage / file path</span><span class="v">the repo's token source directory (where the DTCG JSON lives) — match what's already committed, don't invent a new path</span></div>
-        <div><span class="k">Personal access token</span><span class="v">a GitHub PAT with <code>repo</code> scope (read/write contents + PRs). This is a standard GitHub PAT — <b>not</b> a Figma token, and it does <b>not</b> need any Enterprise scope.</span></div>
-      </div>
-      <div class="callout"><b>Push style:</b> use "Push → create branch + PR" rather than committing to <code>main</code>, so CI runs and you get a reviewable diff before it merges.</div>
+      <details>
+        <summary>First-time setup: connect Token Studio to GitHub (full steps)</summary>
+        <div class="acc-body">
+          <p>You do this <b>one time</b>. It has four small parts. Take them in order. After this, you only press Push.</p>
 
-      <h2>6 · Adding a new component</h2>
-      <ol>
-        <li>Design/confirm the component in Figma with its Variables bound (no raw values).</li>
-        <li>Build the React component in <code>react-ui-kit</code> against <code>--ps-*</code> tokens — never hardcoded colors — with all states, a Storybook story, unit + a11y tests, and a Code Connect mapping.</li>
-        <li>Open a PR. CI runs lint → tsc → token build → drift gate → tests → Storybook build. Green PR → merge → auto-deploy.</li>
-      </ol>
+          <h3>Part 1 &mdash; Get a GitHub key</h3>
+          <p>A key is like a password just for apps. You make it once.</p>
+          <ol class="steps">
+            <li><b>Go to GitHub and sign in.</b><span class="say">Open <code>github.com</code>.</span></li>
+            <li><b>Open your settings.</b><span class="say">Click your picture in the top right, then click <b>Settings</b>.</span></li>
+            <li><b>Open developer settings.</b><span class="say">Scroll to the very bottom of the left menu and click <b>Developer settings</b>.</span></li>
+            <li><b>Pick classic tokens.</b><span class="say">Click <b>Personal access tokens</b>, then <b>Tokens (classic)</b>.</span></li>
+            <li><b>Make a new one.</b><span class="say">Click <b>Generate new token</b>, then <b>Generate new token (classic)</b>.</span></li>
+            <li><b>Name it and set a date.</b><span class="say">Name it <code>Token Studio</code>. Set expiration to 90 days or longer.</span></li>
+            <li><b>Check one box only: <code>repo</code>.</b><span class="say">That single box is all you need. Leave the rest alone.</span></li>
+            <li><b>Click Generate token, then copy it.</b><span class="say">It starts with <code>ghp_</code>. You cannot see it again, so keep it handy for the next part.</span></li>
+          </ol>
+          <div class="callout warn"><b>Careful:</b> this key is a secret, like a password. Do not paste it in a chat or an email. You will only paste it into Token Studio in the next part.</div>
 
-      <h2>7 · What's outstanding</h2>
-      <div class="callout ok"><b>Automation: complete.</b> All 11 project phases read as Delivered in Confluence. The token loop runs end-to-end via the Tokens Studio push; nothing is blocked.</div>
-      <ul>
-        <li><b>PR #20 — Brücke adapter (your decision, not a blocker).</b> Proven to reconcile 118/119 (the 1 delta is composites/units, expected). Merge it to wire the Figma-native Variables → canonical DTCG path into CI, or leave it vendored under <code>token-sync/</code>. Nothing depends on the choice.</li>
-        <li><b>Confluence doc hygiene.</b> The parent project-outline timeline still lists Phase 10 as "in process (10%)" and Phase 11 as "pending", but both phase pages are stamped <b>Delivered (20 Jul 2026)</b>. The table just needs reconciling to match — a documentation edit, not project work.</li>
-        <li><b>The REST token exporter is a dead end, and that's fine.</b> <code>figma-token-sync.yml</code> needs an Enterprise-only Figma scope you don't have; it's soft-skip-guarded so it stays green as a no-op. The Tokens Studio push is the real path and needs none of it.</li>
-      </ul>
+          <h3>Part 2 &mdash; Add GitHub to Token Studio</h3>
+          <ol class="steps">
+            <li><b>Open the plugin in Figma.</b><span class="say"><b>Plugins</b> menu, then <b>Tokens Studio for Figma</b>.</span></li>
+            <li><b>Open its settings.</b><span class="say">Click the <b>gear</b> icon at the bottom of the plugin.</span></li>
+            <li><b>Add a sync provider.</b><span class="say">Find <b>Sync providers</b>, click <b>Add new</b>, and choose <b>GitHub</b>.</span></li>
+            <li><b>Fill in the boxes</b> (see the table below).</li>
+            <li><b>Click Save.</b><span class="say">This stores the connection.</span></li>
+          </ol>
+          <div class="kv">
+            <div><span class="k">Name</span><span class="v">Anything you like, such as <code>react-ui-kit</code>.</span></div>
+            <div><span class="k">Personal access token</span><span class="v">Paste the <code>ghp_</code> key you copied in Part 1.</span></div>
+            <div><span class="k">Repository</span><span class="v"><code>NotTheVeal/react-ui-kit</code> &mdash; type it exactly.</span></div>
+            <div><span class="k">Branch</span><span class="v">A new name like <code>tokens/studio-sync</code>. Never <code>main</code>.</span></div>
+            <div><span class="k">File path</span><span class="v"><code>tokens</code> &mdash; this is the folder name, not one file.</span></div>
+            <div><span class="k">Multi-file</span><span class="v">Turn this <b>ON</b>. Our tokens live in several files inside the <code>tokens</code> folder.</span></div>
+          </div>
+
+          <h3>Part 3 &mdash; Pull once to line things up</h3>
+          <ol class="steps">
+            <li><b>Click Pull.</b><span class="say">This brings the current tokens from GitHub into the plugin.</span></li>
+            <li><b>Check the token sets show up.</b><span class="say">On the left you should see: <code>primitive</code>, <code>semantic</code>, <code>semantic.dark</code>, <code>component</code>, <code>legacy</code>.</span></li>
+            <li><b>Check the themes show up.</b><span class="say">You should see: <b>Primitives</b>, <b>Light</b>, <b>Dark</b>, <b>Component</b>.</span></li>
+          </ol>
+          <div class="callout ok"><b>If you see all of those, you are connected right.</b> You never have to do Parts 1 to 3 again.</div>
+
+          <h3>Part 4 &mdash; How you push from now on</h3>
+          <ol class="steps">
+            <li><b>Change a value.</b><span class="say">Edit a color, space, or text size in a token set.</span></li>
+            <li><b>Click Push.</b><span class="say">Write a short note about what you changed.</span></li>
+            <li><b>Keep your branch, not main.</b><span class="say">This makes a pull request so the work gets checked first.</span></li>
+            <li><b>Click Push to confirm.</b><span class="say">You are done. GitHub checks it and the pipeline runs.</span></li>
+          </ol>
+
+          <h3>If something goes wrong</h3>
+          <div class="kv">
+            <div><span class="k">"Bad credentials"</span><span class="v">Your key is wrong or expired. Make a new one in Part 1.</span></div>
+            <div><span class="k">"Not found"</span><span class="v">Check the Repository spelling: <code>NotTheVeal/react-ui-kit</code>.</span></div>
+            <div><span class="k">Sets look empty</span><span class="v">File path must be <code>tokens</code> with <b>Multi-file ON</b>. Fix it, then Pull again.</span></div>
+            <div><span class="k">Push went to main</span><span class="v">Change Branch to a new name so it opens a pull request, not a direct change.</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>How to make a new part (component) in Token Studio</summary>
+        <div class="acc-body">
+          <p>Say you want to add a brand new part, like a "Tag" or a "Callout." Its colors, spacing, and text sizes need their own tokens first. This is the part people get stuck on, so follow it slowly. It is easier than it looks.</p>
+
+          <p class="stepgroup"><b>The trick to know first</b></p>
+          <p>Token Studio has <b>no "new component" button</b>. You cannot make one from nothing. Instead you <b>copy a part that already exists</b>, then rename it. That is the normal, correct way. Everyone does it this way.</p>
+
+          <p class="stepgroup"><b>Part A — make the tokens (in Token Studio)</b></p>
+          <ol class="steps">
+            <li><b>Open Token Studio in Figma.</b><span class="say">In Figma, open the Plugins menu and click Tokens Studio for Figma. A panel opens on the side.</span></li>
+            <li><b>Click the "component" set.</b><span class="say">On the left of the panel is a list of token sets: primitive, semantic, component, and so on. Click <b>component</b>. Now you see the tokens for every existing part, grouped by name (like <code>button</code>, <code>card</code>, <code>badge</code>).</span></li>
+            <li><b>Pick a part that looks close to yours.</b><span class="say">If your new part is a small pill, the <code>badge</code> group is a good start. If it is a box, start from <code>card</code>. It does not need to be perfect. You will change it next.</span></li>
+            <li><b>Hover a token in that group, then click the three dots (⋯).</b><span class="say">A tiny menu appears on the right side of the token row. This is where the copy option lives.</span></li>
+            <li><b>Click "Duplicate."</b><span class="say">A copy appears right below, with a name ending in "-copy." This copy is the seed of your new part.</span></li>
+            <li><b>Rename the copy to your part's name.</b><span class="say">Click the name and change the first word to your new part. Keep the dots and the shape. Example: change <code>badge.background</code> to <code>tag.background</code>. Keep the pattern <code>yourpart.piece.property</code>.</span></li>
+            <li><b>Duplicate and rename for each piece your part needs.</b><span class="say">Most parts need a few: <code>tag.background</code>, <code>tag.text</code>, <code>tag.border</code>, <code>tag.radius</code>, <code>tag.padding</code>. Duplicate one at a time, rename each.</span></li>
+            <li><b>Set each value by picking a token, not typing a number.</b><span class="say">Click a token's value box. Start typing <code>{</code> and a list appears. Pick a semantic token, like <code>{semantic.color.brand.primary}</code> for the background. <b>Never type a color like</b> <code>#005BA7</code>. Always point at a token.</span></li>
+            <li><b>Push it to GitHub.</b><span class="say">Click the <b>Push</b> button (an up arrow, near the top of the panel). Type a <b>new branch name</b> like <code>tag-tokens</code> — never <code>main</code>. Add a one-line message. Click Push. This opens a pull request for you.</span></li>
+          </ol>
+          <div class="callout warn"><b>The one rule:</b> every value points at another token, never a raw number. A hand-typed color like <code>#005BA7</code> will not update when the brand changes. A token name like <code>{semantic.color.brand.primary}</code> will.</div>
+
+          <p class="stepgroup"><b>Part B — what happens next (all automatic)</b></p>
+          <p>After you push, you are done. The push is the only manual step. The pipeline takes over on its own. You do not touch anything else, and you do not need to wait on a person.</p>
+          <ol class="steps">
+            <li><b>The pipeline builds the tokens.</b><span class="say">GitHub turns your new tokens into code (the <code>--ps-...</code> names) with no one lifting a finger.</span></li>
+            <li><b>The checks run themselves.</b><span class="say">GitHub runs the safety checks automatically. Green means good.</span></li>
+            <li><b>Storybook updates on its own.</b><span class="say">When the checks pass, your change is live in Storybook. No merge to do by hand, no developer needed.</span></li>
+          </ol>
+          <div class="callout"><b>Not sure which group to copy, or what to name a piece?</b> That naming choice is the only judgment call. Ask me, or ask a teammate — send the part's name and a screenshot and that is enough to guide you.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>How to watch it go live</summary>
+        <div class="acc-body">
+          <p>After you push, you can watch your change move. Open the <b>Pipeline</b> tab. It shows each step in order.</p>
+          <div class="kv">
+            <div><span class="k">Green</span><span class="v">All good. Nothing is wrong.</span></div>
+            <div><span class="k">Blue</span><span class="v">Something is running right now. Wait a bit.</span></div>
+            <div><span class="k">Red</span><span class="v">A step stopped. Open the "If you see red" box.</span></div>
+          </div>
+          <p>When the last step turns green, your change is live in Storybook. You can open Storybook to see it.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>If you see red</summary>
+        <div class="acc-body">
+          <p>Red means a step stopped. This is normal sometimes. It is a safety net, not a big problem. Here is what to do.</p>
+          <ol class="steps">
+            <li><b>Do not panic.</b><span class="say">Nothing broke on the live site. The check caught it before that.</span></li>
+            <li><b>Click the red step.</b><span class="say">It opens a page that says what went wrong.</span></li>
+            <li><b>Read the last few red lines.</b><span class="say">They usually name the file or the value with the problem.</span></li>
+            <li><b>Ask a developer, or ask me.</b><span class="say">Share the link to the red step. That is all we need to help fast.</span></li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>What each pipeline step does</summary>
+        <div class="acc-body">
+          <ul>
+            <li><b>Push</b> &mdash; your change leaves Figma.</li>
+            <li><b>Rebuild tokens</b> &mdash; GitHub turns your change into code values.</li>
+            <li><b>Drift gate</b> &mdash; a check that makes sure Figma and code still match.</li>
+            <li><b>Pull request</b> &mdash; the change is written up so it can be checked.</li>
+            <li><b>CI</b> &mdash; more checks: spelling of code, types, tests.</li>
+            <li><b>Merge</b> &mdash; the change is accepted.</li>
+            <li><b>Deploy</b> &mdash; Storybook is rebuilt.</li>
+            <li><b>Storybook live</b> &mdash; you can see your change on the web.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Where to find things</summary>
+        <div class="acc-body">
+          <ul>
+            <li><b>Storybook (all parts):</b> <code>nottheveal.github.io/react-ui-kit</code></li>
+            <li><b>The code:</b> the <code>NotTheVeal/react-ui-kit</code> repo on GitHub.</li>
+            <li><b>This tracker:</b> the Pipeline, Changelog, How to use, and Components tabs at the top.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Quick answers</summary>
+        <div class="acc-body">
+          <ul>
+            <li><b>Do I need to know code?</b> No. You press Push in Figma.</li>
+            <li><b>Can I break the live site?</b> No. The checks catch problems first.</li>
+            <li><b>How long does it take?</b> Usually a few minutes from Push to live.</li>
+            <li><b>What if I am not sure?</b> Push to a branch and pull request. It gets checked before going live.</li>
+          </ul>
+        </div>
+      </details>
 
     </div>
   </section><!-- /view-guide -->
@@ -1149,6 +1330,14 @@
   search.addEventListener("input",applySearch);
 
   setMode("catalog");
+
+  /* ---- single-open accordions: opening one closes the rest ---- */
+  var guideAcc=[].slice.call(document.querySelectorAll(".guide details"));
+  guideAcc.forEach(function(d){
+    d.addEventListener("toggle",function(){
+      if(d.open){guideAcc.forEach(function(o){if(o!==d)o.open=false;});}
+    });
+  });
 })();
 </script>
 
