@@ -1,15 +1,26 @@
 name: CI
 
-# Runs on every push to main and every pull request.
-# The build chain (lint → sync → vite → tsc) enforces the design-system
-# guardrails: a raw hex color, a type error, or a broken build fails the
-# check before anything can merge.
+# Runs on EVERY push to ANY branch, and on every pull request.
+# This is what makes the pipeline turnkey: the moment you push — whether
+# it's a colour change to an existing component or a brand-new component
+# scaffolded with `npm run scaffold` — the full gate runs and builds +
+# tests it. No PR required to get a build; the PR just gates the merge.
+#
+# The build chain (lint → sync → vite → tsc → vitest → drift → storybook)
+# enforces the design-system guardrails: a raw hex colour, a type error,
+# a failing test, token drift, or a broken build fails the check.
 
 on:
   push:
-    branches: [main]
+    branches: ['**']          # every branch — new component or update, it builds + tests
   pull_request:
     branches: [main]
+
+# A newer push to the same branch cancels the older in-flight run, so
+# rapid pushes don't pile up dozens of redundant builds.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -25,8 +36,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          # package-lock.json lives in the repo root (the "UI Kit" folder
-          # becomes the repo root when you `git init` inside it).
 
       - name: Install dependencies
         run: npm ci
@@ -40,6 +49,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Unit + a11y tests (Vitest)
+        run: npm test
+
       - name: Token drift guard (blocks tokens.css drift from /tokens source)
         run: npm run test:tokens
 
@@ -49,8 +61,6 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
-      # Uploads the static Storybook so reviewers can download the
-      # component workshop artifact straight from the CI run.
       - name: Upload Storybook artifact
         uses: actions/upload-artifact@v4
         with:
