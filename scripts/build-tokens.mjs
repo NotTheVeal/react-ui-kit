@@ -17,6 +17,17 @@ const nameSet = (f) => new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(
 const legacyNames = nameSet('legacy.json');
 const darkNames   = nameSet('semantic.dark.json');
 
+// Root sheet sets are sourced dynamically from tokens/$metadata.json so that any
+// new token set (e.g. an "Email Template" set pushed from Tokens Studio) flows
+// into tokens.css automatically. `legacy` and `semantic.dark` are excluded here —
+// they keep their own filtered outputs below (legacy.css / dark.css).
+const meta = JSON.parse(fs.readFileSync(path.join(T, '$metadata.json'), 'utf8'));
+const EXCLUDE = new Set(['legacy', 'semantic.dark']);
+const rootSets = (meta.tokenSetOrder || [])
+  .filter((s) => !EXCLUDE.has(s))
+  .map((s) => `${s}.json`)
+  .filter((f) => fs.existsSync(path.join(T, f)));
+
 StyleDictionary.registerTransform({
   name: 'ps/name', type: 'name', transform: (t) => t.path.join('-'),
 });
@@ -31,7 +42,7 @@ const sd = (sources, file) => new StyleDictionary({
 const F = (dest, opts) => ({ destination: dest, format: 'css/variables', ...opts });
 
 await (await sd(
-  ['primitive.json','semantic.json','component.json'].map((f)=>path.join(T,f)),
+  rootSets.map((f)=>path.join(T,f)),
   F('root.css', { options: { selector: ':root', outputReferences: true } })
 )).buildAllPlatforms();
 
