@@ -1,0 +1,85 @@
+name: New Component (scaffold + PR)
+
+# One-click way to start a brand-new component. Run it from the Actions
+# tab (or `gh workflow run`): give it a name and (optionally) a Figma
+# node id. It scaffolds the canonical file set, runs the FULL gate inline
+# so the new component is proven to build + test, then opens a PR.
+#
+# The gate runs in THIS job on purpose: a bot push using GITHUB_TOKEN
+# does not re-trigger ci.yml, so we build + test here rather than relying
+# on a second workflow firing. The PR is then just the human merge gate.
+
+on:
+  workflow_dispatch:
+    inputs:
+      component_name:
+        description: 'Component name (PascalCase, e.g. Kbd)'
+        required: true
+        type: string
+      figma_node:
+        description: 'Figma node id (e.g. 4820-117) — optional'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  scaffold:
+    name: Scaffold, gate, open PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scaffold component
+        run: |
+          if [ -n "${{ inputs.figma_node }}" ]; then
+            node scripts/scaffold-component.mjs "${{ inputs.component_name }}" --node "${{ inputs.figma_node }}"
+          else
+            node scripts/scaffold-component.mjs "${{ inputs.component_name }}"
+          fi
+
+      - name: Build CSS
+        run: npm run build:css
+
+      - name: Gate — lint
+        run: npm run lint
+
+      - name: Gate — typecheck
+        run: npm run typecheck
+
+      - name: Gate — unit + a11y tests
+        run: npm test
+
+      - name: Gate — token drift
+        run: npm run test:tokens
+
+      - name: Gate — build Storybook
+        run: npm run build-storybook
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: scaffold/${{ inputs.component_name }}
+          commit-message: "feat(${{ inputs.component_name }}): scaffold new component"
+          title: "New component: ${{ inputs.component_name }}"
+          body: |
+            Scaffolded via the **New Component** workflow.
+
+            - Files: `${{ inputs.component_name }}.tsx`, `.stories.tsx`, `.test.tsx`, `.a11y.test.tsx`, `.figma.tsx` + barrel export
+            - Figma node: `${{ inputs.figma_node || 'REPLACE-ME' }}`
+            - Full gate (lint / typecheck / test / drift / Storybook) passed inline on this run.
+
+            Next: flesh out the markup 1:1 from the Figma node, push, and CI re-runs the gate.
+          delete-branch: false
