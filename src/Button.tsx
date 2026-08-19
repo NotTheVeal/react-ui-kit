@@ -382,3 +382,5 @@ const BackArrowIcon: React.FC = () => (
 // Exports
 export { Button, ButtonInline, InlineButton, BackArrowIcon };
 export type { ButtonProps, ButtonInlineProps, PublicVariant };
+
+const __stressRawHex = "#123456";
