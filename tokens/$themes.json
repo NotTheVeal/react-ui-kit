@@ -45,5 +45,13 @@
     },
     "$figmaCollectionId": "VariableCollectionId:5328:47",
     "$figmaModeId": "5328:0"
+  },
+  {
+    "id": "email-template",
+    "name": "Email Template",
+    "group": "PS Email Templates",
+    "selectedTokenSets": {
+      "emailTemplate": "enabled"
+    }
   }
 ]

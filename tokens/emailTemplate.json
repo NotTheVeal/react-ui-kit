@@ -1,0 +1,258 @@
+{
+  "ps-email-canvas": {
+    "$value": "#002f48",
+    "$type": "color"
+  },
+  "ps-email-surface": {
+    "$value": "#ffffff",
+    "$type": "color"
+  },
+  "ps-email-brand": {
+    "$value": "#0056b8",
+    "$type": "color"
+  },
+  "ps-email-fg-heading": {
+    "$value": "#4a4a4a",
+    "$type": "color"
+  },
+  "ps-email-fg-body": {
+    "$value": "#000000",
+    "$type": "color"
+  },
+  "ps-email-fg-legal": {
+    "$value": "#777777",
+    "$type": "color"
+  },
+  "ps-email-divider": {
+    "$value": "#cccccc",
+    "$type": "color"
+  },
+  "ps-email-cta-bg": {
+    "$value": "#ff9505",
+    "$type": "color"
+  },
+  "ps-email-cta-fg": {
+    "$value": "#ffffff",
+    "$type": "color"
+  },
+  "ps-email-font-family": {
+    "$value": "Source Sans Pro",
+    "$type": "fontFamily"
+  },
+  "ps-email-weight-regular": {
+    "$value": 400,
+    "$type": "fontWeight"
+  },
+  "ps-email-weight-bold": {
+    "$value": 700,
+    "$type": "fontWeight"
+  },
+  "ps-email-text-heading": {
+    "$value": "30px",
+    "$type": "dimension"
+  },
+  "ps-email-text-body": {
+    "$value": "14px",
+    "$type": "dimension"
+  },
+  "ps-email-text-caption": {
+    "$value": "12px",
+    "$type": "dimension"
+  },
+  "ps-email-lh-heading": {
+    "$value": "38px",
+    "$type": "dimension"
+  },
+  "ps-email-lh-body": {
+    "$value": "18px",
+    "$type": "dimension"
+  },
+  "ps-email-lh-caption": {
+    "$value": "15px",
+    "$type": "dimension"
+  },
+  "ps-email-tracking-none": {
+    "$value": "0",
+    "$type": "dimension"
+  },
+  "ps-email-case-none": {
+    "$value": "none",
+    "$type": "other"
+  },
+  "ps-email-case-cta": {
+    "$value": "uppercase",
+    "$type": "other"
+  },
+  "ps-email-paragraph-0": {
+    "$value": "0",
+    "$type": "dimension"
+  },
+  "ps-email-decoration-none": {
+    "$value": "none",
+    "$type": "other"
+  },
+  "ps-email-decoration-link": {
+    "$value": "underline",
+    "$type": "other"
+  },
+  "ps-email-divider-width": {
+    "$value": "1px",
+    "$type": "dimension"
+  },
+  "ps-email-cta-radius": {
+    "$value": "100px",
+    "$type": "dimension"
+  },
+  "ps-email-opacity-full": {
+    "$value": "1",
+    "$type": "number"
+  },
+  "ps-email-width": {
+    "$value": "700px",
+    "$type": "dimension"
+  },
+  "ps-email-divider-inset-width": {
+    "$value": "560px",
+    "$type": "dimension"
+  },
+  "ps-email-cta-height": {
+    "$value": "36px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-logo-w": {
+    "$value": "174px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-logo-h": {
+    "$value": "14px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-alert-size": {
+    "$value": "49px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-chat-w": {
+    "$value": "24px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-chat-h": {
+    "$value": "25px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-facebook-w": {
+    "$value": "18px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-facebook-h": {
+    "$value": "32px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-twitter-size": {
+    "$value": "30px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-linkedin-size": {
+    "$value": "28px",
+    "$type": "dimension"
+  },
+  "ps-email-margin-header": {
+    "$value": "72px",
+    "$type": "dimension"
+  },
+  "ps-email-margin-body": {
+    "$value": "70px",
+    "$type": "dimension"
+  },
+  "ps-email-margin-footer": {
+    "$value": "98px",
+    "$type": "dimension"
+  },
+  "ps-email-pad-top": {
+    "$value": "24px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-header-rule": {
+    "$value": "32px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-rule-body": {
+    "$value": "32px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-body-contact": {
+    "$value": "40px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-contact-footer": {
+    "$value": "32px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-contact-stack": {
+    "$value": "16px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-copy-icon": {
+    "$value": "36px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-heading-body": {
+    "$value": "17px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-body-cta": {
+    "$value": "19px",
+    "$type": "dimension"
+  },
+  "ps-email-gap-footer-stack": {
+    "$value": "21px",
+    "$type": "dimension"
+  },
+  "ps-email-cta-padding-x": {
+    "$value": "24px",
+    "$type": "dimension"
+  },
+  "ps-email-cta-padding-y": {
+    "$value": "11px",
+    "$type": "dimension"
+  },
+  "ps-email-asset-base": {
+    "$value": "https://REPLACE-WITH-YOUR-CDN/email/reminder-90d/",
+    "$type": "other"
+  },
+  "ps-email-asset-logo": {
+    "$value": "{ps-email-asset-base}ps-logo@2x.png",
+    "$type": "other"
+  },
+  "ps-email-asset-alert": {
+    "$value": "{ps-email-asset-base}icon-alert@2x.png",
+    "$type": "other"
+  },
+  "ps-email-asset-chat": {
+    "$value": "{ps-email-asset-base}icon-chat@2x.png",
+    "$type": "other"
+  },
+  "ps-email-asset-facebook": {
+    "$value": "{ps-email-asset-base}social-facebook@2x.png",
+    "$type": "other"
+  },
+  "ps-email-asset-twitter": {
+    "$value": "{ps-email-asset-base}social-twitter@2x.png",
+    "$type": "other"
+  },
+  "ps-email-asset-linkedin": {
+    "$value": "{ps-email-asset-base}social-linkedin@2x.png",
+    "$type": "other"
+  },
+  "ps-email-copy-body": {
+    "$value": "This message is for notification-only and is not a receipt of order completion. To complete the Standing Order, please navigate to the Standing Orders page, and select 'Buy This List' or 'Skip' for this Standing Order.",
+    "$type": "other"
+  },
+  "ps-email-copy-cta": {
+    "$value": "Open Standing Order",
+    "$type": "other"
+  },
+  "ps-email-copy-legal": {
+    "$value": "This email was sent by a notification system. It cannot accept incoming emails. Update notification settings here.",
+    "$type": "other"
+  }
+}
