@@ -1,0 +1,94 @@
+name: Design-system token bridge
+
+# Pulls "extra" token sets (e.g. Email Template) from the design-system repo,
+# where Tokens Studio pushes them, and bridges any self-contained set into this
+# repo's DTCG tokens/*.json → rebuilds tokens.css → runs the value-identity gate
+# → opens a PR if (and only if) something changed.
+#
+# This is the automatic fallback for the Tokens Studio → GitHub path: even when
+# the plugin is pointed at the design-system repo, its tokens land here without
+# any manual bridging. No secret is required — design-system is public and read
+# with the built-in GITHUB_TOKEN. Nothing reaches `main` without PR + CI review.
+#
+# Sets that are curated here (primitive/*, semantic/*, component/*) are never
+# touched, and sets that reference other namespaced sets are FLAGGED in the run
+# log for manual review rather than written.
+
+on:
+  workflow_dispatch: {}          # run on demand from the Actions tab
+  schedule:
+    - cron: '0 14 * * 1'         # every Monday 14:00 UTC — adjust to taste
+
+# Least-privilege: allow this workflow to push its branch and open a PR.
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: design-system-token-bridge
+  cancel-in-progress: true
+
+jobs:
+  bridge:
+    name: Bridge design-system tokens & open PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bridge design-system token sets
+        run: npm run bridge:tokens
+
+      - name: Rebuild tokens.css from source
+        run: npm run build:tokens
+
+      - name: Value-identity gate (committed tokens.css vs freshly built source)
+        run: npm run test:tokens
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- tokens tokens.css; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No bridgeable changes from design-system."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- tokens tokens.css
+          fi
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/design-system-token-bridge
+          base: main
+          commit-message: "chore(tokens): bridge sets from design-system"
+          title: "chore(tokens): bridge sets from design-system"
+          delete-branch: true
+          add-paths: |
+            tokens
+            tokens.css
+          body: |
+            Automated bridge from the `NotTheVeal/design-system` repo, where
+            Tokens Studio pushes token sets from Figma.
+
+            - Only self-contained "extra" sets are bridged (curated primitive/
+              semantic/component tiers are never overwritten from here).
+            - Composite tokens and runtime placeholders are dropped to match the
+              shape of the existing `tokens/*.json` files.
+            - Sets that reference other namespaced sets are flagged in the run
+              log for manual review, not written.
+            - The value-identity gate (`npm run test:tokens`) passed in this run.
+
+            Review the diff, then merge. CI re-runs the full gate on the PR.
