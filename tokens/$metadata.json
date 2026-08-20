@@ -4,6 +4,7 @@
     "semantic",
     "semantic.dark",
     "component",
-    "legacy"
+    "legacy",
+    "emailTemplate"
   ]
 }
