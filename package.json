@@ -58,7 +58,9 @@
     "test:tokens": "node scripts/token-gate.mjs",
     "export:tokens": "node scripts/figma-export-tokens.mjs",
     "export:tokens:dry": "node scripts/figma-export-tokens.mjs --dry-run",
-    "test:export": "node scripts/figma-export-tokens.mjs --self-test"
+    "test:export": "node scripts/figma-export-tokens.mjs --self-test",
+    "bridge:tokens": "node scripts/bridge-design-system-tokens.mjs",
+    "bridge:tokens:check": "node scripts/bridge-design-system-tokens.mjs --check"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
