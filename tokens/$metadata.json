@@ -5,6 +5,7 @@
     "semantic.dark",
     "component",
     "legacy",
-    "emailTemplate"
+    "emailTemplate",
+    "aiRating"
   ]
 }

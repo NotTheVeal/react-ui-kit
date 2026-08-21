@@ -1,0 +1,110 @@
+{
+  "aiDataCard-color-background-default": {
+    "$value": "#F5F5F5",
+    "$type": "color"
+  },
+  "aiDataCard-color-background-hover": {
+    "$value": "#E6F2FF",
+    "$type": "color"
+  },
+  "aiDataCard-color-border-default": {
+    "$value": "#E5E5E5",
+    "$type": "color"
+  },
+  "aiDataCard-color-border-hover": {
+    "$value": "#CCE5FF",
+    "$type": "color"
+  },
+  "aiDataCard-color-text-title": {
+    "$value": "#4A4A4A",
+    "$type": "color"
+  },
+  "aiDataCard-color-text-manufacturer": {
+    "$value": "#777777",
+    "$type": "color"
+  },
+  "aiDataCard-color-text-tracking": {
+    "$value": "#005BA6",
+    "$type": "color"
+  },
+  "aiDataCard-color-text-costLabel": {
+    "$value": "#949494",
+    "$type": "color"
+  },
+  "aiDataCard-color-text-costAmount": {
+    "$value": "#4A4A4A",
+    "$type": "color"
+  },
+  "aiDataCard-color-divider": {
+    "$value": "#E5E5E5",
+    "$type": "color"
+  },
+  "aiDataCard-sizing-width": {
+    "$value": "348px",
+    "$type": "dimension"
+  },
+  "aiDataCard-sizing-imageArea": {
+    "$value": "100px",
+    "$type": "dimension"
+  },
+  "aiDataCard-spacing-padding": {
+    "$value": "16px",
+    "$type": "dimension"
+  },
+  "aiDataCard-spacing-gap": {
+    "$value": "8px",
+    "$type": "dimension"
+  },
+  "aiDataCard-spacing-dividerMargin": {
+    "$value": "12px",
+    "$type": "dimension"
+  },
+  "aiDataCard-border-radius": {
+    "$value": "8px",
+    "$type": "dimension"
+  },
+  "aiDataCard-border-width": {
+    "$value": "1px",
+    "$type": "dimension"
+  },
+  "aiDataCard-shadow-default": {
+    "$value": "0 4px 12px rgba(0,0,0,0.04)",
+    "$type": "other"
+  },
+  "aiDataCard-typography-title-fontSize": {
+    "$value": "16px",
+    "$type": "dimension"
+  },
+  "aiDataCard-typography-title-fontWeight": {
+    "$value": 700,
+    "$type": "fontWeight"
+  },
+  "aiDataCard-typography-manufacturer-fontSize": {
+    "$value": "14px",
+    "$type": "dimension"
+  },
+  "aiDataCard-typography-manufacturer-fontWeight": {
+    "$value": 400,
+    "$type": "fontWeight"
+  },
+  "aiDataCard-typography-tracking-fontSize": {
+    "$value": "14px",
+    "$type": "dimension"
+  },
+  "aiDataCard-typography-tracking-fontWeight": {
+    "$value": 600,
+    "$type": "fontWeight"
+  },
+  "aiDataCard-typography-costLabel-fontSize": {
+    "$value": "14px",
+    "$type": "dimension"
+  },
+  "aiDataCard-typography-costAmount-fontSize": {
+    "$value": "16px",
+    "$type": "dimension"
+  },
+  "aiDataCard-typography-costAmount-fontWeight": {
+    "$value": 700,
+    "$type": "fontWeight"
+  }
+}
