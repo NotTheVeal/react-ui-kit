@@ -26,8 +26,8 @@ const preview: Preview = {
       ],
     },
     layout: 'centered',
-    // Show the story JSX in the autodocs Source block, expanded by default.
-    docs: { source: { state: 'open' } },
+    // Show the story JSX in the Source block, expanded by default (SB8 API).
+    docs: { canvas: { sourceState: 'shown' }, source: { state: 'open' } },
   },
   // Global decorator: every story also renders a copy-paste block of its
   // live Tailwind markup (element tree + className strings).
