@@ -1682,3 +1682,146 @@ export const StreamChart: React.FC<StreamChartProps> = ({
     </ChartFrame>
   );
 };
+
+// ══════════════════════════════════════════════════════════════════
+// BoxPlot (statistical distribution: whiskers · IQR box · median · outliers)
+// ══════════════════════════════════════════════════════════════════
+
+export interface BoxPlotDatum {
+  min: number;
+  q1: number;
+  median: number;
+  q3: number;
+  max: number;
+  outliers?: number[];
+}
+
+export interface BoxPlotProps {
+  categories: string[];
+  data: BoxPlotDatum[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  /** IQR box fill. */
+  boxColor?: string;
+  /** IQR box border. */
+  boxStroke?: string;
+  /** Whisker + cap colour. */
+  whiskerColor?: string;
+  /** Median rule colour. */
+  medianColor?: string;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const BoxPlot: React.FC<BoxPlotProps> = ({
+  categories,
+  data,
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  boxColor = 'var(--ps-prim-blue-100)',
+  boxStroke = 'var(--ps-prim-blue-300)',
+  whiskerColor = 'var(--ps-prim-blue-500)',
+  medianColor = 'var(--ps-prim-blue-900)',
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 44;
+  const padR = 12;
+  const padT = 12;
+  const padB = 28;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+
+  const vals = data.flatMap((d) => [d.min, d.max, ...(d.outliers ?? [])]);
+  const rawMax = Math.max(1, ...vals);
+  const rawMin = Math.min(0, ...vals);
+  const range = rawMax - rawMin || 1;
+  const lo = rawMin - range * 0.08;
+  const hi = rawMax + range * 0.08;
+  const y = (v: number) => padT + plotH - ((v - lo) / (hi - lo)) * plotH;
+
+  const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => lo + t * (hi - lo));
+  const slotW = plotW / categories.length;
+  const boxW = Math.min(48, slotW * 0.5);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Median', color: medianColor },
+            { label: 'IQR (Q1–Q3)', color: boxColor },
+            { label: 'Whiskers (min/max)', color: whiskerColor },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Box plot'}
+        style={{ fontFamily: FONT }}
+      >
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={padL} x2={width - padR} y1={y(t)} y2={y(t)} stroke={GRID} strokeWidth={1} />
+            <text x={padL - 8} y={y(t) + 4} textAnchor="end" fontSize={11} fill={AXIS_TEXT}>
+              {valueFormat(Math.round(t))}
+            </text>
+          </g>
+        ))}
+        {categories.map((cat, ci) => {
+          const d = data[ci];
+          if (!d) return null;
+          const cx = padL + ci * slotW + slotW / 2;
+          const bx = cx - boxW / 2;
+          const capW = boxW / 4;
+          return (
+            <g key={cat}>
+              <line x1={cx} x2={cx} y1={y(d.max)} y2={y(d.min)} stroke={whiskerColor} strokeWidth={1.5} />
+              <line x1={cx - capW} x2={cx + capW} y1={y(d.max)} y2={y(d.max)} stroke={whiskerColor} strokeWidth={1.5} />
+              <line x1={cx - capW} x2={cx + capW} y1={y(d.min)} y2={y(d.min)} stroke={whiskerColor} strokeWidth={1.5} />
+              <rect
+                x={bx}
+                y={y(d.q3)}
+                width={boxW}
+                height={Math.max(1, y(d.q1) - y(d.q3))}
+                rx={2}
+                strokeWidth={1}
+                style={{ fill: boxColor, stroke: boxStroke }}
+              >
+                <title>
+                  {`${cat}: min ${valueFormat(d.min)} · Q1 ${valueFormat(d.q1)} · median ${valueFormat(
+                    d.median,
+                  )} · Q3 ${valueFormat(d.q3)} · max ${valueFormat(d.max)}`}
+                </title>
+              </rect>
+              <line x1={bx} x2={bx + boxW} y1={y(d.median)} y2={y(d.median)} stroke={medianColor} strokeWidth={2} />
+              {(d.outliers ?? []).map((o, oi) => (
+                <circle key={oi} cx={cx} cy={y(o)} r={2.5} style={{ fill: whiskerColor }}>
+                  <title>{`${cat} outlier: ${valueFormat(o)}`}</title>
+                </circle>
+              ))}
+              <text x={cx} y={height - 10} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+                {cat}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};

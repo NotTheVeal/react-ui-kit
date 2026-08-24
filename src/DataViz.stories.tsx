@@ -16,6 +16,7 @@ import {
   TreeMap,
   BumpChart,
   StreamChart,
+  BoxPlot,
   Legend,
   SERIES_COLORS,
 } from './DataViz';
@@ -322,6 +323,24 @@ export const Stream: Story = {
         { name: 'ICU', data: [10, 12, 14, 13, 15, 16] },
         { name: 'Lab', data: [8, 9, 8, 11, 10, 12] },
       ]}
+    />
+  ),
+};
+
+export const Distribution: Story = {
+  render: () => (
+    <BoxPlot
+      eyebrow="Statistics"
+      title="Repair Turnaround Distribution"
+      subtitle="Days to close, by month"
+      categories={['Jan', 'Feb', 'Mar', 'Apr']}
+      data={[
+        { min: 2, q1: 5, median: 8, q3: 12, max: 16 },
+        { min: 3, q1: 7, median: 10, q3: 14, max: 19, outliers: [24] },
+        { min: 1, q1: 4, median: 6, q3: 10, max: 15 },
+        { min: 4, q1: 9, median: 12, q3: 15, max: 20 },
+      ]}
+      valueFormat={(n) => `${n}d`}
     />
   ),
 };

@@ -86,6 +86,7 @@ export {
   TreeMap,
   BumpChart,
   StreamChart,
+  BoxPlot,
   HEATMAP_SCALE,
 } from './DataViz';
 export type {
@@ -102,6 +103,8 @@ export type {
   BumpChartProps,
   StreamSeries,
   StreamChartProps,
+  BoxPlotDatum,
+  BoxPlotProps,
 } from './DataViz';
 export {
   TypingIndicator,
