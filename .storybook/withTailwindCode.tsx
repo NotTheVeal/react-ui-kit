@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { Decorator } from '@storybook/react';
 
 /**
@@ -78,14 +78,15 @@ const TailwindCode: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [markup, setMarkup] = useState('');
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (ref.current) {
-      // Read the story's rendered subtree (excludes this decorator's own UI).
-      const host = ref.current;
-      const html = host.innerHTML;
-      setMarkup(formatHtml(html));
+  // Compute the rendered markup on demand — only when the user opens the
+  // disclosure below. A setState-on-every-render effect here would re-render
+  // the story subtree on every frame and interrupt interactive controls
+  // mid-drag (e.g. native range inputs), so we read innerHTML lazily instead.
+  const handleToggle = (e: React.SyntheticEvent<HTMLDetailsElement>) => {
+    if (e.currentTarget.open && ref.current) {
+      setMarkup(formatHtml(ref.current.innerHTML));
     }
-  });
+  };
 
   const copy = async () => {
     try {
@@ -100,9 +101,9 @@ const TailwindCode: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <div style={{ width: '100%' }}>
       <div ref={ref}>{children}</div>
-      <details style={wrapStyle}>
+      <details style={wrapStyle} onToggle={handleToggle}>
         <summary style={summaryStyle}>Tailwind markup</summary>
-        <pre style={preStyle}>{markup || '(rendering…)'}</pre>
+        <pre style={preStyle}>{markup || '(open to view rendered markup)'}</pre>
         <button type="button" style={copyBtnStyle} onClick={copy}>
           {copied ? 'Copied' : 'Copy'}
         </button>
