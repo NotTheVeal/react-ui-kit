@@ -16,6 +16,17 @@ import {
   BumpChart,
   StreamChart,
   BoxPlot,
+  SankeyChart,
+  ChordChart,
+  CalendarHeatmap,
+  SwarmPlot,
+  Sunburst,
+  CirclePacking,
+  ParallelCoordinates,
+  NetworkGraph,
+  MarimekkoChart,
+  GeoChart,
+  VoronoiDiagram,
 } from './DataViz'
 
 const FIG = 'https://www.figma.com/design/pyZ5wKN9KGBUfgi47UwQ0q/PartsSource-Design-System'
@@ -260,6 +271,203 @@ figma.connect(BoxPlot, `${FIG}?node-id=4751-975`, {
         { min: 1, q1: 4, median: 6, q3: 10, max: 15 },
         { min: 4, q1: 9, median: 12, q3: 15, max: 20 },
       ]}
+    />
+  ),
+})
+
+// Sankey
+figma.connect(SankeyChart, `${FIG}?node-id=4645-47`, {
+  example: () => (
+    <SankeyChart
+      title="Order Flow"
+      sources={[
+        { id: 'orders', label: 'Orders' },
+        { id: 'returns', label: 'Returns' },
+        { id: 'pending', label: 'Pending' },
+      ]}
+      targets={[
+        { id: 'fulfilled', label: 'Fulfilled' },
+        { id: 'processing', label: 'Processing' },
+        { id: 'cancelled', label: 'Cancelled' },
+      ]}
+      links={[
+        { source: 'orders', target: 'fulfilled', value: 60 },
+        { source: 'orders', target: 'processing', value: 25 },
+        { source: 'returns', target: 'processing', value: 15 },
+        { source: 'returns', target: 'cancelled', value: 10 },
+        { source: 'pending', target: 'processing', value: 12 },
+        { source: 'pending', target: 'cancelled', value: 8 },
+      ]}
+    />
+  ),
+})
+
+// Chord
+figma.connect(ChordChart, `${FIG}?node-id=4645-47`, {
+  example: () => (
+    <ChordChart
+      title="Cross-Category Flow"
+      labels={['Group A', 'Group B', 'Group C', 'Group D']}
+      matrix={[
+        [0, 8, 6, 3],
+        [8, 0, 5, 4],
+        [6, 5, 0, 7],
+        [3, 4, 7, 0],
+      ]}
+    />
+  ),
+})
+
+// Calendar Heatmap
+figma.connect(CalendarHeatmap, `${FIG}?node-id=4645-48`, {
+  example: () => (
+    <CalendarHeatmap
+      title="Daily Order Volume"
+      subtitle="Jan → Mar (daily activity)"
+      values={Array.from({ length: 84 }, (_, i) => Math.round(20 + 30 * Math.abs(Math.sin(i / 4))))}
+    />
+  ),
+})
+
+// Swarm Plot
+figma.connect(SwarmPlot, `${FIG}?node-id=4645-48`, {
+  example: () => (
+    <SwarmPlot
+      title="Repair Turnaround Spread"
+      data={Array.from({ length: 60 }, (_, i) => ({
+        value: Math.round(2 + 18 * Math.abs(Math.sin(i * 1.3))),
+        label: `WO-${1000 + i}`,
+      }))}
+      valueFormat={(n) => `${n}d`}
+    />
+  ),
+})
+
+// Sunburst
+figma.connect(Sunburst, `${FIG}?node-id=4645-49`, {
+  example: () => (
+    <Sunburst
+      title="Spend Breakdown"
+      centerLabel="Total"
+      root={{
+        name: 'Total',
+        children: [
+          { name: 'Imaging', children: [{ name: 'MRI', value: 40 }, { name: 'CT', value: 30 }] },
+          { name: 'Surgical', children: [{ name: 'Ortho', value: 25 }, { name: 'Neuro', value: 15 }] },
+          { name: 'Lab', children: [{ name: 'Chem', value: 20 }, { name: 'Micro', value: 10 }] },
+        ],
+      }}
+      valueFormat={(n) => `$${n}k`}
+    />
+  ),
+})
+
+// Circle Packing
+figma.connect(CirclePacking, `${FIG}?node-id=4645-49`, {
+  example: () => (
+    <CirclePacking
+      title="Category Volume"
+      data={[
+        { label: 'Imaging', value: 180 },
+        { label: 'Surgery', value: 120 },
+        { label: 'Lab', value: 90 },
+        { label: 'Biomedical', value: 50 },
+      ]}
+      valueFormat={(n) => `$${n}k`}
+    />
+  ),
+})
+
+// Parallel Coordinates
+figma.connect(ParallelCoordinates, `${FIG}?node-id=4645-50`, {
+  example: () => (
+    <ParallelCoordinates
+      title="Supplier Profiles"
+      axes={['Price', 'Lead Time', 'Quality', 'Coverage', 'Satisfaction']}
+      series={[
+        { name: 'Supplier A', values: [80, 40, 90, 70, 85] },
+        { name: 'Supplier B', values: [60, 75, 70, 85, 65] },
+        { name: 'Supplier C', values: [45, 60, 80, 55, 75] },
+      ]}
+    />
+  ),
+})
+
+// Network Graph
+figma.connect(NetworkGraph, `${FIG}?node-id=4645-50`, {
+  example: () => (
+    <NetworkGraph
+      title="Supplier Network"
+      nodes={[
+        { id: 'hub', label: 'Hub', x: 0.5, y: 0.5, group: 'hub' },
+        { id: 'a', label: 'A', x: 0.35, y: 0.28, group: 'primary' },
+        { id: 'b', label: 'B', x: 0.68, y: 0.28, group: 'primary' },
+        { id: 'c', label: 'C', x: 0.28, y: 0.78, group: 'secondary' },
+        { id: 'd', label: 'D', x: 0.72, y: 0.78, group: 'secondary' },
+      ]}
+      edges={[
+        { source: 'hub', target: 'a', weight: 3 },
+        { source: 'hub', target: 'b', weight: 3 },
+        { source: 'hub', target: 'c', weight: 2 },
+        { source: 'hub', target: 'd', weight: 2 },
+        { source: 'c', target: 'd', weight: 1 },
+      ]}
+    />
+  ),
+})
+
+// Marimekko
+figma.connect(MarimekkoChart, `${FIG}?node-id=4645-51`, {
+  example: () => (
+    <MarimekkoChart
+      title="Quarterly Mix by Volume"
+      keys={[
+        { key: 'imaging', name: 'Imaging' },
+        { key: 'surgery', name: 'Surgery' },
+        { key: 'other', name: 'Other' },
+      ]}
+      columns={[
+        { label: 'Q1', segments: [{ key: 'imaging', value: 40 }, { key: 'surgery', value: 30 }, { key: 'other', value: 30 }] },
+        { label: 'Q2', segments: [{ key: 'imaging', value: 35 }, { key: 'surgery', value: 32 }, { key: 'other', value: 33 }] },
+        { label: 'Q3', segments: [{ key: 'imaging', value: 38 }, { key: 'surgery', value: 28 }, { key: 'other', value: 34 }] },
+        { label: 'Q4', segments: [{ key: 'imaging', value: 42 }, { key: 'surgery', value: 30 }, { key: 'other', value: 28 }] },
+      ]}
+    />
+  ),
+})
+
+// Geo / Choropleth
+figma.connect(GeoChart, `${FIG}?node-id=4728-311`, {
+  example: () => (
+    <GeoChart
+      title="Revenue by US Region"
+      regions={[
+        { code: 'NW', value: 4.2 },
+        { code: 'MW', value: 3.9 },
+        { code: 'NE', value: 6.8 },
+        { code: 'SW', value: 2.3 },
+        { code: 'S', value: 5.1 },
+        { code: 'SE', value: 4.7 },
+      ]}
+      valueFormat={(n) => `$${n}M`}
+    />
+  ),
+})
+
+// Voronoi
+figma.connect(VoronoiDiagram, `${FIG}?node-id=4728-629`, {
+  example: () => (
+    <VoronoiDiagram
+      title="Territory Regions"
+      cells={[
+        { points: [[0, 0], [180, 0], [150, 130], [0, 150]], seed: [70, 60], zone: 1 },
+        { points: [[180, 0], [400, 0], [400, 120], [260, 150], [150, 130]], seed: [280, 55], zone: 0 },
+        { points: [[0, 150], [150, 130], [180, 300], [0, 300]], seed: [80, 230], zone: 2 },
+        { points: [[150, 130], [260, 150], [280, 300], [180, 300]], seed: [215, 230], zone: 1 },
+        { points: [[260, 150], [400, 120], [400, 300], [280, 300]], seed: [335, 230], zone: 0 },
+      ]}
+      width={400}
+      height={300}
     />
   ),
 })
