@@ -1126,7 +1126,7 @@
     "$value": "{ps-sem-fg-tertiary}"
   },
   "ps-cmp-tooltip-bg": {
-    "$value": "{ps-prim-gray-700}"
+    "$value": "{ps-prim-gray-750}"
   },
   "ps-cmp-tooltip-fg": {
     "$value": "{ps-prim-gray-0}"
@@ -1142,10 +1142,10 @@
     "$type": "dimension"
   },
   "ps-cmp-tooltip-text": {
-    "$value": "{ps-sem-text-caption}"
+    "$value": "{ps-sem-text-body}"
   },
   "ps-cmp-tooltip-weight": {
-    "$value": "{ps-sem-weight-emphasis}"
+    "$value": "{ps-sem-weight-body}"
   },
   "ps-cmp-tooltip-shadow": {
     "$value": "0 4px 14px rgba(0,0,0,.18)"

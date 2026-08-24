@@ -176,33 +176,33 @@ interface TooltipProps {
 const caretPos = (p: TooltipPlacement) => {
   switch (p) {
     case "top":
-      return "top-full left-6 border-t-[var(--ps-prim-gray-750)]";
+      return "top-full left-6 border-t-[var(--ps-cmp-tooltip-bg)]";
     case "bottom":
-      return "bottom-full left-6 border-b-[var(--ps-prim-gray-750)]";
+      return "bottom-full left-6 border-b-[var(--ps-cmp-tooltip-bg)]";
     case "left":
-      return "left-full top-1/2 -translate-y-1/2 border-l-[var(--ps-prim-gray-750)]";
+      return "left-full top-1/2 -translate-y-1/2 border-l-[var(--ps-cmp-tooltip-bg)]";
     case "right":
-      return "right-full top-1/2 -translate-y-1/2 border-r-[var(--ps-prim-gray-750)]";
+      return "right-full top-1/2 -translate-y-1/2 border-r-[var(--ps-cmp-tooltip-bg)]";
   }
 };
 
 const bubblePos = (p: TooltipPlacement) => {
   switch (p) {
     case "top":
-      return "bottom-[calc(100%+10px)] left-0";
+      return "bottom-[calc(100%+var(--ps-cmp-tooltip-offset))] left-0";
     case "bottom":
-      return "top-[calc(100%+10px)] left-0";
+      return "top-[calc(100%+var(--ps-cmp-tooltip-offset))] left-0";
     case "left":
-      return "right-[calc(100%+10px)] top-1/2 -translate-y-1/2";
+      return "right-[calc(100%+var(--ps-cmp-tooltip-offset))] top-1/2 -translate-y-1/2";
     case "right":
-      return "left-[calc(100%+10px)] top-1/2 -translate-y-1/2";
+      return "left-[calc(100%+var(--ps-cmp-tooltip-offset))] top-1/2 -translate-y-1/2";
   }
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
   label,
   placement = "top",
-  maxWidth = 280,
+  maxWidth,
   children,
 }) => {
   const id = React.useId();
@@ -217,12 +217,13 @@ const Tooltip: React.FC<TooltipProps> = ({
       <span
         id={id}
         role="tooltip"
-        style={{ maxWidth: `${maxWidth}px` }}
+        style={maxWidth !== undefined ? { maxWidth: `${maxWidth}px` } : undefined}
         className={cxF(
-          "absolute z-10 bg-[var(--ps-prim-gray-750)] text-white text-[14px] leading-[1.5] font-normal w-max",
-          "px-4 py-2.5 rounded-lg shadow-[0_4px_14px_rgba(0,0,0,0.18)]",
+          "absolute z-10 bg-[var(--ps-cmp-tooltip-bg)] text-[var(--ps-cmp-tooltip-fg)] text-[length:var(--ps-cmp-tooltip-text)] leading-[1.5] font-[number:var(--ps-cmp-tooltip-weight)] w-max",
+          "max-w-[var(--ps-cmp-tooltip-max-width)]",
+          "px-[var(--ps-cmp-tooltip-padding-x)] py-2.5 rounded-[var(--ps-cmp-tooltip-radius)] shadow-[var(--ps-cmp-tooltip-shadow)]",
           "font-['Source_Sans_Pro',sans-serif] pointer-events-none",
-          "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150",
+          "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-[var(--ps-cmp-tooltip-fade-duration)]",
           bubblePos(placement),
         )}
       >
@@ -230,7 +231,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         <span
           aria-hidden="true"
           className={cxF(
-            "absolute border-[7px] border-transparent",
+            "absolute border-[length:var(--ps-cmp-tooltip-caret-size)] border-transparent",
             caretPos(placement),
           )}
         />
@@ -251,13 +252,13 @@ const TooltipRich: React.FC<TooltipRichProps> = ({ title, body, cta, className =
   <div
     role="tooltip"
     className={cxF(
-      "relative bg-[var(--ps-prim-gray-750)] text-white rounded-[10px] shadow-[0_6px_20px_rgba(0,0,0,0.22)]",
-      "font-['Source_Sans_Pro',sans-serif] max-w-[380px]",
+      "relative bg-[var(--ps-cmp-tooltip-bg)] text-[var(--ps-cmp-tooltip-fg)] rounded-[var(--ps-cmp-tooltip-rich-radius)] shadow-[var(--ps-cmp-tooltip-rich-shadow)]",
+      "font-['Source_Sans_Pro',sans-serif] max-w-[var(--ps-cmp-tooltip-rich-max-width)]",
       "pl-14 pr-6 py-5",
       className,
     )}
   >
-    <span className="absolute left-[18px] top-[18px] w-6 h-6 rounded-full bg-white text-[var(--ps-prim-gray-800)] inline-flex items-center justify-center">
+    <span className="absolute left-[18px] top-[18px] w-[var(--ps-cmp-tooltip-rich-icon-size)] h-[var(--ps-cmp-tooltip-rich-icon-size)] rounded-full bg-white text-[var(--ps-prim-gray-800)] inline-flex items-center justify-center">
       <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10" />
         <path d="M12 16v-4" />
@@ -265,12 +266,12 @@ const TooltipRich: React.FC<TooltipRichProps> = ({ title, body, cta, className =
       </svg>
     </span>
     <h3 className="m-0 mb-2 text-[16px] font-bold leading-[1.25]">{title}</h3>
-    <p className="m-0 mb-3.5 text-[14px] leading-[1.55] text-white/90">{body}</p>
+    <p className="m-0 mb-3.5 text-[14px] leading-[1.55] text-[var(--ps-cmp-tooltip-fg-muted)]">{body}</p>
     {cta && (
       <button
         type="button"
         onClick={cta.onClick}
-        className="text-[13px] font-bold uppercase tracking-[0.5px] text-white bg-transparent border-0 cursor-pointer hover:text-[var(--ps-prim-blue-300)]"
+        className="text-[13px] font-bold uppercase tracking-[0.5px] text-[var(--ps-cmp-tooltip-rich-cta-color)] bg-transparent border-0 cursor-pointer hover:text-[var(--ps-cmp-tooltip-rich-cta-hover)]"
       >
         {cta.label}
       </button>

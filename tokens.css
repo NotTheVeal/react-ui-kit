@@ -703,7 +703,7 @@
   --ps-cmp-filter-chip-bg: var(--ps-prim-blue-100);
   --ps-cmp-filter-chip-radius: var(--ps-prim-radius-full);
   --ps-cmp-filter-chip-gap: var(--ps-prim-space-1);
-  --ps-cmp-tooltip-bg: var(--ps-prim-gray-700);
+  --ps-cmp-tooltip-bg: var(--ps-prim-gray-750);
   --ps-cmp-tooltip-fg: var(--ps-prim-gray-0);
   --ps-cmp-tooltip-padding-x: var(--ps-prim-space-4);
   --ps-cmp-tooltip-padding-y: var(--ps-prim-space-2);
@@ -991,8 +991,8 @@
   --ps-cmp-stepper-label-text: var(--ps-sem-text-caption);
   --ps-cmp-stepper-label-fg-active: var(--ps-sem-fg-primary);
   --ps-cmp-stepper-label-fg-pending: var(--ps-sem-fg-tertiary);
-  --ps-cmp-tooltip-text: var(--ps-sem-text-caption);
-  --ps-cmp-tooltip-weight: var(--ps-sem-weight-emphasis);
+  --ps-cmp-tooltip-text: var(--ps-sem-text-body);
+  --ps-cmp-tooltip-weight: var(--ps-sem-weight-body);
   --ps-cmp-tooltip-z-index: var(--ps-sem-z-tooltip);
   --ps-cmp-dropdown-bg: var(--ps-sem-bg-surface);
   --ps-cmp-dropdown-fg: var(--ps-sem-fg-primary);
