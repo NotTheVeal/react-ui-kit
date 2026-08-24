@@ -340,10 +340,13 @@ export const Filter: React.FC<FilterProps> = ({
                 : 'border-l-0 border-[var(--ps-sem-border-strong)]',
             )}
           >
-            <span className="flex-1 flex flex-col leading-none min-w-0">
-              {blueTrigger ? (
+            <span className="flex-1 flex flex-col justify-center leading-none min-w-0 h-full">
+              {hasFacet ? (
                 <>
-                  <span className="text-[11px] font-semibold text-[var(--ps-sem-fg-brand)] tracking-[0.2px] mb-[3px]">
+                  {/* Floating label — matches the canonical Input floating-label
+                      spec (12px bold, brand). Only shown once a facet is
+                      actually selected, mirroring how Input labels float on fill. */}
+                  <span className="text-[12px] font-bold text-[var(--ps-sem-fg-brand)] tracking-[0.2px] mb-[2px]">
                     Add a Filter
                   </span>
                   <span className="text-base font-normal text-[var(--ps-sem-fg-brand)] tracking-[-0.16px] truncate">
@@ -351,7 +354,14 @@ export const Filter: React.FC<FilterProps> = ({
                   </span>
                 </>
               ) : (
-                <span className="text-base font-normal text-[var(--ps-prim-gray-650)] tracking-[-0.16px] truncate">
+                <span
+                  className={cx(
+                    'text-base font-normal tracking-[-0.16px] truncate',
+                    blueTrigger
+                      ? 'text-[var(--ps-sem-fg-brand)]'
+                      : 'text-[var(--ps-prim-gray-650)]',
+                  )}
+                >
                   Add a Filter
                 </span>
               )}
