@@ -29,30 +29,33 @@ export interface AssetUptimeSummaryCardProps {
   /** e.g. "1.2%" */
   trendValue?: string;
   trendDirection?: 'up' | 'down';
+  /**
+   * Explicit status-bar segments. When omitted, the bar is derived from
+   * `legend` so it always reflects the same counts shown below it — a card
+   * headlined "98.6%" then renders a bar that is 98.6% operational.
+   */
   segments?: UptimeSegment[];
   legend?: UptimeLegendItem[];
   className?: string;
 }
-
-const DEFAULT_SEGMENTS: UptimeSegment[] = [
-  { value: 292, color: 'var(--ps-sem-success-solid)' },
-  { value: 40, color: 'var(--ps-sem-warning-solid)' },
-  { value: 18, color: 'var(--ps-sem-danger-solid)' },
-];
 
 const AssetUptimeSummaryCard: React.FC<AssetUptimeSummaryCardProps> = ({
   title = 'Fleet Uptime (30 days)',
   metric,
   trendValue,
   trendDirection = 'up',
-  segments = DEFAULT_SEGMENTS,
+  segments,
   legend = [
     { label: 'Operational', count: 142, color: 'var(--ps-sem-success-solid)' },
     { label: 'Down', count: 2, color: 'var(--ps-sem-danger-solid)' },
   ],
   className = '',
 }) => {
-  const total = segments.reduce((s, seg) => s + seg.value, 0) || 1;
+  // Derive the bar from the legend when explicit segments aren't supplied, so
+  // the bar can never tell a different story than the metric/legend.
+  const bars: UptimeSegment[] =
+    segments ?? legend.map((l) => ({ value: l.count, color: l.color }));
+  const total = bars.reduce((s, seg) => s + seg.value, 0) || 1;
   const up = trendDirection === 'up';
 
   return (
@@ -94,7 +97,7 @@ const AssetUptimeSummaryCard: React.FC<AssetUptimeSummaryCardProps> = ({
           .map((l) => `${l.label} ${l.count}`)
           .join(', ')}`}
       >
-        {segments.map((seg, i) => (
+        {bars.map((seg, i) => (
           <span
             key={i}
             className="h-full rounded-[var(--ps-sem-radius-pill)]"

@@ -16,5 +16,13 @@ export const Default: Story = {
 };
 
 export const Declining: Story = {
-  args: { metric: '94.1%', trendValue: '0.8%', trendDirection: 'down' },
+  args: {
+    metric: '94.1%',
+    trendValue: '0.8%',
+    trendDirection: 'down',
+    legend: [
+      { label: 'Operational', count: 160, color: 'var(--ps-sem-success-solid)' },
+      { label: 'Down', count: 10, color: 'var(--ps-sem-danger-solid)' },
+    ],
+  },
 };
