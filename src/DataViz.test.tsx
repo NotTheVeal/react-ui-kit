@@ -12,6 +12,7 @@ import {
   Sparkline,
   BulletChart,
   BULLET_RANGE_COLORS,
+  BoxPlot,
   Legend,
   SERIES_COLORS,
 } from './DataViz';
@@ -189,6 +190,34 @@ describe('BulletChart', () => {
     expect(screen.getByText('Revenue')).toBeInTheDocument();
     expect(screen.getByText('Measure')).toBeInTheDocument();
     expect(screen.getByText('Target marker')).toBeInTheDocument();
+  });
+});
+
+describe('BoxPlot', () => {
+  const cats = ['Jan', 'Feb', 'Mar'];
+  const data = [
+    { min: 2, q1: 5, median: 8, q3: 12, max: 16 },
+    { min: 3, q1: 7, median: 10, q3: 14, max: 19, outliers: [24] },
+    { min: 1, q1: 4, median: 6, q3: 10, max: 15 },
+  ];
+
+  it('renders as an img with an accessible name', () => {
+    render(<BoxPlot title="Distribution" categories={cats} data={data} />);
+    expect(screen.getByRole('img', { name: 'Distribution' })).toBeInTheDocument();
+  });
+
+  it('renders one IQR box per category and lists the legend', () => {
+    const { container } = render(<BoxPlot title="Dist" categories={cats} data={data} />);
+    expect(container.querySelectorAll('rect').length).toBe(cats.length);
+    expect(screen.getByText('Median')).toBeInTheDocument();
+    expect(screen.getByText('IQR (Q1–Q3)')).toBeInTheDocument();
+    expect(screen.getByText('Whiskers (min/max)')).toBeInTheDocument();
+  });
+
+  it('draws outliers as circles', () => {
+    const { container } = render(<BoxPlot title="Dist" categories={cats} data={data} />);
+    // exactly one outlier across the dataset
+    expect(container.querySelectorAll('circle').length).toBe(1);
   });
 });
 

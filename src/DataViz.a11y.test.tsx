@@ -10,6 +10,7 @@ import {
   WaffleChart,
   Sparkline,
   BulletChart,
+  BoxPlot,
 } from './DataViz';
 
 const months = ['Jan', 'Feb', 'Mar'];
@@ -89,6 +90,21 @@ describe('DataViz accessibility', () => {
         rows={[
           { label: 'Revenue', measure: 76, target: 85, ranges: [50, 75, 100] },
           { label: 'Uptime', measure: 92, target: 90, ranges: [60, 80, 100] },
+        ]}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no violations — BoxPlot', async () => {
+    const { container } = render(
+      <BoxPlot
+        title="Turnaround Distribution"
+        categories={months}
+        data={[
+          { min: 2, q1: 5, median: 8, q3: 12, max: 16 },
+          { min: 3, q1: 7, median: 10, q3: 14, max: 19, outliers: [24] },
+          { min: 1, q1: 4, median: 6, q3: 10, max: 15 },
         ]}
       />,
     );
