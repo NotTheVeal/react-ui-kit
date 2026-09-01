@@ -1825,3 +1825,1284 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
     </ChartFrame>
   );
 };
+
+// ══════════════════════════════════════════════════════════════════
+// Advanced chart helpers (bucketing + magnitude ramp)
+// ══════════════════════════════════════════════════════════════════
+
+/** Sequential magnitude ramp, light (index 0) → dark (index n-1). */
+const MAGNITUDE_SCALE: string[] = [
+  'var(--ps-prim-blue-50)',
+  'var(--ps-prim-blue-200)',
+  'var(--ps-prim-blue-400)',
+  'var(--ps-prim-blue-700)',
+  'var(--ps-prim-blue-900)',
+];
+
+/** Three-step activity ramp for calendar / swarm tiers. */
+const TIER_SCALE: string[] = [
+  'var(--ps-prim-blue-200)',
+  'var(--ps-prim-blue-400)',
+  'var(--ps-prim-blue-700)',
+];
+
+const bucketIndex = (v: number, min: number, max: number, n: number) => {
+  if (max <= min) return n - 1;
+  const t = (v - min) / (max - min);
+  return Math.min(n - 1, Math.max(0, Math.floor(t * n)));
+};
+
+// ══════════════════════════════════════════════════════════════════
+// SankeyChart — source → flow band → target
+// ══════════════════════════════════════════════════════════════════
+
+export interface SankeyNode {
+  id: string;
+  label: string;
+}
+
+export interface SankeyLink {
+  source: string;
+  target: string;
+  value: number;
+}
+
+export interface SankeyChartProps {
+  sources: SankeyNode[];
+  targets: SankeyNode[];
+  links: SankeyLink[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  sourceColor?: string;
+  targetColor?: string;
+  flowColor?: string;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const SankeyChart: React.FC<SankeyChartProps> = ({
+  sources,
+  targets,
+  links,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  sourceColor = 'var(--ps-prim-blue-500)',
+  targetColor = 'var(--ps-prim-blue-700)',
+  flowColor = 'var(--ps-prim-gray-300)',
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padT = 16;
+  const padB = 16;
+  const nodeW = 14;
+  const plotH = height - padT - padB;
+  const leftX = 8;
+  const rightX = width - 8 - nodeW;
+
+  const sum = (id: string, key: 'source' | 'target') =>
+    links.filter((l) => l[key] === id).reduce((a, l) => a + l.value, 0);
+
+  const srcTotals = sources.map((n) => sum(n.id, 'source'));
+  const tgtTotals = targets.map((n) => sum(n.id, 'target'));
+  const gap = 12;
+  const colMax = Math.max(
+    srcTotals.reduce((a, b) => a + b, 0),
+    tgtTotals.reduce((a, b) => a + b, 0),
+    1,
+  );
+  const scale = (plotH - gap * (Math.max(sources.length, targets.length) - 1)) / colMax;
+
+  const layout = (nodes: SankeyNode[], totals: number[]) => {
+    let cursor = padT;
+    return nodes.map((n, i) => {
+      const h = Math.max(2, totals[i] * scale);
+      const y = cursor;
+      cursor += h + gap;
+      return { id: n.id, label: n.label, y, h };
+    });
+  };
+  const srcNodes = layout(sources, srcTotals);
+  const tgtNodes = layout(targets, tgtTotals);
+
+  const srcOffset: Record<string, number> = {};
+  const tgtOffset: Record<string, number> = {};
+  srcNodes.forEach((n) => (srcOffset[n.id] = n.y));
+  tgtNodes.forEach((n) => (tgtOffset[n.id] = n.y));
+
+  const bands = links.map((l, i) => {
+    const s = srcNodes.find((n) => n.id === l.source);
+    const t = tgtNodes.find((n) => n.id === l.target);
+    if (!s || !t) return null;
+    const th = Math.max(1, l.value * scale);
+    const y0 = srcOffset[l.source];
+    const y1 = tgtOffset[l.target];
+    srcOffset[l.source] += th;
+    tgtOffset[l.target] += th;
+    const x0 = leftX + nodeW;
+    const x1 = rightX;
+    const xm = (x0 + x1) / 2;
+    const d = [
+      `M ${x0} ${y0}`,
+      `C ${xm} ${y0}, ${xm} ${y1}, ${x1} ${y1}`,
+      `L ${x1} ${y1 + th}`,
+      `C ${xm} ${y1 + th}, ${xm} ${y0 + th}, ${x0} ${y0 + th}`,
+      'Z',
+    ].join(' ');
+    return { key: `${l.source}-${l.target}-${i}`, d, label: `${s.label} → ${t.label}`, value: l.value };
+  });
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Source nodes', color: sourceColor },
+            { label: 'Target nodes', color: targetColor },
+            { label: 'Flow bands', color: flowColor },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Sankey diagram'}
+        style={{ fontFamily: FONT }}
+      >
+        {bands.map((b) =>
+          b ? (
+            <path key={b.key} d={b.d} fill={flowColor} fillOpacity={0.55}>
+              <title>{`${b.label}: ${valueFormat(b.value)}`}</title>
+            </path>
+          ) : null,
+        )}
+        {srcNodes.map((n) => (
+          <g key={n.id}>
+            <rect x={leftX} y={n.y} width={nodeW} height={n.h} rx={2} style={{ fill: sourceColor }} />
+            <text x={leftX + nodeW + 6} y={n.y + n.h / 2 + 4} fontSize={11} fill={TITLE_TEXT}>
+              {n.label}
+            </text>
+          </g>
+        ))}
+        {tgtNodes.map((n) => (
+          <g key={n.id}>
+            <rect x={rightX} y={n.y} width={nodeW} height={n.h} rx={2} style={{ fill: targetColor }} />
+            <text x={rightX - 6} y={n.y + n.h / 2 + 4} textAnchor="end" fontSize={11} fill={TITLE_TEXT}>
+              {n.label}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// ChordChart — circular group arcs + ribbons
+// ══════════════════════════════════════════════════════════════════
+
+export interface ChordChartProps {
+  labels: string[];
+  matrix: number[][];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  colors?: string[];
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const ChordChart: React.FC<ChordChartProps> = ({
+  labels,
+  matrix,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  colors,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const cx = width / 2;
+  const cy = height / 2;
+  const rOuter = Math.min(width, height) / 2 - 20;
+  const rInner = rOuter - 14;
+  const n = labels.length;
+  const color = (i: number) => seriesColor(i, colors?.[i]);
+
+  const rowTotals = matrix.map((row) => row.reduce((a, b) => a + b, 0));
+  const total = rowTotals.reduce((a, b) => a + b, 0) || 1;
+  const padDeg = 4;
+  const availDeg = 360 - n * padDeg;
+  const k = availDeg / total;
+
+  // Group arcs + sub-arc angle ranges per (i,j).
+  const groups: { start: number; end: number; mid: number }[] = [];
+  const sub: { s0: number; s1: number }[][] = [];
+  let cursor = 0;
+  for (let i = 0; i < n; i++) {
+    const start = cursor;
+    const span = rowTotals[i] * k;
+    groups.push({ start, end: start + span, mid: start + span / 2 });
+    const row: { s0: number; s1: number }[] = [];
+    let sc = start;
+    for (let j = 0; j < n; j++) {
+      const sspan = matrix[i][j] * k;
+      row.push({ s0: sc, s1: sc + sspan });
+      sc += sspan;
+    }
+    sub.push(row);
+    cursor = start + span + padDeg;
+  }
+
+  const ribbons: { key: string; d: string; color: string; label: string }[] = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i; j < n; j++) {
+      if (matrix[i][j] <= 0 && matrix[j][i] <= 0) continue;
+      const a = sub[i][j];
+      const b = sub[j][i];
+      const pA0 = polar(cx, cy, rInner, a.s0);
+      const pA1 = polar(cx, cy, rInner, a.s1);
+      const pB0 = polar(cx, cy, rInner, b.s0);
+      const pB1 = polar(cx, cy, rInner, b.s1);
+      const d = [
+        `M ${pA0.x} ${pA0.y}`,
+        `A ${rInner} ${rInner} 0 0 1 ${pA1.x} ${pA1.y}`,
+        `Q ${cx} ${cy} ${pB0.x} ${pB0.y}`,
+        `A ${rInner} ${rInner} 0 0 1 ${pB1.x} ${pB1.y}`,
+        `Q ${cx} ${cy} ${pA0.x} ${pA0.y}`,
+        'Z',
+      ].join(' ');
+      ribbons.push({
+        key: `${i}-${j}`,
+        d,
+        color: color(i),
+        label: `${labels[i]} ↔ ${labels[j]}`,
+      });
+    }
+  }
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={labels.map((l, i) => ({ label: l, color: color(i) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Chord diagram'}
+        style={{ fontFamily: FONT }}
+      >
+        {ribbons.map((r) => (
+          <path key={r.key} d={r.d} fill={r.color} fillOpacity={0.35}>
+            <title>{r.label}</title>
+          </path>
+        ))}
+        {groups.map((g, i) => {
+          const labelPt = polar(cx, cy, rOuter + 12, g.mid);
+          return (
+            <g key={labels[i]}>
+              <path d={arcPath(cx, cy, rOuter, rInner, g.start, g.end)} style={{ fill: color(i) }} />
+              <text
+                x={labelPt.x}
+                y={labelPt.y + 3}
+                textAnchor="middle"
+                fontSize={11}
+                fill={AXIS_TEXT}
+              >
+                {labels[i]}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// CalendarHeatmap — daily activity grid
+// ══════════════════════════════════════════════════════════════════
+
+export interface CalendarHeatmapProps {
+  /** Daily values, chronological. Rendered top-to-bottom, week per column. */
+  values: number[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  emptyColor?: string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
+  values,
+  eyebrow,
+  title,
+  subtitle,
+  height = 200,
+  width = 520,
+  emptyColor = 'var(--ps-prim-blue-50)',
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const rows = 7;
+  const cols = Math.ceil(values.length / rows);
+  const padL = 8;
+  const padT = 8;
+  const gapCell = 3;
+  const cell = Math.min(
+    (width - padL * 2 - gapCell * (cols - 1)) / cols,
+    (height - padT * 2 - 24 - gapCell * (rows - 1)) / rows,
+  );
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Low activity', color: TIER_SCALE[0] },
+            { label: 'Medium activity', color: TIER_SCALE[1] },
+            { label: 'High activity', color: TIER_SCALE[2] },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Calendar heatmap'}
+        style={{ fontFamily: FONT }}
+      >
+        {values.map((v, idx) => {
+          const c = Math.floor(idx / rows);
+          const r = idx % rows;
+          const x = padL + c * (cell + gapCell);
+          const y = padT + r * (cell + gapCell);
+          const fill = TIER_SCALE[bucketIndex(v, min, max, TIER_SCALE.length)];
+          return (
+            <rect key={idx} x={x} y={y} width={cell} height={cell} rx={2} style={{ fill }}>
+              <title>{`Day ${idx + 1}: ${v}`}</title>
+            </rect>
+          );
+        })}
+        {values.length === 0 && (
+          <rect x={padL} y={padT} width={cell} height={cell} rx={2} style={{ fill: emptyColor }} />
+        )}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// SwarmPlot — beeswarm distribution along one axis
+// ══════════════════════════════════════════════════════════════════
+
+export interface SwarmDatum {
+  value: number;
+  label?: string;
+}
+
+export interface SwarmPlotProps {
+  data: SwarmDatum[];
+  tierLabels?: [string, string, string];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  dotRadius?: number;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const SwarmPlot: React.FC<SwarmPlotProps> = ({
+  data,
+  tierLabels = ['Low', 'Mid', 'High'],
+  eyebrow,
+  title,
+  subtitle,
+  height = 260,
+  width = 520,
+  dotRadius = 5,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 16;
+  const padR = 16;
+  const padT = 16;
+  const padB = 28;
+  const plotW = width - padL - padR;
+  const midY = padT + (height - padT - padB) / 2;
+
+  const min = Math.min(...data.map((d) => d.value));
+  const max = Math.max(...data.map((d) => d.value));
+  const xOf = (v: number) => padL + ((v - min) / (max - min || 1)) * plotW;
+
+  // Beeswarm: sort by x, stack into a bin, alternate above/below centerline.
+  const sorted = [...data].sort((a, b) => a.value - b.value);
+  const binW = dotRadius * 2 + 1;
+  const binCount: Record<number, number> = {};
+  const dots = sorted.map((d, i) => {
+    const x = xOf(d.value);
+    const bin = Math.round(x / binW);
+    const c = binCount[bin] ?? 0;
+    binCount[bin] = c + 1;
+    const rank = Math.ceil(c / 2);
+    const dir = c % 2 === 0 ? -1 : 1;
+    const y = midY + dir * rank * (dotRadius * 2 - 1);
+    const tier = bucketIndex(d.value, min, max, 3);
+    return { key: i, x, y, fill: TIER_SCALE[tier], label: d.label, value: d.value };
+  });
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: `${tierLabels[0]} tier`, color: TIER_SCALE[0] },
+            { label: `${tierLabels[1]} tier`, color: TIER_SCALE[1] },
+            { label: `${tierLabels[2]} tier`, color: TIER_SCALE[2] },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Swarm plot'}
+        style={{ fontFamily: FONT }}
+      >
+        <line
+          x1={padL}
+          x2={width - padR}
+          y1={midY}
+          y2={midY}
+          stroke={GRID}
+          strokeWidth={1}
+          strokeDasharray="4 4"
+        />
+        {dots.map((d) => (
+          <circle key={d.key} cx={d.x} cy={d.y} r={dotRadius} style={{ fill: d.fill }}>
+            <title>{`${d.label ? d.label + ': ' : ''}${valueFormat(d.value)}`}</title>
+          </circle>
+        ))}
+        {tierLabels.map((t, i) => (
+          <text
+            key={t}
+            x={padL + (plotW / 2) * i}
+            y={height - 8}
+            textAnchor={i === 0 ? 'start' : i === 1 ? 'middle' : 'end'}
+            fontSize={11}
+            fill={AXIS_TEXT}
+          >
+            {t}
+          </text>
+        ))}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// Sunburst — hierarchical radial rings
+// ══════════════════════════════════════════════════════════════════
+
+export interface SunburstNode {
+  name: string;
+  value?: number;
+  color?: string;
+  children?: SunburstNode[];
+}
+
+interface SunburstArc {
+  key: string;
+  r0: number;
+  r1: number;
+  start: number;
+  end: number;
+  color: string;
+  name: string;
+  value: number;
+  depth: number;
+}
+
+export interface SunburstProps {
+  root: SunburstNode;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  centerLabel?: string;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const Sunburst: React.FC<SunburstProps> = ({
+  root,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  centerLabel,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const cx = width / 2;
+  const cy = height / 2;
+
+  const nodeValue = (n: SunburstNode): number =>
+    n.children && n.children.length
+      ? n.children.reduce((a, c) => a + nodeValue(c), 0)
+      : n.value ?? 0;
+
+  const maxDepth = (n: SunburstNode): number =>
+    n.children && n.children.length ? 1 + Math.max(...n.children.map(maxDepth)) : 0;
+
+  const depth = maxDepth(root);
+  const r0Disk = 34;
+  const ringW = (Math.min(width, height) / 2 - 24 - r0Disk) / Math.max(1, depth);
+
+  const arcs: SunburstArc[] = [];
+  const walk = (n: SunburstNode, d: number, start: number, end: number, sib: number) => {
+    if (d > 0) {
+      arcs.push({
+        key: `${d}-${n.name}-${start.toFixed(1)}`,
+        r0: r0Disk + (d - 1) * ringW,
+        r1: r0Disk + d * ringW,
+        start,
+        end,
+        color: n.color ?? SERIES_COLORS[(d + sib) % SERIES_COLORS.length],
+        name: n.name,
+        value: nodeValue(n),
+        depth: d,
+      });
+    }
+    if (n.children && n.children.length) {
+      const tot = n.children.reduce((a, c) => a + nodeValue(c), 0) || 1;
+      let a = start;
+      n.children.forEach((c, i) => {
+        const span = (nodeValue(c) / tot) * (end - start);
+        walk(c, d + 1, a, a + span, i);
+        a += span;
+      });
+    }
+  };
+  walk(root, 0, 0, 360, 0);
+  const rootTotal = nodeValue(root);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Root', color: 'var(--ps-prim-blue-900)' },
+            { label: 'Level 2', color: 'var(--ps-prim-blue-500)' },
+            { label: 'Level 3', color: 'var(--ps-prim-blue-300)' },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Sunburst chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {arcs.map((arc) => (
+          <path key={arc.key} d={arcPath(cx, cy, arc.r1, arc.r0, arc.start, arc.end)} style={{ fill: arc.color }}>
+            <title>{`${arc.name}: ${valueFormat(arc.value)}`}</title>
+          </path>
+        ))}
+        <circle cx={cx} cy={cy} r={r0Disk} style={{ fill: 'var(--ps-prim-blue-900)' }} />
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize={12} fontWeight={600} fill="var(--ps-prim-white)">
+          {centerLabel ?? valueFormat(rootTotal)}
+        </text>
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// CirclePacking — value-sized bubbles, spiral packed
+// ══════════════════════════════════════════════════════════════════
+
+export interface PackCircle {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+export interface CirclePackingProps {
+  data: PackCircle[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const CirclePacking: React.FC<CirclePackingProps> = ({
+  data,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const cx = width / 2;
+  const cy = height / 2;
+  const maxV = Math.max(...data.map((d) => d.value), 1);
+  const rMax = Math.min(width, height) / 3.2;
+
+  // Deterministic spiral packing: largest first, scan an Archimedean spiral
+  // outward for the first collision-free centre.
+  const sorted = [...data]
+    .map((d, i) => ({ ...d, i, r: Math.max(10, rMax * Math.sqrt(d.value / maxV)) }))
+    .sort((a, b) => b.r - a.r);
+
+  const placed: { x: number; y: number; r: number }[] = [];
+  const positioned = sorted.map((d) => {
+    if (placed.length === 0) {
+      const p = { x: cx, y: cy, r: d.r };
+      placed.push(p);
+      return { ...d, ...p };
+    }
+    for (let t = 0; t < 4000; t++) {
+      const ang = t * 0.5;
+      const rad = 4 + t * 0.7;
+      const x = cx + rad * Math.cos(ang);
+      const y = cy + rad * Math.sin(ang);
+      const hit = placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.r + d.r + 2);
+      if (!hit) {
+        const p = { x, y, r: d.r };
+        placed.push(p);
+        return { ...d, ...p };
+      }
+    }
+    const p = { x: cx, y: cy, r: d.r };
+    placed.push(p);
+    return { ...d, ...p };
+  });
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={data.map((d, i) => ({ label: d.label, color: seriesColor(i, d.color) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Circle packing'}
+        style={{ fontFamily: FONT }}
+      >
+        {positioned.map((d) => (
+          <g key={d.label}>
+            <circle cx={d.x} cy={d.y} r={d.r} style={{ fill: seriesColor(d.i, d.color) }}>
+              <title>{`${d.label}: ${valueFormat(d.value)}`}</title>
+            </circle>
+            {d.r > 22 && (
+              <text
+                x={d.x}
+                y={d.y + 4}
+                textAnchor="middle"
+                fontSize={11}
+                fontWeight={600}
+                fill="var(--ps-prim-white)"
+              >
+                {d.label}
+              </text>
+            )}
+          </g>
+        ))}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// ParallelCoordinates — multi-axis entity profiles
+// ══════════════════════════════════════════════════════════════════
+
+export interface ParallelSeries {
+  name: string;
+  values: number[];
+  color?: string;
+}
+
+export interface ParallelCoordinatesProps {
+  axes: string[];
+  series: ParallelSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({
+  axes,
+  series,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 20;
+  const padR = 20;
+  const padT = 16;
+  const padB = 32;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const axisX = (i: number) => padL + (plotW / Math.max(1, axes.length - 1)) * i;
+
+  const bounds = axes.map((_, ai) => {
+    const col = series.map((s) => s.values[ai]);
+    return { min: Math.min(...col), max: Math.max(...col) };
+  });
+  const yOf = (ai: number, v: number) => {
+    const b = bounds[ai];
+    return padT + plotH - ((v - b.min) / (b.max - b.min || 1)) * plotH;
+  };
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={series.map((s, i) => ({ label: s.name, color: seriesColor(i, s.color) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Parallel coordinates'}
+        style={{ fontFamily: FONT }}
+      >
+        {axes.map((ax, ai) => (
+          <g key={ax}>
+            <line x1={axisX(ai)} x2={axisX(ai)} y1={padT} y2={padT + plotH} stroke={GRID} strokeWidth={1} />
+            <text
+              x={axisX(ai)}
+              y={height - 12}
+              textAnchor={ai === 0 ? 'start' : ai === axes.length - 1 ? 'end' : 'middle'}
+              fontSize={11}
+              fill={AXIS_TEXT}
+            >
+              {ax}
+            </text>
+          </g>
+        ))}
+        {series.map((s, si) => {
+          const pts = s.values.map((v, ai) => `${axisX(ai)},${yOf(ai, v)}`).join(' ');
+          return (
+            <polyline
+              key={s.name}
+              points={pts}
+              fill="none"
+              stroke={seriesColor(si, s.color)}
+              strokeWidth={2}
+              strokeLinejoin="round"
+            >
+              <title>{s.name}</title>
+            </polyline>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// NetworkGraph — force-directed node-link (positions supplied 0–1)
+// ══════════════════════════════════════════════════════════════════
+
+export type NetworkGroup = 'hub' | 'primary' | 'secondary';
+
+export interface NetworkNode {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  group?: NetworkGroup;
+}
+
+export interface NetworkEdge {
+  source: string;
+  target: string;
+  weight?: number;
+}
+
+export interface NetworkGraphProps {
+  nodes: NetworkNode[];
+  edges: NetworkEdge[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+const NETWORK_STYLE: Record<NetworkGroup, { color: string; r: number }> = {
+  hub: { color: 'var(--ps-prim-blue-900)', r: 18 },
+  primary: { color: 'var(--ps-prim-blue-500)', r: 13 },
+  secondary: { color: 'var(--ps-prim-blue-300)', r: 10 },
+};
+
+export const NetworkGraph: React.FC<NetworkGraphProps> = ({
+  nodes,
+  edges,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 40;
+  const padR = 40;
+  const padT = 24;
+  const padB = 24;
+  const px = (x: number) => padL + x * (width - padL - padR);
+  const py = (y: number) => padT + y * (height - padT - padB);
+  const byId = (id: string) => nodes.find((n) => n.id === id);
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Hub node', color: NETWORK_STYLE.hub.color },
+            { label: 'Primary nodes', color: NETWORK_STYLE.primary.color },
+            { label: 'Secondary nodes', color: NETWORK_STYLE.secondary.color },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Network graph'}
+        style={{ fontFamily: FONT }}
+      >
+        {edges.map((e, i) => {
+          const s = byId(e.source);
+          const t = byId(e.target);
+          if (!s || !t) return null;
+          return (
+            <line
+              key={`${e.source}-${e.target}-${i}`}
+              x1={px(s.x)}
+              y1={py(s.y)}
+              x2={px(t.x)}
+              y2={py(t.y)}
+              stroke={GRID}
+              strokeWidth={Math.max(1, e.weight ?? 1)}
+            />
+          );
+        })}
+        {nodes.map((n) => {
+          const style = NETWORK_STYLE[n.group ?? 'secondary'];
+          return (
+            <g key={n.id}>
+              <circle cx={px(n.x)} cy={py(n.y)} r={style.r} style={{ fill: style.color }}>
+                <title>{n.label}</title>
+              </circle>
+              <text
+                x={px(n.x)}
+                y={py(n.y) + 4}
+                textAnchor="middle"
+                fontSize={10}
+                fontWeight={600}
+                fill="var(--ps-prim-white)"
+              >
+                {n.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// MarimekkoChart — variable-width stacked columns (2D proportional)
+// ══════════════════════════════════════════════════════════════════
+
+export interface MarimekkoSegment {
+  key: string;
+  value: number;
+}
+
+export interface MarimekkoColumn {
+  label: string;
+  segments: MarimekkoSegment[];
+}
+
+export interface MarimekkoSeries {
+  key: string;
+  name: string;
+  color?: string;
+}
+
+export interface MarimekkoChartProps {
+  columns: MarimekkoColumn[];
+  keys: MarimekkoSeries[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const MarimekkoChart: React.FC<MarimekkoChartProps> = ({
+  columns,
+  keys,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 8;
+  const padR = 8;
+  const padT = 8;
+  const padB = 24;
+  const gap = 4;
+  const plotW = width - padL - padR - gap * (columns.length - 1);
+  const plotH = height - padT - padB;
+
+  const colTotals = columns.map((c) => c.segments.reduce((a, s) => a + s.value, 0));
+  const grand = colTotals.reduce((a, b) => a + b, 0) || 1;
+  const colorOf = (key: string, i: number) => {
+    const idx = keys.findIndex((k) => k.key === key);
+    return seriesColor(idx >= 0 ? idx : i, keys[idx]?.color);
+  };
+
+  let xCursor = padL;
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={keys.map((k, i) => ({ label: k.name, color: seriesColor(i, k.color) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Marimekko chart'}
+        style={{ fontFamily: FONT }}
+      >
+        {columns.map((col, ci) => {
+          const cw = (colTotals[ci] / grand) * plotW;
+          const x = xCursor;
+          xCursor += cw + gap;
+          const total = colTotals[ci] || 1;
+          let yCursor = padT;
+          return (
+            <g key={col.label}>
+              {col.segments.map((seg, si) => {
+                const sh = (seg.value / total) * plotH;
+                const y = yCursor;
+                yCursor += sh;
+                const pct = Math.round((seg.value / total) * 100);
+                return (
+                  <g key={seg.key}>
+                    <rect x={x} y={y} width={cw} height={sh} style={{ fill: colorOf(seg.key, si) }}>
+                      <title>{`${col.label} · ${seg.key}: ${pct}%`}</title>
+                    </rect>
+                    {sh > 18 && cw > 24 && (
+                      <text
+                        x={x + cw / 2}
+                        y={y + sh / 2 + 4}
+                        textAnchor="middle"
+                        fontSize={11}
+                        fill="var(--ps-prim-white)"
+                      >
+                        {pct}%
+                      </text>
+                    )}
+                  </g>
+                );
+              })}
+              <text x={x + cw / 2} y={height - 8} textAnchor="middle" fontSize={11} fill={AXIS_TEXT}>
+                {col.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// GeoChart — tile-grid regional map / choropleth
+// ══════════════════════════════════════════════════════════════════
+
+export interface GeoRegion {
+  code: string;
+  value: number;
+  label?: string;
+}
+
+export interface GeoChartProps {
+  regions: GeoRegion[];
+  columns?: number;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  valueFormat?: (n: number) => string;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export const GeoChart: React.FC<GeoChartProps> = ({
+  regions,
+  columns = 3,
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  valueFormat = (n) => `${n}`,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const padL = 8;
+  const padT = 8;
+  const gap = 10;
+  const rows = Math.ceil(regions.length / columns);
+  const tileW = (width - padL * 2 - gap * (columns - 1)) / columns;
+  const tileH = (height - padT * 2 - gap * (rows - 1)) / rows;
+  const min = Math.min(...regions.map((r) => r.value));
+  const max = Math.max(...regions.map((r) => r.value));
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend
+          items={[
+            { label: 'Very High', color: MAGNITUDE_SCALE[4] },
+            { label: 'High', color: MAGNITUDE_SCALE[3] },
+            { label: 'Medium', color: MAGNITUDE_SCALE[2] },
+            { label: 'Low', color: MAGNITUDE_SCALE[1] },
+            { label: 'Minimal', color: MAGNITUDE_SCALE[0] },
+          ]}
+        />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Regional map'}
+        style={{ fontFamily: FONT }}
+      >
+        {regions.map((r, i) => {
+          const c = i % columns;
+          const row = Math.floor(i / columns);
+          const x = padL + c * (tileW + gap);
+          const y = padT + row * (tileH + gap);
+          const bi = bucketIndex(r.value, min, max, MAGNITUDE_SCALE.length);
+          const fill = MAGNITUDE_SCALE[bi];
+          const light = bi <= 1;
+          const fg = light ? TITLE_TEXT : 'var(--ps-prim-white)';
+          return (
+            <g key={r.code}>
+              <rect x={x} y={y} width={tileW} height={tileH} rx={4} style={{ fill }}>
+                <title>{`${r.label ?? r.code}: ${valueFormat(r.value)}`}</title>
+              </rect>
+              <text x={x + tileW / 2} y={y + tileH / 2 - 2} textAnchor="middle" fontSize={12} fontWeight={600} fill={fg}>
+                {r.code}
+              </text>
+              <text x={x + tileW / 2} y={y + tileH / 2 + 16} textAnchor="middle" fontSize={11} fill={fg}>
+                {valueFormat(r.value)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartFrame>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════
+// VoronoiDiagram — tessellation of proximity regions (pure renderer)
+// ══════════════════════════════════════════════════════════════════
+
+export interface VoronoiCell {
+  /** Polygon vertices in viewBox units. */
+  points: Array<[number, number]>;
+  /** Seed point in viewBox units. */
+  seed: [number, number];
+  /** Zone index → colour + legend grouping. */
+  zone?: number;
+  label?: string;
+  value?: number;
+}
+
+export interface VoronoiDiagramProps {
+  cells: VoronoiCell[];
+  zoneLabels?: string[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  height?: number;
+  width?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+const VORONOI_SCALE: string[] = [
+  'var(--ps-prim-blue-500)',
+  'var(--ps-prim-blue-300)',
+  'var(--ps-prim-blue-700)',
+  'var(--ps-prim-blue-100)',
+];
+
+export const VoronoiDiagram: React.FC<VoronoiDiagramProps> = ({
+  cells,
+  zoneLabels = ['Zone A', 'Zone B', 'Zone C'],
+  eyebrow,
+  title,
+  subtitle,
+  height = 300,
+  width = 520,
+  className,
+  'aria-label': ariaLabel,
+}) => {
+  const zoneColor = (z: number) => VORONOI_SCALE[z % VORONOI_SCALE.length];
+
+  return (
+    <ChartFrame
+      eyebrow={eyebrow}
+      title={title}
+      subtitle={subtitle}
+      className={className}
+      footer={
+        <Legend items={zoneLabels.map((l, i) => ({ label: l, color: zoneColor(i) }))} />
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        role="img"
+        aria-label={ariaLabel ?? title ?? 'Voronoi diagram'}
+        style={{ fontFamily: FONT }}
+      >
+        {cells.map((cell, i) => {
+          const pts = cell.points.map((p) => `${p[0]},${p[1]}`).join(' ');
+          const fill = zoneColor(cell.zone ?? 0);
+          return (
+            <polygon
+              key={i}
+              points={pts}
+              style={{ fill, stroke: 'var(--ps-sem-bg-surface)' }}
+              fillOpacity={0.35}
+              strokeWidth={2}
+            >
+              <title>
+                {`${cell.label ?? `Cell ${i + 1}`}${cell.value != null ? `: ${cell.value}` : ''}`}
+              </title>
+            </polygon>
+          );
+        })}
+        {cells.map((cell, i) => (
+          <circle key={`s-${i}`} cx={cell.seed[0]} cy={cell.seed[1]} r={3} style={{ fill: 'var(--ps-prim-blue-900)' }} />
+        ))}
+      </svg>
+    </ChartFrame>
+  );
+};
