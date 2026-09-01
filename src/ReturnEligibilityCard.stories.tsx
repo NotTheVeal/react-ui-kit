@@ -29,6 +29,7 @@ export const NotEligible: Story = {
     title: 'Return Eligibility',
     status: 'Not Eligible',
     statusTone: 'danger',
+    reasonLabel: 'Why it’s not eligible',
     reason: 'Return window has expired',
     showUpload: false,
   },
