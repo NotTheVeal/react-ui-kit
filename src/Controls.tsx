@@ -399,6 +399,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   className = "",
 }) => {
   const [open, setOpen] = React.useState(false);
+  const [anchor, setAnchor] = React.useState<"start" | "end">("start");
   const [month, setMonth] = React.useState<Date>(startDate ?? new Date());
   const [draftStart, setDraftStart] = React.useState<Date | undefined>(startDate);
   const [draftEnd, setDraftEnd] = React.useState<Date | undefined>(endDate);
@@ -412,6 +413,13 @@ const DatePicker: React.FC<DatePickerProps> = ({
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, [open]);
+
+  // Open the calendar under whichever field was clicked; clicking the
+  // already-open field toggles it shut, clicking the other keeps it open.
+  const triggerField = (field: "start" | "end") => {
+    setOpen((o) => !(o && anchor === field));
+    setAnchor(field);
+  };
 
   const selectDay = (d: Date) => {
     if (!range) {
@@ -445,7 +453,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           value={draftStart}
           disabled={disabled}
           error={Boolean(error)}
-          onTrigger={() => setOpen((o) => !o)}
+          onTrigger={() => triggerField("start")}
         />
         {range && (
           <DateField
@@ -453,13 +461,20 @@ const DatePicker: React.FC<DatePickerProps> = ({
             value={draftEnd}
             disabled={disabled}
             error={Boolean(error)}
-            onTrigger={() => setOpen((o) => !o)}
+            onTrigger={() => triggerField("end")}
           />
         )}
       </div>
       {error && <div className="text-[12px] text-[var(--ps-prim-red-600)]">{error}</div>}
       {open && !disabled && (
-        <div className="absolute top-[calc(100%+8px)] left-0 z-10">
+        <div
+          className={cxC(
+            "absolute top-[calc(100%+8px)] z-10",
+            // Anchor the popover under whichever field is active. End Date sits
+            // 260px right of Start (230px field + 30px gap).
+            range && anchor === "end" ? "left-[260px]" : "left-0",
+          )}
+        >
           <CalendarPopover
             month={month}
             onMonthChange={setMonth}
